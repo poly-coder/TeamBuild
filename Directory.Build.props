@@ -1,0 +1,48 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <PropertyGroup Label="PackageProperties">
+        <Version>0.1.0</Version>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/poly-coder/TeamBuild</RepositoryUrl>
+        <PackageTags>TeamBuild</PackageTags>
+        <PackageIcon>icon-color.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/poly-coder/TeamBuild</PackageProjectUrl> 
+        <Authors>PolyCoder</Authors>
+        <Copyright>Copyright © 2025</Copyright>
+        <PackageOutputPath Condition="$(Build_ArtifactStagingDirectory) != ''">
+            $(Build_ArtifactStagingDirectory)
+        </PackageOutputPath>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackagePrimaryLicenseFile>$(RepoRoot)\LICENSE.TXT</PackagePrimaryLicenseFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)icon-color.png" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)LICENSE.TXT" Pack="true" PackagePath="LICENSE.TXT" />
+    </ItemGroup>
+</Project>
