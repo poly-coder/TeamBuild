@@ -1,8 +1,35 @@
-﻿@using TeamBuild.Core.MudBlazor.Layout
+﻿@using System.Reflection
+@inject AppInfo AppInfo
 
-<Router AppAssembly="typeof(Program).Assembly">
+<Router AppAssembly="typeof(Program).Assembly"
+        AdditionalAssemblies="@GetUiAssemblies()">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(MudBlazorMainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        <RouteView RouteData="routeData"
+                   DefaultLayout="typeof(TbMainLayout)" />
+        <FocusOnNavigate RouteData="routeData"
+                         Selector="h1" />
     </Found>
+    <NotFound>
+        <LayoutView Layout="typeof(TbMainLayout)">
+            <TbAppPageTitle Title="Not Found"/>
+            
+            <p>
+                Sorry, there's nothing at this address.
+            </p>
+        </LayoutView>
+    </NotFound>
 </Router>
+
+@code
+{
+    private IEnumerable<Assembly> GetUiAssemblies()
+    {
+        yield return TeamBuildCoreBlazor.Assembly;
+        yield return TeamBuildCoreMudBlazor.Assembly;
+
+        foreach (var assembly in AppInfo.UiAssemblies)
+        {
+            yield return assembly;
+        }
+    }
+}

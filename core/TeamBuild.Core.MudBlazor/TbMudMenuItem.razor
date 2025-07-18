@@ -1,0 +1,34 @@
+@using MudBlazor
+
+@switch (MenuItem)
+{
+    case null:
+        return;
+
+    case { Children: { Count: > 0 } items }:
+        <MudNavGroup Title="@MenuItem.Label()">
+            @foreach (var item in items)
+            {
+                <TbMudMenuItem MenuItem="@item"/>
+            }
+        </MudNavGroup>
+        break;
+
+    case { Route: { Length: > 0 } route }:
+        <MudNavLink Href="@route" Match="NavLinkMatch.Prefix">
+            @MenuItem.Label()
+        </MudNavLink>
+        break;
+
+    default:
+        <MudNavLink>
+            @MenuItem.Label()
+        </MudNavLink>
+        break;
+}
+
+@code
+{
+    [Parameter]
+    public MainMenuItem? MenuItem { get; set; }
+}

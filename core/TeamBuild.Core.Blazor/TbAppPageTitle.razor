@@ -1,0 +1,11 @@
+@inject AppInfo AppInfo
+
+<PageTitle>@AppInfo.GetPageTitle(Title)</PageTitle>
+
+<TbPageHeader Title="@Title"/>
+
+@code
+{
+    [Parameter]
+    public string Title { get; set; } = "";
+}

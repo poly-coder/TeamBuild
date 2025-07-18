@@ -1,5 +1,6 @@
-﻿@inherits LayoutComponentBase
-@inject AppInfoProvider AppInfo
+@using MudBlazor
+@inherits TbMainLayoutView
+@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
 
 @* Required *@
 <MudThemeProvider />
@@ -16,7 +17,7 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu"
                        Color="Color.Inherit"
                        Edge="Edge.Start"
-                       OnClick="@((e) => DrawerToggle())" />
+                       OnClick="@DrawerToggle" />
         <MudText Typo="Typo.h5"
                  Class="ml-3">
             @AppInfo.Title
@@ -25,7 +26,19 @@
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudDrawer @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        @*NavMenu*@
+        <MudNavMenu>
+            @foreach (var (category, items) in MainMenu)
+            {
+                <MudText Typo="Typo.subtitle1" Class="px-4 mud-text-secondary">
+                    @category.Label()
+                </MudText>
+
+                @foreach (var item in items)
+                {
+                    <TbMudMenuItem MenuItem="@item" />
+                }
+            }
+        </MudNavMenu>
     </MudDrawer>
     <MudMainContent>
         <MudContainer>

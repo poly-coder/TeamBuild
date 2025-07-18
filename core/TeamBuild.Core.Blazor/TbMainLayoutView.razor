@@ -1,0 +1,14 @@
+@inherits TbCustomView
+
+@if (TryRender(__builder)) return;
+
+@Body
+
+@code
+{
+    [Parameter]
+    public RenderFragment Body { get; set; } = @<text/>;
+
+    [Parameter]
+    public IEnumerable<(MainMenuCategory, IEnumerable<MainMenuItem>)> MainMenu { get; set; } = [];
+}
