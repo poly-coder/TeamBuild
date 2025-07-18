@@ -1,0 +1,13 @@
+@inject AppInfoProvider AppInfo
+
+<PageTitle>@FullPageTitle</PageTitle>
+
+<h1>@Title</h1>
+
+@code
+{
+    [Parameter]
+    public string Title { get; set; } = "";
+
+    string FullPageTitle => AppInfo.GetPageTitle(Title);
+}

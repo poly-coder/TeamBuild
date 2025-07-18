@@ -1,0 +1,15 @@
+@using System.Text.Json
+
+<pre>@JsonValue</pre>
+
+@code {
+    [Parameter]
+    public object? Value { get; set; }
+
+    private static readonly JsonSerializerOptions Options = new()
+    {
+        WriteIndented = true,
+    };
+
+    private string JsonValue => JsonSerializer.Serialize(Value, Options);
+}

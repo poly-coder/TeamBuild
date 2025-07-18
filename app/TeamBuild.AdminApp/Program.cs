@@ -1,14 +1,23 @@
+using MudBlazor.Services;
 using TeamBuild.AdminApp.Components;
+using TeamBuild.Core.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+builder.Services.AddTeamBuildCoreBlazorServices();
+
+builder.Services.AddMudServices();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+var appInfo = app.Services.GetRequiredService<AppInfoProvider>();
+appInfo.Title = "Team Build Admin";
 
 app.MapDefaultEndpoints();
 

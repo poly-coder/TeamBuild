@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBuild.Core.Blazor", "co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBuild.Core.MudBlazor", "core\TeamBuild.Core.MudBlazor\TeamBuild.Core.MudBlazor.csproj", "{2A39DDD5-BE07-47EE-B3F2-4DCF5D5E93EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamBuild.Core", "core\TeamBuild.Core\TeamBuild.Core.csproj", "{52504CA5-7A7A-477D-A0E0-2B23E684BF83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{2A39DDD5-BE07-47EE-B3F2-4DCF5D5E93EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A39DDD5-BE07-47EE-B3F2-4DCF5D5E93EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A39DDD5-BE07-47EE-B3F2-4DCF5D5E93EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52504CA5-7A7A-477D-A0E0-2B23E684BF83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52504CA5-7A7A-477D-A0E0-2B23E684BF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52504CA5-7A7A-477D-A0E0-2B23E684BF83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52504CA5-7A7A-477D-A0E0-2B23E684BF83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{746A7165-283F-4A39-BE4A-E34B239B239E} = {C8745CC9-9F76-4696-B4E5-438796BC73D9}
 		{A1D32163-AC22-4D30-B8C7-3A1A4565DE48} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{2A39DDD5-BE07-47EE-B3F2-4DCF5D5E93EB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{52504CA5-7A7A-477D-A0E0-2B23E684BF83} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {964D0E61-E64B-4867-83D8-C26B15689EF0}

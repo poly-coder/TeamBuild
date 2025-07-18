@@ -1,0 +1,198 @@
+@using System.Diagnostics.CodeAnalysis
+@typeparam TValue
+
+@switch (Display)
+{
+    case DisplayMode.Inline:
+        <span class="async-view">@CurrentContent</span>
+        break;
+    case DisplayMode.Block:
+        <div class="async-view">@CurrentContent</div>
+        break;
+    default:
+        @CurrentContent
+        break;
+}
+
+@code
+{
+    [Parameter]
+    public DisplayMode Display { get; set; }
+
+    [Parameter]
+    public bool LoadOnInit { get; set; }
+
+    [Parameter]
+    public Func<CancellationToken, Task<TValue>>? Operation { get; set; }
+
+    [Parameter]
+    public RenderFragment IdleContent { get; set; } = @<span class="async-view-idle"></span>;
+
+    [Parameter]
+    public RenderFragment LoadingContent { get; set; } = @<span class="async-view-loading">Loading...</span>;
+
+    [Parameter]
+    public RenderFragment<TValue> ChildContent { get; set; } = v => @<span class="async-view-loaded">@v</span>;
+
+    [Parameter]
+    public RenderFragment<Exception> ErrorContent { get; set; } = ex => @<pre class="async-view-error">@ex</pre>;
+
+    [Parameter]
+    public RenderFragment CancelledContent { get; set; } = @<span class="async-view-cancelled">Cancelled</span>;
+
+    [Parameter]
+    public EventCallback<StatusMode> OnStatusChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<TValue> OnLoaded { get; set; }
+
+    [Parameter]
+    public EventCallback<Exception> OnError { get; set; }
+
+    public StatusMode Status { get; set; }
+
+    public async Task Execute()
+    {
+        if (Operation == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await CancelInternal(false);
+            cts = new CancellationTokenSource();
+            Status = StatusMode.Loading;
+            value = default!;
+            exception = null;
+            await OnStatusChanged.InvokeAsync(Status);
+            StateHasChanged();
+
+            value = await Operation.Invoke(cts.Token);
+            Status = StatusMode.Loaded;
+            await OnStatusChanged.InvokeAsync(Status);
+            await OnLoaded.InvokeAsync(value);
+        }
+        catch (OperationCanceledException)
+        {
+            Status = StatusMode.Cancelled;
+            await OnStatusChanged.InvokeAsync(Status);
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+            Status = StatusMode.Error;
+            await OnStatusChanged.InvokeAsync(Status);
+            await OnError.InvokeAsync(ex);
+        }
+        finally
+        {
+            cts?.Dispose();
+            cts = null;
+            StateHasChanged();
+        }
+    }
+
+    public async Task Clear()
+    {
+        await CancelInternal(false);
+        Status = StatusMode.Idle;
+        value = default!;
+        exception = null;
+        await OnStatusChanged.InvokeAsync(Status);
+    }
+
+    public async Task Cancel()
+    {
+        await CancelInternal(true);
+    }
+
+
+    private async Task CancelInternal(bool updateStatus)
+    {
+        if (cts is not null)
+        {
+            await cts.CancelAsync();
+            cts.Dispose();
+            cts = null;
+
+            if (updateStatus)
+            {
+                Status = StatusMode.Cancelled;
+                await OnStatusChanged.InvokeAsync(Status);
+                StateHasChanged();
+            }
+        }
+    }
+
+    public TValue GetValue()
+    {
+        if (Status == StatusMode.Loaded)
+        {
+            return value;
+        }
+        throw new InvalidOperationException("Cannot get value when status is not Success.");
+    }
+
+    public bool TryGetValue(out TValue result)
+    {
+        if (Status == StatusMode.Loaded)
+        {
+            result = value;
+            return true;
+        }
+        result = default!;
+        return false;
+    }
+
+    public bool TryGetException([NotNullWhen(true)] out Exception? result)
+    {
+        if (Status == StatusMode.Error && exception is not null)
+        {
+            result = exception;
+            return true;
+        }
+        result = null;
+        return false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if (LoadOnInit)
+        {
+            await Execute();
+        }
+    }
+
+    private CancellationTokenSource? cts;
+    private TValue value = default!;
+    private Exception? exception;
+
+    private RenderFragment CurrentContent => Status switch
+    {
+        StatusMode.Idle => IdleContent,
+        StatusMode.Loading => LoadingContent,
+        StatusMode.Loaded => ChildContent.Invoke(value),
+        StatusMode.Error => ErrorContent(exception!),
+        StatusMode.Cancelled => CancelledContent,
+        _ => IdleContent
+    };
+
+    public enum StatusMode
+    {
+        Idle,
+        Loading,
+        Loaded,
+        Error,
+        Cancelled,
+    }
+
+    public enum DisplayMode
+    {
+        None,
+        Inline,
+        Block,
+    }
+}
