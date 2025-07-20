@@ -5,59 +5,143 @@ namespace TeamBuild.Projects.Domain.CultureFeature;
 
 using CultureAggregateResult = Result<IReadOnlyCollection<CultureDomainEvent>, DomainError>;
 
-public record CultureAggregate(CultureEntity Culture)
+public record CultureAggregate(string CultureCode, string EnglishName, string NativeName)
 {
     public const string EntityName = "Culture";
 
-    public static CultureAggregateResult Execute(
+    #region [ Commands ]
+
+    public static CultureAggregateResult Create(
         Option<CultureAggregate> aggregate,
-        CultureCommand command
+        CultureCreateCommand command
+    ) =>
+        aggregate switch
+        {
+            Option<CultureAggregate>.Some { Value: var agg } => !agg.HasChanges(command)
+                // Idempotency
+                ? Array.Empty<CultureDomainEvent>()
+                : DomainError.Conflict(EntityName, agg.CultureCode),
+
+            Option<CultureAggregate>.None => new CultureDomainEvent[]
+            {
+                new CultureUpdatedEvent(
+                    command.CultureCode,
+                    command.EnglishName,
+                    command.NativeName
+                ),
+            },
+
+            _ => throw DomainException.UnexpectedCaseType("option", aggregate),
+        };
+
+    private bool HasChanges(CultureCreateCommand command)
+    {
+        return !CultureCode.Equals(command.CultureCode, StringComparison.Ordinal)
+            || !EnglishName.Equals(command.EnglishName, StringComparison.Ordinal)
+            || !NativeName.Equals(command.NativeName, StringComparison.Ordinal);
+    }
+
+    public static CultureAggregateResult Update(
+        Option<CultureAggregate> aggregate,
+        CultureUpdateCommand command
+    ) =>
+        aggregate switch
+        {
+            Option<CultureAggregate>.Some { Value: var agg } => !agg.HasChanges(command)
+                ? Array.Empty<CultureDomainEvent>()
+                :
+                [
+                    new CultureUpdatedEvent(
+                        command.CultureCode,
+                        command.EnglishName,
+                        command.NativeName
+                    ),
+                ],
+
+            Option<CultureAggregate>.None => DomainError.NotFound(EntityName, command.CultureCode),
+
+            _ => throw DomainException.UnexpectedCaseType("option", aggregate),
+        };
+
+    private bool HasChanges(CultureUpdateCommand command)
+    {
+        return !CultureCode.Equals(command.CultureCode, StringComparison.Ordinal)
+            || !EnglishName.Equals(command.EnglishName, StringComparison.Ordinal)
+            || !NativeName.Equals(command.NativeName, StringComparison.Ordinal);
+    }
+
+    public static CultureAggregateResult Delete(
+        Option<CultureAggregate> aggregate,
+        CultureDeleteCommand command
+    ) =>
+        aggregate switch
+        {
+            Option<CultureAggregate>.Some { Value: var agg } => new CultureDomainEvent[]
+            {
+                new CultureDeletedEvent(command.CultureCode),
+            },
+
+            Option<CultureAggregate>.None => Array.Empty<CultureDomainEvent>(),
+
+            _ => throw DomainException.UnexpectedCaseType("option", aggregate),
+        };
+
+    #endregion [ Execute ]
+
+    #region [ Apply ]
+
+    public static Option<CultureAggregate> Apply(
+        Option<CultureAggregate> aggregate,
+        CultureDomainEvent @event
     )
     {
         return aggregate switch
         {
-            Option<CultureAggregate>.Some { Value: var existing } => command switch
+            Option<CultureAggregate>.Some { Value: var existing } => @event switch
             {
-                CultureCreateCommand cmd => Create(existing, cmd),
-                CultureUpdateCommand cmd => Update(existing, cmd),
-                CultureDeleteCommand cmd => Delete(existing, cmd),
+                CultureCreatedEvent ev => ApplyCreated(existing, ev),
+                CultureUpdatedEvent ev => ApplyUpdated(existing, ev),
+                CultureDeletedEvent ev => ApplyDeleted(existing, ev),
 
-                _ => throw DomainException.UnknownCommandType(command),
+                _ => throw DomainException.UnexpectedCommandType(@event),
             },
 
-            Option<CultureAggregate>.None => command switch
+            Option<CultureAggregate>.None => @event switch
             {
-                CultureCreateCommand cmd => Create(cmd),
-                CultureUpdateCommand cmd => Update(cmd),
-                CultureDeleteCommand cmd => Delete(cmd),
+                CultureCreatedEvent ev => ApplyCreated(ev),
+                CultureUpdatedEvent ev => ApplyUpdated(ev),
+                CultureDeletedEvent ev => ApplyDeleted(ev),
 
-                _ => throw DomainException.UnknownCommandType(command),
+                _ => throw DomainException.UnexpectedCommandType(@event),
             },
 
-            _ => throw DomainException.UnknownCaseType("option", aggregate),
+            _ => throw DomainException.UnexpectedCaseType("option", aggregate),
         };
     }
 
-    private static CultureAggregateResult Create(CultureAggregate agg, CultureCreateCommand cmd) =>
-        agg.Culture.Equals(cmd.Culture)
-            // Idempotency
-            ? Array.Empty<CultureDomainEvent>()
-            : DomainError.Conflict(EntityName, agg.Culture.CultureCode);
+    private static Option<CultureAggregate> ApplyCreated(
+        CultureAggregate agg,
+        CultureCreatedEvent ev
+    ) => new CultureAggregate(ev.CultureCode, ev.EnglishName, ev.NativeName);
 
-    private static CultureAggregateResult Create(CultureCreateCommand cmd) =>
-        new CultureDomainEvent[] { new CultureUpdatedEvent(cmd.Culture) };
+    private static Option<CultureAggregate> ApplyCreated(CultureCreatedEvent ev) =>
+        new CultureAggregate(ev.CultureCode, ev.EnglishName, ev.NativeName);
 
-    private static CultureAggregateResult Update(CultureAggregate agg, CultureUpdateCommand cmd) =>
-        agg.Culture.Equals(cmd.Culture)
-            ? Array.Empty<CultureDomainEvent>()
-            : [new CultureUpdatedEvent(cmd.Culture)];
+    private static Option<CultureAggregate> ApplyUpdated(
+        CultureAggregate agg,
+        CultureUpdatedEvent ev
+    ) => new CultureAggregate(ev.CultureCode, ev.EnglishName, ev.NativeName);
 
-    private static CultureAggregateResult Update(CultureUpdateCommand cmd) =>
-        DomainError.NotFound(EntityName, cmd.Culture.CultureCode);
+    private static Option<CultureAggregate> ApplyUpdated(CultureUpdatedEvent ev) =>
+        Option.None<CultureAggregate>();
 
-    private static CultureAggregateResult Delete(CultureAggregate agg, CultureDeleteCommand cmd) =>
-        new CultureDomainEvent[] { new CultureDeletedEvent() };
+    private static Option<CultureAggregate> ApplyDeleted(
+        CultureAggregate agg,
+        CultureDeletedEvent ev
+    ) => Option.None<CultureAggregate>();
 
-    private static CultureAggregateResult Delete(CultureDeleteCommand cmd) =>
-        Array.Empty<CultureDomainEvent>();
+    private static Option<CultureAggregate> ApplyDeleted(CultureDeletedEvent ev) =>
+        Option.None<CultureAggregate>();
+
+    #endregion [ Apply ]
 }

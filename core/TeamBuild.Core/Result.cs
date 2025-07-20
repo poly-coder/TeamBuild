@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace TeamBuild.Core;
 
@@ -131,7 +130,7 @@ public static class Result
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TValue GetValue<TValue, TError>(this Result<TValue, TError> option)
+    public static TValue GetValueOrThrow<TValue, TError>(this Result<TValue, TError> option)
     {
         return option.Match(
             ok: x => x,
@@ -178,7 +177,7 @@ public static class Result
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TError GetError<TValue, TError>(this Result<TValue, TError> option)
+    public static TError GetErrorOrThrow<TValue, TError>(this Result<TValue, TError> option)
     {
         return option.Match(
             ok: _ => throw new InvalidOperationException("Result is in Ok state"),

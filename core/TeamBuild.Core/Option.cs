@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace TeamBuild.Core;
 
@@ -58,7 +57,8 @@ public static class Option
     ) => option.Match(some: value => mapper(value), none: None<TOutput>);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<T> OfObj<T>(T value) => value is null ? None<T>() : Some(value);
+    public static Option<T> OfObj<T>(T? value)
+        where T : class => value is null ? None<T>() : Some(value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T? ToObj<T>(this Option<T> option)
@@ -110,7 +110,7 @@ public static class Option
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T GetValue<T>(this Option<T> option)
+    public static T GetValueOrThrow<T>(this Option<T> option)
     {
         return option.Match(
             some: x => x,

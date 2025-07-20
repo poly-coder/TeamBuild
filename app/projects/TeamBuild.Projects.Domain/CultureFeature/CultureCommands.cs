@@ -6,25 +6,31 @@ namespace TeamBuild.Projects.Domain.CultureFeature;
 
 public abstract record CultureCommand : IDomainCommand;
 
-public record CultureCreateCommand(CultureEntity Culture) : CultureCommand;
+public record CultureCreateCommand(string CultureCode, string EnglishName, string NativeName)
+    : CultureCommand;
 
-public record CultureUpdateCommand(CultureEntity Culture) : CultureCommand;
+public record CultureUpdateCommand(string CultureCode, string EnglishName, string NativeName)
+    : CultureCommand;
 
 public record CultureDeleteCommand(string CultureCode) : CultureCommand;
 
 public class CultureCreateCommandValidator : AbstractValidator<CultureCreateCommand>
 {
-    public CultureCreateCommandValidator(IValidator<CultureEntity> modelValidator)
+    public CultureCreateCommandValidator()
     {
-        RuleFor(e => e.Culture).NotNull().SetValidator(modelValidator);
+        RuleFor(e => e.CultureCode).ValidateWith(CultureValidations.CultureCode);
+        RuleFor(e => e.EnglishName).ValidateWith(CultureValidations.EnglishName);
+        RuleFor(e => e.NativeName).ValidateWith(CultureValidations.NativeName);
     }
 }
 
 public class CultureUpdateCommandValidator : AbstractValidator<CultureUpdateCommand>
 {
-    public CultureUpdateCommandValidator(IValidator<CultureEntity> modelValidator)
+    public CultureUpdateCommandValidator()
     {
-        RuleFor(e => e.Culture).NotNull().SetValidator(modelValidator);
+        RuleFor(e => e.CultureCode).ValidateWith(CultureValidations.CultureCode);
+        RuleFor(e => e.EnglishName).ValidateWith(CultureValidations.EnglishName);
+        RuleFor(e => e.NativeName).ValidateWith(CultureValidations.NativeName);
     }
 }
 

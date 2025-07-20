@@ -4,4 +4,8 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TeamBuild.Core\TeamBuild.Core.csproj" />
+  </ItemGroup>
+
 </Project>

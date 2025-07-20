@@ -10,7 +10,7 @@ public class DomainException : Exception
     public DomainException(string message, Exception inner)
         : base(message, inner) { }
 
-    public static DomainException UnknownCaseType(string name, object? subject)
+    public static DomainException UnexpectedCaseType(string name, object? subject)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -19,20 +19,20 @@ public class DomainException : Exception
             : subject.GetType() is var type ? type.FullName ?? type.Name
             : "unknown";
 
-        return new UnknownCaseException($"Unknown {name} type: {actual}");
+        return new UnexpectedCaseException($"Unexpected {name} type: {actual}");
     }
 
-    public static DomainException UnknownCommandType(object command) =>
-        UnknownCaseType("command", command);
+    public static DomainException UnexpectedCommandType(object command) =>
+        UnexpectedCaseType("command", command);
 }
 
-public class UnknownCaseException : DomainException
+public class UnexpectedCaseException : DomainException
 {
-    public UnknownCaseException() { }
+    public UnexpectedCaseException() { }
 
-    public UnknownCaseException(string message)
+    public UnexpectedCaseException(string message)
         : base(message) { }
 
-    public UnknownCaseException(string message, Exception inner)
+    public UnexpectedCaseException(string message, Exception inner)
         : base(message, inner) { }
 }

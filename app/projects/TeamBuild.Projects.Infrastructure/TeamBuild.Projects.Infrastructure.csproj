@@ -5,11 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\core\TeamBuild.Core.MartenExt\TeamBuild.Core.MartenExt.csproj" />
     <ProjectReference Include="..\TeamBuild.Projects.Application\TeamBuild.Projects.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CultureFeature\" />
   </ItemGroup>
 
 </Project>
