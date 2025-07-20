@@ -76,7 +76,7 @@ public record CultureAggregate(string CultureCode, string EnglishName, string Na
     ) =>
         aggregate switch
         {
-            Option<CultureAggregate>.Some { Value: var agg } => new CultureDomainEvent[]
+            Option<CultureAggregate>.Some => new CultureDomainEvent[]
             {
                 new CultureDeletedEvent(command.CultureCode),
             },
@@ -120,7 +120,7 @@ public record CultureAggregate(string CultureCode, string EnglishName, string Na
     }
 
     private static Option<CultureAggregate> ApplyCreated(
-        CultureAggregate agg,
+        CultureAggregate _agg,
         CultureCreatedEvent ev
     ) => new CultureAggregate(ev.CultureCode, ev.EnglishName, ev.NativeName);
 
@@ -128,19 +128,19 @@ public record CultureAggregate(string CultureCode, string EnglishName, string Na
         new CultureAggregate(ev.CultureCode, ev.EnglishName, ev.NativeName);
 
     private static Option<CultureAggregate> ApplyUpdated(
-        CultureAggregate agg,
+        CultureAggregate _agg,
         CultureUpdatedEvent ev
     ) => new CultureAggregate(ev.CultureCode, ev.EnglishName, ev.NativeName);
 
-    private static Option<CultureAggregate> ApplyUpdated(CultureUpdatedEvent ev) =>
+    private static Option<CultureAggregate> ApplyUpdated(CultureUpdatedEvent _ev) =>
         Option.None<CultureAggregate>();
 
     private static Option<CultureAggregate> ApplyDeleted(
-        CultureAggregate agg,
-        CultureDeletedEvent ev
+        CultureAggregate _agg,
+        CultureDeletedEvent _ev
     ) => Option.None<CultureAggregate>();
 
-    private static Option<CultureAggregate> ApplyDeleted(CultureDeletedEvent ev) =>
+    private static Option<CultureAggregate> ApplyDeleted(CultureDeletedEvent _ev) =>
         Option.None<CultureAggregate>();
 
     #endregion [ Apply ]
