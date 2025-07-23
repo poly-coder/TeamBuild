@@ -16,8 +16,4 @@
     <ProjectReference Include="..\..\..\core\TeamBuild.Core.Blazor\TeamBuild.Core.Blazor.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CultureFeature\" />
-  </ItemGroup>
-
 </Project>

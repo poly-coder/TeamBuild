@@ -1,0 +1,17 @@
+@inherits TbButton
+
+<TbButton ButtonType="@ButtonType"
+          Color="@(Color ?? TbColor.Primary)"
+          Disabled="@Disabled"
+          EndIcon="@EndIcon"
+          FullWidth="@FullWidth"
+          Href="@Href"
+          IconColor="@IconColor"
+          Rel="@Rel"
+          Size="@Size"
+          StartIcon="@(StartIcon ?? TbIcon.Add)"
+          Target="@Target"
+          Variant="@Variant"
+          OnClick="@OnClick">
+    @ChildContent
+</TbButton>

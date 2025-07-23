@@ -1,0 +1,20 @@
+@using MudBlazor
+@inherits TbButton
+@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
+
+<MudButton ButtonType="@ButtonType.MapToMudButtonType()"
+           Color="@(Color.MapToMudColor() ?? MudGlobal.ButtonDefaults.Color)"
+           Disabled="@Disabled"
+           EndIcon="@EndIcon.MapToMudIcon()"
+           FullWidth="@FullWidth"
+           Href="@Href"
+           IconColor="@(IconColor.MapToMudColor() ?? global::MudBlazor.Color.Inherit)"
+           Rel="@Rel"
+           Size="@(Size.MapToMudSize() ?? global::MudBlazor.Size.Medium)"
+           StartIcon="@StartIcon.MapToMudIcon()"
+           Target="@Target"
+           Variant="@(Variant.MapToMudVariant() ?? MudGlobal.ButtonDefaults.Variant)"
+           OnClick="@OnClick"
+           >
+    @ChildContent
+</MudButton>
