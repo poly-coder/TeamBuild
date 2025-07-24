@@ -1,5 +1,49 @@
 @attribute [Route(CultureRoutes.NewRoute)]
+@inject NavigationManager Nav
 
-<TbAppPageTitle Title="New Culture"/>
+<TbPageComponent Title="New Culture" Breadcrumbs="@Breadcrumbs">
+    <ChildContent>Hello world</ChildContent>
 
-<CultureNewComponent />
+    <BottomLeftBar>
+        <TbSwitch Label="Go to details" Color="TbColor.Info" @bind-Value="goToDetails"/>
+    </BottomLeftBar>
+
+    <BottomBar>
+        <TbCancelButton Href="@CultureRoutes.List()"/>
+
+        <TbResetButton />
+
+        <TbSaveButton OnClick="HandleSaveClick" Loading="isSaving" Disabled="isSaving">
+            <LoadingContent>
+                Saving...
+            </LoadingContent>
+        </TbSaveButton>
+    </BottomBar>
+</TbPageComponent>
+
+@code
+{
+    private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
+        TbBreadcrumbItem.Create("Cultures", CultureRoutes.List(), TbIcon.List),
+        TbBreadcrumbItem.Current("New Culture", TbIcon.Add)
+    ];
+
+    private bool goToDetails;
+    private bool isSaving;
+
+    private async Task HandleSaveClick()
+    {
+        isSaving = true;
+        StateHasChanged();
+        await Task.Delay(TimeSpan.FromSeconds(3));
+        if (goToDetails)
+        {
+            Nav.NavigateTo(CultureRoutes.Details("es-ES"));
+        }
+        else
+        {
+            Nav.NavigateTo(CultureRoutes.List());
+        }
+    }
+}
+

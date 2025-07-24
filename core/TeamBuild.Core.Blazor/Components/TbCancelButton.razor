@@ -1,7 +1,7 @@
 @inherits TbButton
 
 <TbButton ButtonType="@ButtonType"
-          Color="@(Color ?? TbColor.Primary)"
+          Color="@(Color ?? TbColor.Default)"
           Disabled="@Disabled"
           EndIcon="@EndIcon"
           FullWidth="@FullWidth"
@@ -11,7 +11,7 @@
           LoadingContent="@LoadingContent"
           Rel="@Rel"
           Size="@Size"
-          StartIcon="@(StartIcon ?? TbIcon.Add)"
+          StartIcon="@(StartIcon ?? TbIcon.Cancel)"
           Target="@Target"
           Variant="@Variant"
           OnClick="@OnClick">
@@ -20,6 +20,6 @@
         @ChildContent
     }
     else{
-        <text>Add</text>
+        <text>Cancel</text>
     }
 </TbButton>

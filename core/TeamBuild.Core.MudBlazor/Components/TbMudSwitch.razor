@@ -1,0 +1,15 @@
+@using MudBlazor
+@inherits TbSwitch
+@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
+
+<MudSwitch Color="@(Color.MapToMudColor() ?? global::MudBlazor.Color.Default)"
+           UncheckedColor="@(UncheckedColor.MapToMudColor() ?? global::MudBlazor.Color.Default)"
+           Disabled="@Disabled"
+           Label="@Label"
+           ThumbIcon="@ThumbIcon.MapToMudIcon()"
+           ThumbIconColor="@(ThumbIconColor.MapToMudColor() ?? global::MudBlazor.Color.Default)"
+           Value="@Value"
+           ValueChanged="@ValueChanged"
+           Size="@(Size.MapToMudSize() ?? global::MudBlazor.Size.Medium)">
+    @ChildContent
+</MudSwitch>

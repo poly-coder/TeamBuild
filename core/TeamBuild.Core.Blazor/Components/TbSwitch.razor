@@ -1,0 +1,38 @@
+﻿@inherits TbCustomView
+
+@{
+    Render(__builder);
+}
+
+@code
+{
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public TbColor? Color { get; set; }
+
+    [Parameter]
+    public TbColor? UncheckedColor { get; set; }
+
+    [Parameter]
+    public TbSize? Size { get; set; }
+
+    [Parameter]
+    public string? Label { get; set; }
+
+    [Parameter]
+    public TbIcon? ThumbIcon { get; set; }
+
+    [Parameter]
+    public TbColor? ThumbIconColor { get; set; }
+
+    [Parameter]
+    public bool Value { get; set; }
+}

@@ -1,5 +1,41 @@
 @attribute [Route(CultureRoutes.EditRoute)]
 
-<TbAppPageTitle Title="Edit Culture"/>
+@if (CultureId is null)
+{
+    return;
+}
 
-<CultureEditComponent />
+<TbPageComponent Title="Edit Culture" Breadcrumbs="@Breadcrumbs">
+    <ChildContent>Hello world</ChildContent>
+
+    <BottomBar>
+        <TbCancelButton Href="@CultureRoutes.List()" />
+
+        <TbResetButton />
+
+        <TbSaveButton OnClick="HandleSaveClick" Loading="isSaving" Disabled="isSaving">
+            <LoadingContent>
+                Saving...
+            </LoadingContent>
+        </TbSaveButton>
+    </BottomBar>
+</TbPageComponent>
+
+@code
+{
+    [Parameter]
+    public string? CultureId { get; set; }
+
+    private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
+        TbBreadcrumbItem.Create("Cultures", CultureRoutes.List(), TbIcon.List),
+        TbBreadcrumbItem.Current("Edit Culture", TbIcon.Edit)
+    ];
+
+    private bool isSaving;
+
+    private void HandleSaveClick()
+    {
+        isSaving = !isSaving;
+    }
+}
+

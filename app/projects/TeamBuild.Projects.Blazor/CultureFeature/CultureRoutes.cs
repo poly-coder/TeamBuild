@@ -8,11 +8,11 @@ public static class CultureRoutes
 
     public const string NewRoute = $"{ListRoute}/new";
 
-    public const string DetailsRoute = $"{ListRoute}/details/{{cultureId}}";
+    public const string DetailsRoute = $$"""{{ListRoute}}/details/{cultureId}""";
 
-    public const string EditRoute = $"{ListRoute}/edit/{{cultureId}}";
+    public const string EditRoute = $$"""{{ListRoute}}/edit/{cultureId}""";
 
-    public const string DeleteRoute = $"{ListRoute}/delete/{{cultureId}}";
+    public const string DeleteRoute = $$"""{{ListRoute}}/delete/{cultureId}""";
 
     public static string List() => ListRoute;
 

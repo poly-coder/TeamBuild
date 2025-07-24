@@ -1,5 +1,39 @@
 @attribute [Route(CultureRoutes.DeleteRoute)]
 
-<TbAppPageTitle Title="Delete Culture"/>
+@if (CultureId is null)
+{
+    return;
+}
 
-<CultureDeleteComponent />
+<TbPageComponent Title="Delete Culture" Breadcrumbs="@Breadcrumbs">
+    <ChildContent>Hello world</ChildContent>
+
+    <BottomBar>
+        <TbCancelButton Href="@CultureRoutes.List()" />
+
+        <TbDeleteButton OnClick="HandleDeleteClick" Loading="isSaving" Disabled="isSaving">
+            <LoadingContent>
+                Deleting...
+            </LoadingContent>
+        </TbDeleteButton>
+    </BottomBar>
+</TbPageComponent>
+
+@code
+{
+    [Parameter]
+    public string? CultureId { get; set; }
+
+    private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
+        TbBreadcrumbItem.Create("Cultures", CultureRoutes.List(), TbIcon.List),
+        TbBreadcrumbItem.Current("Edit Culture", TbIcon.Edit)
+    ];
+
+    private bool isSaving;
+
+    private void HandleDeleteClick()
+    {
+        isSaving = !isSaving;
+    }
+}
+

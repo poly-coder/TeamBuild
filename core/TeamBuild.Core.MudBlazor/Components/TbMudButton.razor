@@ -14,7 +14,13 @@
            StartIcon="@StartIcon.MapToMudIcon()"
            Target="@Target"
            Variant="@(Variant.MapToMudVariant() ?? MudGlobal.ButtonDefaults.Variant)"
-           OnClick="@OnClick"
-           >
-    @ChildContent
+           OnClick="@OnClick">
+    @if (Loading && LoadingContent is not null)
+    {
+        @LoadingContent
+    }
+    else
+    {
+        @ChildContent
+    }
 </MudButton>

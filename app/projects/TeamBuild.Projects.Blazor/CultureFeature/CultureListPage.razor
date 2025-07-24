@@ -1,5 +1,16 @@
 @attribute [Route(CultureRoutes.ListRoute)]
 
-<TbAppPageTitle Title="Cultures"/>
+<TbPageComponent Title="Cultures" Breadcrumbs="@Breadcrumbs">
+    <TopBar>
+        <TbAddButton Href="@CultureRoutes.New()"/>
+    </TopBar>
 
-<CultureListComponent />
+    <ChildContent>Hello world</ChildContent>
+</TbPageComponent>
+
+@code
+{
+    private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
+        TbBreadcrumbItem.Current("Cultures", TbIcon.List)
+    ];
+}

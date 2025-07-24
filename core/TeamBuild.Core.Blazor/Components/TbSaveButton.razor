@@ -1,6 +1,6 @@
 @inherits TbButton
 
-<TbButton ButtonType="@ButtonType"
+<TbButton ButtonType="@TbButtonType.Submit"
           Color="@(Color ?? TbColor.Primary)"
           Disabled="@Disabled"
           EndIcon="@EndIcon"
@@ -11,7 +11,7 @@
           LoadingContent="@LoadingContent"
           Rel="@Rel"
           Size="@Size"
-          StartIcon="@(StartIcon ?? TbIcon.Add)"
+          StartIcon="@(StartIcon ?? TbIcon.Save)"
           Target="@Target"
           Variant="@Variant"
           OnClick="@OnClick">
@@ -20,6 +20,6 @@
         @ChildContent
     }
     else{
-        <text>Add</text>
+        <text>Save</text>
     }
 </TbButton>

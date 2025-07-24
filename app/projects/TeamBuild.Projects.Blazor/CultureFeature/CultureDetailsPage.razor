@@ -1,5 +1,26 @@
 @attribute [Route(CultureRoutes.DetailsRoute)]
 
-<TbAppPageTitle Title="Culture Details" />
+@if (CultureId is null)
+{
+    return;
+}
 
-<CultureDetailsComponent />
+<TbPageComponent Title="Culture Details" Breadcrumbs="@Breadcrumbs">
+    <ChildContent>Hello world</ChildContent>
+
+    <BottomBar>
+        <TbEditButton Href="@CultureRoutes.Edit(CultureId)" />
+        <TbDeleteButton Href="@CultureRoutes.Delete(CultureId)" />
+    </BottomBar>
+</TbPageComponent>
+
+@code
+{
+    [Parameter]
+    public string? CultureId { get; set; }
+
+    private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
+        TbBreadcrumbItem.Create("Cultures", CultureRoutes.List(), TbIcon.List),
+        TbBreadcrumbItem.Current("Culture Details", TbIcon.View)
+    ];
+}
