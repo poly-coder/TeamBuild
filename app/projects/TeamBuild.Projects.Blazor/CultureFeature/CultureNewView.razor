@@ -1,0 +1,91 @@
+﻿@inherits TbCustomView
+@using System.ComponentModel.DataAnnotations
+
+@{
+    Render(__builder);
+}
+
+@code {
+    [Parameter]
+    public Func<FormModel, Task>? OnSave { get; set; }
+
+    #region [ Form ]
+
+    [Parameter]
+    public FormModel? InitialForm { get; set; }
+    protected FormModel? form;
+    private FormModel? previousInitialForm;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (form is null || !FormModel.AreEqual(previousInitialForm, InitialForm))
+        {
+            previousInitialForm = InitialForm?.Clone();
+            form = InitialForm?.Clone() ?? new FormModel();
+        }
+    }
+
+    public class FormModel
+    {
+        [Required]
+        public string? CultureCode { get; set; }
+
+        [Required]
+        public string? EnglishName { get; set; }
+
+        [Required]
+        public string? NativeName { get; set; }
+
+        public FormModel Clone()
+        {
+            return new FormModel
+            {
+                CultureCode = CultureCode,
+                EnglishName = EnglishName,
+                NativeName = NativeName
+            };
+        }
+
+        public static bool AreEqual(FormModel? previous, FormModel? newOne)
+        {
+            if (previous is null) return newOne is null;
+            if (newOne is null) return false;
+
+            return previous.CultureCode == newOne.CultureCode &&
+                   previous.EnglishName == newOne.EnglishName &&
+                   previous.NativeName == newOne.NativeName;
+        }
+    }
+
+    #endregion [ Form ]
+
+
+    protected bool goToDetails;
+    protected bool isSaving;
+    protected Exception? exception;
+
+    protected async Task HandleValidSubmit(EditContext arg)
+    {
+        if (form is null || isSaving || OnSave is null) return;
+
+        isSaving = true;
+        exception = null;
+
+        StateHasChanged();
+
+        try
+        {
+            await OnSave(form);
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+}

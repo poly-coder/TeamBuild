@@ -1,0 +1,13 @@
+@inherits TbCustomView
+
+@{
+    Render(__builder);
+}
+
+@code
+{
+    [Parameter]
+    public Exception? Exception { get; set; }
+
+    protected string Title => Exception?.Message ?? "An error occurred";
+}

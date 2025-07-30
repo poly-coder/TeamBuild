@@ -1,0 +1,61 @@
+@using TeamBuild.Projects.Blazor.CultureFeature
+@using MudBlazor
+
+@inherits TeamBuild.Projects.Blazor.CultureFeature.CultureNewView
+@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
+
+@if (form is null)
+{
+    return;
+}
+
+<EditForm Model="@form" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Culture Code"
+                          HelperText="Valid ISO culture code"
+                          @bind-Value="form.CultureCode"
+                          For="@(() => form.CultureCode)"
+                          Disabled="isSaving" />
+
+            <MudTextField Label="English Name"
+                          HelperText="English name of the culture"
+                          @bind-Value="form.EnglishName"
+                          For="@(() => form.EnglishName)"
+                          Disabled="isSaving" />
+
+            <MudTextField Label="Native Name"
+                          HelperText="Native name of the culture"
+                          @bind-Value="form.NativeName"
+                          For="@(() => form.NativeName)"
+                          Disabled="isSaving" />
+        </MudCardContent>
+        <MudCardActions Class="gap-4">
+            <MudSpacer />
+
+            <TbCancelButton Href="@CultureRoutes.List()" Disabled="isSaving" />
+
+            <TbResetButton Disabled="isSaving" />
+
+            <TbSaveButton Loading="isSaving" Disabled="isSaving">
+                <LoadingContent>
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Saving</MudText>
+                </LoadingContent>
+            </TbSaveButton>
+        </MudCardActions>
+        <MudCardContent>
+            <MudText Color="Color.Error">
+                <ValidationSummary />
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+</EditForm>
+
+<TbExceptionAlert Exception="exception" />
+
+@code
+{
+}
