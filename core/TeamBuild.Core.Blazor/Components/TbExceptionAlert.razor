@@ -10,4 +10,10 @@
     public Exception? Exception { get; set; }
 
     protected string Title => Exception?.Message ?? "An error occurred";
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        StateHasChanged();
+    }
 }

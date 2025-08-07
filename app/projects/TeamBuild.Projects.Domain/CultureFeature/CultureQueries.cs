@@ -11,11 +11,11 @@ public abstract record CultureQuerySuccess : IDomainQuerySuccess;
 
 public record CultureGetByIdQuery(string CultureCode) : CultureQuery;
 
-public record CultureGetByIdQuerySuccess(CultureAggregate Culture) : CultureQuerySuccess;
+public record CultureGetByIdQuerySuccess(CultureDetails Culture) : CultureQuerySuccess;
 
 public record CultureGetByIdsQuery(string[] CultureCodes) : CultureQuery;
 
-public record CultureGetByIdsQuerySuccess(Option<CultureAggregate>[] CultureList)
+public record CultureGetByIdsQuerySuccess(Option<CultureDetails>[] CultureList)
     : CultureQuerySuccess;
 
 public class CultureCreateQueryValidator : AbstractValidator<CultureGetByIdQuery>

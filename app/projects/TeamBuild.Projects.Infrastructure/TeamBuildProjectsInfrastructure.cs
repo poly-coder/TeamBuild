@@ -3,9 +3,9 @@ using System.Diagnostics.Metrics;
 using System.Reflection;
 using TeamBuild.Core;
 
-namespace TeamBuild.Projects.Application;
+namespace TeamBuild.Projects.Infrastructure;
 
-public class TeamBuildProjectsApplication
+public class TeamBuildProjectsInfrastructure
 {
     public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 

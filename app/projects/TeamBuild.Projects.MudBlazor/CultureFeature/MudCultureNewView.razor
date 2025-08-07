@@ -33,15 +33,20 @@
                           Disabled="isSaving" />
         </MudCardContent>
         <MudCardActions Class="gap-4">
-            <MudSpacer />
+            <MudSwitch Label="Go to details"
+                       @bind-Value="form.GoToDetails"
+                       For="@(() => form.GoToDetails)"
+                       Disabled="isSaving"/>
 
-            <TbCancelButton Href="@CultureRoutes.List()" Disabled="isSaving" />
+            <MudSpacer/>
 
-            <TbResetButton Disabled="isSaving" />
+            <TbCancelButton Href="@CultureRoutes.List()" Disabled="isSaving"/>
+
+            <TbResetButton Disabled="isSaving"/>
 
             <TbSaveButton Loading="isSaving" Disabled="isSaving">
                 <LoadingContent>
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                     <MudText Class="ms-2">Saving</MudText>
                 </LoadingContent>
             </TbSaveButton>
@@ -54,8 +59,7 @@
     </MudCard>
 </EditForm>
 
-<TbExceptionAlert Exception="exception" />
-
-@code
+@if (exception is not null)
 {
+    <TbExceptionAlert Exception="exception" />
 }

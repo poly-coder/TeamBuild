@@ -9,6 +9,6 @@ public static class CultureFeatureExtensions
         this IServiceCollection services
     )
     {
-        return services.AddScoped<ICultureAggregateService, CultureAggregateMartenService>();
+        return services.AddScoped<ICultureCommandService, CultureCommandMartenService>();
     }
 }

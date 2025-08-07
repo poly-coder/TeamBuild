@@ -20,23 +20,22 @@
     {
         base.OnParametersSet();
 
-        if (form is null || !FormModel.AreEqual(previousInitialForm, InitialForm))
+        if (form is null || previousInitialForm is null || !previousInitialForm.IsEqualTo(InitialForm))
         {
-            previousInitialForm = InitialForm?.Clone();
+            previousInitialForm = InitialForm?.Clone() ?? new FormModel();
             form = InitialForm?.Clone() ?? new FormModel();
         }
     }
 
     public class FormModel
     {
-        [Required]
-        public string? CultureCode { get; set; }
+        [Required] public string CultureCode { get; set; } = "";
 
-        [Required]
-        public string? EnglishName { get; set; }
+        [Required] public string EnglishName { get; set; } = "";
 
-        [Required]
-        public string? NativeName { get; set; }
+        [Required] public string NativeName { get; set; } = "";
+
+        public bool GoToDetails { get; set; }
 
         public FormModel Clone()
         {
@@ -48,25 +47,24 @@
             };
         }
 
-        public static bool AreEqual(FormModel? previous, FormModel? newOne)
+        public bool IsEqualTo(FormModel? newOne)
         {
-            if (previous is null) return newOne is null;
             if (newOne is null) return false;
 
-            return previous.CultureCode == newOne.CultureCode &&
-                   previous.EnglishName == newOne.EnglishName &&
-                   previous.NativeName == newOne.NativeName;
+            return CultureCode == newOne.CultureCode &&
+                   EnglishName == newOne.EnglishName &&
+                   NativeName == newOne.NativeName &&
+                   GoToDetails == newOne.GoToDetails;
         }
     }
 
     #endregion [ Form ]
 
 
-    protected bool goToDetails;
     protected bool isSaving;
     protected Exception? exception;
 
-    protected async Task HandleValidSubmit(EditContext arg)
+    protected async Task HandleValidSubmit()
     {
         if (form is null || isSaving || OnSave is null) return;
 
