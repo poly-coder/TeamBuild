@@ -1,57 +1,14 @@
-using MudBlazor.Services;
-using TeamBuild.AdminApp.Components;
-using TeamBuild.Core.Blazor;
-using TeamBuild.Core.MudBlazor;
-using TeamBuild.Projects.Blazor;
-using TeamBuild.Projects.Infrastructure;
-using TeamBuild.Projects.MudBlazor;
+using JasperFx;
+using TeamBuild.AdminApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
+var startup = new Startup();
 
-builder
-    .Services.AddTeamBuildCoreBlazorServices()
-    .AddAppInfo(
-        new(
-            "Team Build Admin",
-            TeamBuildCoreMudBlazor.UiSelector,
-            [
-                TeamBuildCoreMudBlazor.Assembly,
-                TeamBuildProjectsBlazor.Assembly,
-                TeamBuildProjectsMudBlazor.Assembly,
-            ]
-        )
-    );
-
-builder.Services.AddMudServices();
-
-// Infrastructure
-
-builder.Services.AddProjectsInfrastructureServices();
-
-// Add services to the container.
-builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-
-builder.Services.AddTeamBuildProjectsBlazorServices();
+startup.ConfigureServices(builder);
 
 var app = builder.Build();
 
-app.MapDefaultEndpoints();
+startup.ConfigureApplication(app);
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAntiforgery();
-
-app.MapStaticAssets();
-app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
-
-app.Run();
+return await app.RunJasperFxCommands(args);

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
 
@@ -8,10 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.4.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\core\TeamBuild.Core.AspireHost\TeamBuild.Core.AspireHost.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\..\core\TeamBuild.Core.AspirePostgres\TeamBuild.Core.AspirePostgres.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\TeamBuild.AdminApp\TeamBuild.AdminApp.csproj" />
   </ItemGroup>
 

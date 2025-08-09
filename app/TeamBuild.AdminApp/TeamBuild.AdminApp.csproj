@@ -4,8 +4,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql" Version="9.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\core\TeamBuild.Core.Blazor\TeamBuild.Core.Blazor.csproj" />
     <ProjectReference Include="..\..\core\TeamBuild.Core.MudBlazor\TeamBuild.Core.MudBlazor.csproj" />
+    <ProjectReference Include="..\..\core\TeamBuild.Core.Services\TeamBuild.Core.Services.csproj" />
     <ProjectReference Include="..\projects\TeamBuild.Projects.Blazor\TeamBuild.Projects.Blazor.csproj" />
     <ProjectReference Include="..\projects\TeamBuild.Projects.Infrastructure\TeamBuild.Projects.Infrastructure.csproj" />
     <ProjectReference Include="..\projects\TeamBuild.Projects.MudBlazor\TeamBuild.Projects.MudBlazor.csproj" />

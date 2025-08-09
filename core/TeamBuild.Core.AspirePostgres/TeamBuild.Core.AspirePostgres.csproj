@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Marten" Version="8.7.0" />
+    <PackageReference Include="Aspire.Hosting" Version="9.4.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TeamBuild.Core.Domain\TeamBuild.Core.Domain.csproj" />
+    <ProjectReference Include="..\TeamBuild.Core.AspireHost\TeamBuild.Core.AspireHost.csproj" />
   </ItemGroup>
 
 </Project>
