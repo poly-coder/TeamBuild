@@ -6,6 +6,7 @@ using Marten;
 using Marten.Services;
 using MudBlazor.Services;
 using TeamBuild.AdminApp.Components;
+using TeamBuild.Core.Application;
 using TeamBuild.Core.Blazor;
 using TeamBuild.Core.MudBlazor;
 using TeamBuild.Core.Services;
@@ -28,7 +29,7 @@ public class Startup
 
     public void ConfigureApplicationServices(WebApplicationBuilder builder)
     {
-        // Fluent validation
+        builder.Services.AddCoreApplicationServices();
     }
 
     public void ConfigureInfrastructureServices(WebApplicationBuilder builder)

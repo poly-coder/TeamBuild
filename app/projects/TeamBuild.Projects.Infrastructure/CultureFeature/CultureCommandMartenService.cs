@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.Metrics;
-using Marten;
+﻿using Marten;
 using Marten.Schema;
+using TeamBuild.Core;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
@@ -8,16 +8,22 @@ namespace TeamBuild.Projects.Infrastructure.CultureFeature;
 
 internal class CultureCommandMartenService(IDocumentSession session) : ICultureCommandService
 {
-    private static readonly Counter<int> DefineCounter = new Meter(
-        "TeamBuild.Projects.Infrastructure.CultureCommandMartenService"
-    ).CreateCounter<int>("DefineCultureCommand");
-
-    public async Task<CultureDefineCommandSuccess> DefineAsync(
+    public async Task<CultureDefineCommandSuccess> Define(
         CultureDefineCommand command,
         CancellationToken cancel = default
     )
     {
-        var doc = new CultureDocument(command.CultureCode, command.EnglishName, command.NativeName);
+        var textSearchData = command.CultureCode.ToTextSearchData(
+            command.EnglishName,
+            command.NativeName
+        );
+
+        var doc = new CultureDocument(
+            command.CultureCode,
+            command.EnglishName,
+            command.NativeName,
+            textSearchData
+        );
 
         session.Store(doc);
 
@@ -26,7 +32,7 @@ internal class CultureCommandMartenService(IDocumentSession session) : ICultureC
         return new CultureDefineCommandSuccess(doc.MapToDetails());
     }
 
-    public async Task<CultureDeleteCommandSuccess> DeleteAsync(
+    public async Task<CultureDeleteCommandSuccess> Delete(
         CultureDeleteCommand command,
         CancellationToken cancel = default
     )
@@ -39,12 +45,19 @@ internal class CultureCommandMartenService(IDocumentSession session) : ICultureC
     }
 }
 
-[DocumentAlias("cultures")]
+[DocumentAlias(TableName)]
 public record CultureDocument(
-    [property: Identity] string CultureCode,
-    string EnglishName,
-    string NativeName
-);
+    [property: Identity]
+    [property: FullTextIndex(IndexName = CultureDocument.FullTextIndexName)]
+        string CultureCode,
+    [property: FullTextIndex(IndexName = CultureDocument.FullTextIndexName)] string EnglishName,
+    [property: FullTextIndex(IndexName = CultureDocument.FullTextIndexName)] string NativeName,
+    string TextSearchData
+)
+{
+    public const string TableName = "cultures";
+    public const string FullTextIndexName = $"idx_{TableName}_ft";
+}
 
 internal static class CultureCommandServiceMapper
 {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace TeamBuild.Core;
 
-public static partial class SystemRegexExtensions
+public static partial class RegexExtensions
 {
     public static string ExtractGroup(this string input, Regex pattern, string groupName)
     {

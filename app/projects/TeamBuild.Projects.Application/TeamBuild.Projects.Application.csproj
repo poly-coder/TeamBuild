@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\core\TeamBuild.Core.Application\TeamBuild.Core.Application.csproj" />
+    <ProjectReference Include="..\..\..\core\TeamBuild.Core.Domain.FluentValidations\TeamBuild.Core.Domain.FluentValidations.csproj" />
     <ProjectReference Include="..\TeamBuild.Projects.Domain\TeamBuild.Projects.Domain.csproj" />
   </ItemGroup>
 

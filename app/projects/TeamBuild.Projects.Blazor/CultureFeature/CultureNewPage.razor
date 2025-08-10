@@ -18,7 +18,7 @@
 
     private async Task HandleOnSave(CultureNewView.FormModel form)
     {
-        var success = await Service.DefineAsync(form.MapToCommand());
+        var success = await Service.Define(form.MapToCommand());
 
         var route = form.GoToDetails
             ? CultureRoutes.Details(success.Culture.CultureCode)

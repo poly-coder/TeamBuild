@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TeamBuild.Core.Domain\TeamBuild.Core.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="ValidationsResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

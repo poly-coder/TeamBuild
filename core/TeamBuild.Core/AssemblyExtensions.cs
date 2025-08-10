@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace TeamBuild.Core;
 
-public static partial class SystemAssemblyExtensions
+public static partial class AssemblyExtensions
 {
     /// <summary>
     /// Gets the simple name of the assembly.
