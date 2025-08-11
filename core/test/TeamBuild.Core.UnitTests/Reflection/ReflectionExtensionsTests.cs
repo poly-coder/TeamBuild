@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using Shouldly;
 using TeamBuild.Core.Reflection;
 
 namespace TeamBuild.Core.UnitTests.Reflection;
@@ -191,4 +190,48 @@ public class ReflectionExtensionsTests
     }
 
     #endregion [ ExtractConstructor ]
+
+    #region [ CombineExpressions ]
+
+    [Theory]
+    [ClassData(typeof(CombineAndAlsoExpressionsTestData))]
+    public void CombineAndAlsoExpressionsTest(LambdaExpression[] expressions, string expected)
+    {
+        var actual = expressions.Select(e => e.Body).CombineAndAlsoExpressions();
+
+        actual.ToString().ShouldBe(expected);
+    }
+
+    public class CombineAndAlsoExpressionsTestData : TheoryData<LambdaExpression[], string>
+    {
+        public CombineAndAlsoExpressionsTestData()
+        {
+            Add([], "True");
+            Add([(bool x) => x], "x");
+            Add([(bool x) => x, (bool y) => y], "(x AndAlso y)");
+            Add([(int x) => x > 10, (int x) => x < 20], "((x > 10) AndAlso (x < 20))");
+        }
+    }
+
+    [Theory]
+    [ClassData(typeof(CombineOrElseExpressionsTestData))]
+    public void CombineOrElseExpressionsTest(LambdaExpression[] expressions, string expected)
+    {
+        var actual = expressions.Select(e => e.Body).CombineOrElseExpressions();
+
+        actual.ToString().ShouldBe(expected);
+    }
+
+    public class CombineOrElseExpressionsTestData : TheoryData<LambdaExpression[], string>
+    {
+        public CombineOrElseExpressionsTestData()
+        {
+            Add([], "False");
+            Add([(bool x) => x], "x");
+            Add([(bool x) => x, (bool y) => y], "(x OrElse y)");
+            Add([(int x) => x > 10, (int x) => x < 20], "((x > 10) OrElse (x < 20))");
+        }
+    }
+
+    #endregion [ CombineExpressions ]
 }

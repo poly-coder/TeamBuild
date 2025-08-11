@@ -10,19 +10,23 @@ public static partial class StringExtensions
     public static string? CoerceTrim(this string? text) => text?.Trim();
 
     #region [ ToTextSearchData ]
-    public static string ToTextSearchData(this string text)
-    {
-        return NonWordRegex().Replace(text.FoldToASCII(), string.Empty).ToLowerInvariant();
-    }
 
     public static string ToTextSearchData(this string text, params ReadOnlySpan<string> components)
     {
-        var sb = new StringBuilder(text.ToTextSearchData());
+        return ToTextSearchData([text, .. components]);
+    }
+
+    public static string ToTextSearchData(params ReadOnlySpan<string> components)
+    {
+        var sb = new StringBuilder();
 
         foreach (var component in components)
         {
-            sb.Append('/');
-            sb.Append(component.ToTextSearchData());
+            if (sb.Length > 0)
+                sb.Append('/');
+            sb.Append(
+                NonWordRegex().Replace(component.FoldToASCII(), string.Empty).ToLowerInvariant()
+            );
         }
 
         return sb.ToString();
