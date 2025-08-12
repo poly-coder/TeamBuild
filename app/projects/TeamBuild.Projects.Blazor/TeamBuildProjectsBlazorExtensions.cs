@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TeamBuild.Core.Blazor;
+using TeamBuild.Core.Services;
 
 namespace TeamBuild.Projects.Blazor;
 
@@ -14,6 +15,6 @@ public static class TeamBuildProjectsBlazorExtensions
             ServiceDescriptor.Singleton<IMainMenuItemProvider, ProjectsMainMenuItemsProvider>()
         );
 
-        return services;
+        return services.AddOpenTelemetrySources(TeamBuildProjectsBlazor.Name);
     }
 }

@@ -1,29 +1,28 @@
 ﻿@inherits TbCustomView
-@using System.ComponentModel.DataAnnotations
 
 @{
     Render(__builder);
 }
 
-@code {
+@code
+{
     [Parameter]
     public Func<FormModel, Task>? OnSave { get; set; }
 
-    #region [ Form ]
-
     [Parameter]
     public FormModel? InitialForm { get; set; }
-    protected FormModel? form;
+
+    protected FormModel? Form { get; set; }
     private FormModel? previousInitialForm;
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
 
-        if (form is null || previousInitialForm is null || !previousInitialForm.IsEqualTo(InitialForm))
+        if (Form is null || previousInitialForm is null || !previousInitialForm.IsEqualTo(InitialForm))
         {
             previousInitialForm = InitialForm?.Clone() ?? new FormModel();
-            form = InitialForm?.Clone() ?? new FormModel();
+            Form = InitialForm?.Clone() ?? new FormModel();
         }
     }
 
@@ -58,32 +57,29 @@
         }
     }
 
-    #endregion [ Form ]
-
-
-    protected bool isSaving;
-    protected Exception? exception;
+    protected bool IsSaving { get; set; }
+    protected Exception? Exception { get; set; }
 
     protected async Task HandleValidSubmit()
     {
-        if (form is null || isSaving || OnSave is null) return;
+        if (Form is null || IsSaving || OnSave is null) return;
 
-        isSaving = true;
-        exception = null;
+        IsSaving = true;
+        Exception = null;
 
         StateHasChanged();
 
         try
         {
-            await OnSave(form);
+            await OnSave(Form);
         }
         catch (Exception ex)
         {
-            exception = ex;
+            Exception = ex;
         }
         finally
         {
-            isSaving = false;
+            IsSaving = false;
         }
     }
 }

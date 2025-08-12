@@ -4,52 +4,47 @@
 @inherits TeamBuild.Projects.Blazor.CultureFeature.CultureNewView
 @attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
 
-@if (form is null)
+@if (Form is null)
 {
     return;
 }
 
-<EditForm Model="@form" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@Form" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
 
     <MudCard>
         <MudCardContent>
             <MudTextField Label="Culture Code"
                           HelperText="Valid ISO culture code"
-                          @bind-Value="form.CultureCode"
-                          For="@(() => form.CultureCode)"
-                          Disabled="isSaving" />
+                          @bind-Value="Form.CultureCode"
+                          For="@(() => Form.CultureCode)"
+                          Disabled="IsSaving" />
 
             <MudTextField Label="English Name"
                           HelperText="English name of the culture"
-                          @bind-Value="form.EnglishName"
-                          For="@(() => form.EnglishName)"
-                          Disabled="isSaving" />
+                          @bind-Value="Form.EnglishName"
+                          For="@(() => Form.EnglishName)"
+                          Disabled="IsSaving" />
 
             <MudTextField Label="Native Name"
                           HelperText="Native name of the culture"
-                          @bind-Value="form.NativeName"
-                          For="@(() => form.NativeName)"
-                          Disabled="isSaving" />
+                          @bind-Value="Form.NativeName"
+                          For="@(() => Form.NativeName)"
+                          Disabled="IsSaving" />
         </MudCardContent>
         <MudCardActions Class="gap-4">
             <MudSwitch Label="Go to details"
-                       @bind-Value="form.GoToDetails"
-                       For="@(() => form.GoToDetails)"
-                       Disabled="isSaving"/>
+                       @bind-Value="Form.GoToDetails"
+                       For="@(() => Form.GoToDetails)"
+                       Disabled="IsSaving"/>
 
             <MudSpacer/>
 
-            <TbCancelButton Href="@CultureRoutes.List()" Disabled="isSaving"/>
+            <TbCancelButton Href="@CultureRoutes.List()" Disabled="IsSaving"/>
 
-            <TbResetButton Disabled="isSaving"/>
+            <TbResetButton Disabled="IsSaving"/>
 
-            <TbSaveButton Loading="isSaving" Disabled="isSaving">
-                <LoadingContent>
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                    <MudText Class="ms-2">Saving</MudText>
-                </LoadingContent>
-            </TbSaveButton>
+            <TbMudSaveButton Loading="IsSaving" Disabled="IsSaving"/>
         </MudCardActions>
         <MudCardContent>
             <MudText Color="Color.Error">
@@ -59,7 +54,7 @@
     </MudCard>
 </EditForm>
 
-@if (exception is not null)
+@if (Exception is not null)
 {
-    <TbExceptionAlert Exception="exception" />
+    <TbExceptionAlert Exception="Exception" />
 }

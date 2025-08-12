@@ -18,10 +18,19 @@ public static class CultureFeatureExtensions
             {
                 options.Schema.For<CultureDocument>();
             })
+            // ICultureCommandService
             .AddSingleton<CultureCommandServiceMetricsAspect>()
             .AddScoped<ICultureCommandService>(provider =>
                 provider.CreateInstance<CultureCommandServiceDecorator>(
-                    provider.CreateInstance<CultureCommandMartenService>(),
+                    provider.CreateInstance<CultureMartenCommandService>(),
+                    new TracingAspect(TeamBuildProjectsApplication.ActivitySource)
+                )
+            )
+            // ICultureQueryService
+            .AddSingleton<CultureQueryServiceMetricsAspect>()
+            .AddScoped<ICultureQueryService>(provider =>
+                provider.CreateInstance<CultureQueryServiceDecorator>(
+                    provider.CreateInstance<CultureMartenQueryService>(),
                     new TracingAspect(TeamBuildProjectsApplication.ActivitySource)
                 )
             );

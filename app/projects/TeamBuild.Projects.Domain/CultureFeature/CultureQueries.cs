@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using TeamBuild.Core;
 using TeamBuild.Core.Domain;
 using TeamBuild.Core.Domain.FluentValidations;
 
@@ -9,13 +8,18 @@ public abstract record CultureQuery : IDomainQuery;
 
 public abstract record CultureQuerySuccess : IDomainQuerySuccess;
 
+public record CultureListQuery(string? TextSearch) : CultureQuery;
+
+public record CultureListQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
+    : CultureQuerySuccess;
+
 public record CultureGetByIdQuery(string CultureCode) : CultureQuery;
 
 public record CultureGetByIdQuerySuccess(CultureDetails Culture) : CultureQuerySuccess;
 
-public record CultureGetByIdsQuery(string[] CultureCodes) : CultureQuery;
+public record CultureGetByIdsQuery(IReadOnlyList<string> CultureCodes) : CultureQuery;
 
-public record CultureGetByIdsQuerySuccess(Option<CultureDetails>[] CultureList)
+public record CultureGetByIdsQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
     : CultureQuerySuccess;
 
 public class CultureCreateQueryValidator : AbstractValidator<CultureGetByIdQuery>

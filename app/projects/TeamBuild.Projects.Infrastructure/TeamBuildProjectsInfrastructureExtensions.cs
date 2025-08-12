@@ -1,5 +1,7 @@
 ﻿using Marten;
 using Microsoft.Extensions.DependencyInjection;
+using TeamBuild.Core.Services;
+using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Infrastructure.CultureFeature;
 
 namespace TeamBuild.Projects.Infrastructure;
@@ -10,7 +12,12 @@ public static class TeamBuildProjectsInfrastructureExtensions
         this IServiceCollection services
     )
     {
-        return services.AddCultureInfrastructureServices();
+        return services
+            .AddCultureInfrastructureServices()
+            .AddOpenTelemetrySources(
+                TeamBuildProjectsApplication.Name,
+                TeamBuildProjectsInfrastructure.Name
+            );
     }
 
     public static MartenServiceCollectionExtensions.MartenConfigurationExpression AddProjectsMartenServices(

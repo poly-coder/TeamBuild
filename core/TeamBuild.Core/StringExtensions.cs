@@ -9,7 +9,7 @@ public static partial class StringExtensions
     [return: NotNullIfNotNull(nameof(text))]
     public static string? CoerceTrim(this string? text) => text?.Trim();
 
-    #region [ ToTextSearchData ]
+    #region [ ToTextSearchData/Query ]
 
     public static string ToTextSearchData(this string text, params ReadOnlySpan<string> components)
     {
@@ -32,8 +32,19 @@ public static partial class StringExtensions
         return sb.ToString();
     }
 
+    public static IReadOnlyList<string> ToTextSearchQuery(this string? query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return [];
+
+        return WhiteSpacesRegex().Split(query).Select(x => x.ToTextSearchData()).ToArray();
+    }
+
     [GeneratedRegex(@"\W")]
     private static partial Regex NonWordRegex();
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex WhiteSpacesRegex();
 
     #endregion [ ToTextSearchData ]
 

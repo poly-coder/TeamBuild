@@ -24,57 +24,31 @@ public class CultureCommandServiceDecorator(
     LoggingAspect loggingAspect,
     FluentValidationAspect validationAspect,
     CultureCommandServiceMetricsAspect metricsAspect
-) : ICultureCommandService, IDisposable
+)
+    : StandardServiceDecorator(tracingAspect, loggingAspect, validationAspect, metricsAspect),
+        ICultureCommandService,
+        IDisposable
 {
     public Task<CultureDefineCommandSuccess> Define(
         CultureDefineCommand command,
         CancellationToken cancel = default
-    )
-    {
-        var targetType = service.GetType();
-        IReadOnlyList<object?> parameters = [command];
-
-        return tracingAspect.ExecuteAsync(
-            targetType,
-            () =>
-                loggingAspect.ExecuteAsync(
-                    targetType,
-                    2,
-                    () =>
-                        validationAspect.ExecuteAsync(
-                            parameters,
-                            () =>
-                                metricsAspect.ExecuteAsync(
-                                    parameters,
-                                    () => service.Define(command, cancel)
-                                ),
-                            cancel
-                        )
-                )
+    ) =>
+        ExecuteAsync(
+            targetType: service.GetType(),
+            parameters: [command],
+            action: () => service.Define(command, cancel),
+            cancel: cancel
         );
-    }
 
     public Task<CultureDeleteCommandSuccess> Delete(
         CultureDeleteCommand command,
         CancellationToken cancel = default
     ) =>
-        tracingAspect.ExecuteAsync(
-            service.GetType(),
-            () =>
-                loggingAspect.ExecuteAsync(
-                    service.GetType(),
-                    2,
-                    () =>
-                        validationAspect.ExecuteAsync(
-                            [command],
-                            () =>
-                                metricsAspect.ExecuteAsync(
-                                    [command],
-                                    () => service.Delete(command, cancel)
-                                ),
-                            cancel
-                        )
-                )
+        ExecuteAsync(
+            targetType: service.GetType(),
+            parameters: [command],
+            action: () => service.Delete(command, cancel),
+            cancel: cancel
         );
 
     public void Dispose()
@@ -88,13 +62,13 @@ public class CultureCommandServiceMetricsAspect : MetricsAspect
     private static readonly Counter<long> DefineCounter =
         TeamBuildProjectsApplication.Meter.CreateCounter<long>(
             name: "culture-define",
-            description: "Culture define operations"
+            description: "Culture define commands"
         );
 
     private static readonly Counter<long> DeleteCounter =
         TeamBuildProjectsApplication.Meter.CreateCounter<long>(
             name: "culture-delete",
-            description: "Culture delete operations"
+            description: "Culture delete commands"
         );
 
     protected override void Count(

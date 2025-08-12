@@ -1,0 +1,54 @@
+@using MudBlazor
+@using TeamBuild.Projects.Domain.CultureFeature
+
+@inherits TeamBuild.Projects.Blazor.CultureFeature.CultureListView
+@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
+
+@if (Form is null)
+{
+    return;
+}
+
+<EditForm Model="@Form" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <MudStack Row="true" Spacing="4">
+        <MudTextField Label="Search"
+                      @bind-Value="Form.TextSearch"
+                      For="@(() => Form.TextSearch)"
+                      Disabled="IsSaving"
+                      Class="flex-grow-1" />
+        <MudIconButton Icon="@Icons.Material.Filled.Search"
+                       Disabled="IsSaving"
+                       ButtonType="ButtonType.Submit" />
+    </MudStack>
+</EditForm>
+
+@if (Exception is not null)
+{
+    <TbExceptionAlert Exception="Exception" />
+}
+
+@if (CultureList is { Count: > 0 })
+{
+    <MudList T="CultureDetails"
+             SelectionMode="SelectionMode.SingleSelection"
+             SelectedValueChanged="HandleSelectedCulture">
+        @foreach (var culture in CultureList)
+        {
+            <MudListItem Value="@culture">
+                <MudStack Row="true" Spacing="8">
+                    <MudIcon Icon="@Icons.Material.Filled.Language" />
+                    <MudText Typo="Typo.body1">@culture.EnglishName</MudText>
+                    <MudSpacer />
+                    <MudText Typo="Typo.body1">@culture.NativeName</MudText>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" />
+                </MudStack>
+            </MudListItem>
+        }
+    </MudList>
+}
+else
+{
+    <MudText Typo="Typo.caption">No cultures found.</MudText>
+}

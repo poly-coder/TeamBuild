@@ -1,12 +1,11 @@
 ﻿using Marten;
-using Marten.Schema;
 using TeamBuild.Core;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Infrastructure.CultureFeature;
 
-internal class CultureCommandMartenService(IDocumentSession session) : ICultureCommandService
+internal class CultureMartenCommandService(IDocumentSession session) : ICultureCommandService
 {
     public async Task<CultureDefineCommandSuccess> Define(
         CultureDefineCommand command,
@@ -43,24 +42,4 @@ internal class CultureCommandMartenService(IDocumentSession session) : ICultureC
 
         return new CultureDeleteCommandSuccess();
     }
-}
-
-[DocumentAlias(TableName)]
-public record CultureDocument(
-    [property: Identity]
-    [property: FullTextIndex(IndexName = CultureDocument.FullTextIndexName)]
-        string CultureCode,
-    [property: FullTextIndex(IndexName = CultureDocument.FullTextIndexName)] string EnglishName,
-    [property: FullTextIndex(IndexName = CultureDocument.FullTextIndexName)] string NativeName,
-    string TextSearchData
-)
-{
-    public const string TableName = "cultures";
-    public const string FullTextIndexName = $"idx_{TableName}_ft";
-}
-
-internal static class CultureCommandServiceMapper
-{
-    internal static CultureDetails MapToDetails(this CultureDocument doc) =>
-        new(doc.CultureCode, doc.EnglishName, doc.NativeName);
 }

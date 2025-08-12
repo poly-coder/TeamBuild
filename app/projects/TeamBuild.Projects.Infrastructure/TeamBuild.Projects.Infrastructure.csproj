@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\TeamBuild.Core.MartenExt\TeamBuild.Core.MartenExt.csproj" />
+    <ProjectReference Include="..\..\..\core\TeamBuild.Core.Services\TeamBuild.Core.Services.csproj" />
     <ProjectReference Include="..\TeamBuild.Projects.Application\TeamBuild.Projects.Application.csproj" />
   </ItemGroup>
 

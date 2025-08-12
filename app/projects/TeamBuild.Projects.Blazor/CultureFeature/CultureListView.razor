@@ -1,0 +1,41 @@
+@using TeamBuild.Projects.Domain.CultureFeature
+@inherits TbCustomFormView<CultureListView.FormModel>
+
+@{
+    Render(__builder);
+}
+
+@code
+{
+    [Parameter]
+    public IReadOnlyList<CultureDetails>? CultureList { get; set; }
+
+    [Parameter]
+    public EventCallback<CultureDetails> OnCultureSelected { get; set; }
+
+    protected async Task HandleSelectedCulture(CultureDetails? culture)
+    {
+        if (culture is not null)
+            await OnCultureSelected.InvokeAsync(culture);
+    }
+
+    public class FormModel : FormModelBase
+    {
+        public string TextSearch { get; set; } = "";
+
+        public override FormModel Clone()
+        {
+            return new FormModel
+            {
+                TextSearch = TextSearch,
+            };
+        }
+
+        public override bool IsEqualTo(FormModel? newOne)
+        {
+            if (newOne is null) return false;
+
+            return TextSearch == newOne.TextSearch;
+        }
+    }
+}

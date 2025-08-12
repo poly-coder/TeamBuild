@@ -1,16 +1,76 @@
+@using System.Diagnostics
+@using TeamBuild.Projects.Application.CultureFeature
+@using TeamBuild.Projects.Domain.CultureFeature
 @attribute [Route(CultureRoutes.ListRoute)]
+
+@inject NavigationManager Nav
+@inject ICultureQueryService Service
 
 <TbPageComponent Title="Cultures" Breadcrumbs="@Breadcrumbs">
     <TopBar>
         <TbAddButton Href="@CultureRoutes.New()" />
     </TopBar>
 
-    <ChildContent>Hello world</ChildContent>
+    <ChildContent>
+        <CultureListView OnSave="HandleOnSearch"
+                         OnCultureSelected="HandleOnCultureSelected"
+                         CultureList="cultureList"/>
+    </ChildContent>
 </TbPageComponent>
 
 @code
 {
+    private IReadOnlyList<CultureDetails> cultureList = [];
+
     private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
         TbBreadcrumbItem.Current("Cultures", TbIcon.List)
     ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await HandleOnSearch(new CultureListView.FormModel());
+    }
+
+    private async Task HandleOnSearch(CultureListView.FormModel form)
+    {
+        var activity = TeamBuildProjectsBlazor.ActivitySource.StartActivity(
+            name: $"{nameof(CultureListPage)}.{nameof(HandleOnSearch)}",
+            kind: ActivityKind.Client,
+            tags: new ActivityTagsCollection
+            {
+                { "filter.text", form.TextSearch }
+            });
+
+        try
+        {
+            cultureList = [];
+
+            StateHasChanged();
+
+            var success = await Service.List(form.MapToQuery());
+
+            cultureList = success.CultureList;
+
+            StateHasChanged();
+
+            activity?.SetTag("result.count", cultureList.Count);
+            activity?.SetStatus(ActivityStatusCode.Ok);
+            activity?.Stop();
+        }
+        catch (Exception exception)
+        {
+            activity?.AddException(exception);
+            activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
+            activity?.Stop();
+
+            throw;
+        }
+    }
+
+
+    private void HandleOnCultureSelected(CultureDetails culture)
+    {
+        Nav.NavigateTo(CultureRoutes.Details(culture.CultureCode));
+    }
 }

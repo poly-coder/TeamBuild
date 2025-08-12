@@ -12,4 +12,16 @@ internal static class CultureMapper
             NativeName: form.NativeName
         );
     }
+
+    //public static CultureDeleteCommand MapToCommand(this CultureDeleteView.FormModel form)
+    //{
+    //    return new CultureDeleteCommand(
+    //        CultureCode: form.CultureCode,
+    //    );
+    //}
+
+    public static CultureListQuery MapToQuery(this CultureListView.FormModel form)
+    {
+        return new CultureListQuery(TextSearch: form.TextSearch);
+    }
 }
