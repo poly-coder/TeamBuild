@@ -80,6 +80,7 @@ public class Startup
     {
         builder
             .Services.AddTeamBuildCoreBlazorServices()
+            .AddTeamBuildCoreMudBlazorServices()
             .AddAppInfo(
                 new(
                     "Team Build Admin",

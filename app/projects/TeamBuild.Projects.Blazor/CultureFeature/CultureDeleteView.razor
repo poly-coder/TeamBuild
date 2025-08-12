@@ -1,0 +1,26 @@
+@using TeamBuild.Projects.Domain.CultureFeature
+@inherits TbCustomView
+
+@{
+    Render(__builder);
+}
+
+@code
+{
+    [Parameter]
+    public CultureDetails? Culture { get; set; }
+
+    [Parameter]
+    public Exception? Exception { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleteClick { get; set; }
+
+    protected async Task HandleDeleteClick()
+    {
+        await OnDeleteClick.InvokeAsync();
+    }
+}

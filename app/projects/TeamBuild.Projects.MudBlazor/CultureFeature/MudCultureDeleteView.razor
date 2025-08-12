@@ -1,0 +1,43 @@
+@using MudBlazor
+@using TeamBuild.Projects.Blazor.CultureFeature
+
+@inherits TeamBuild.Projects.Blazor.CultureFeature.CultureDeleteView
+
+@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
+
+@inject ISnackbar Snackbar
+
+@if (Culture is not null)
+{
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Culture Code"
+                          Value="Culture.CultureCode"
+                          ReadOnly="true"/>
+
+            <MudTextField Label="English Name"
+                          Value="Culture.EnglishName"
+                          ReadOnly="true" />
+
+            <MudTextField Label="Native Name"
+                          Value="Culture.NativeName"
+                          ReadOnly="true" />
+        </MudCardContent>
+
+        <MudCardActions Class="gap-4">
+            <MudSpacer />
+
+            <TbCancelButton Href="@CultureRoutes.Details(Culture.CultureCode)" />
+
+            <TbMudDeleteButton Loading="IsLoading"
+                               Disabled="IsLoading"
+                               ButtonType="TbButtonType.Button"
+                               OnClick="HandleDeleteClick" />
+        </MudCardActions>
+    </MudCard>
+}
+
+@if (Exception is not null)
+{
+    <TbExceptionAlert Exception="Exception" />
+}

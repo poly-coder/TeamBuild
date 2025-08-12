@@ -1,0 +1,24 @@
+@using MudBlazor
+
+@inherits TbDeleteButton
+
+<TbDeleteButton ButtonType="@TbButtonType.Submit"
+              Color="@(Color ?? TbColor.Error)"
+              Disabled="@Disabled"
+              EndIcon="@EndIcon"
+              FullWidth="@FullWidth"
+              Href="@Href"
+              IconColor="@IconColor"
+              Loading="@Loading"
+              Rel="@Rel"
+              Size="@Size"
+              StartIcon="@(StartIcon ?? TbIcon.Delete)"
+              Target="@Target"
+              Variant="@Variant"
+              OnClick="@OnClick"
+              ChildContent="@ChildContent">
+    <LoadingContent>
+        <MudProgressCircular Class="ms-n1" Size="global::MudBlazor.Size.Small" Indeterminate="true"/>
+        <MudText Class="ms-2">Deleting</MudText>
+    </LoadingContent>
+</TbDeleteButton>

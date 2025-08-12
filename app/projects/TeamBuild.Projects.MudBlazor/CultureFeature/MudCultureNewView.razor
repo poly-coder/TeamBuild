@@ -32,6 +32,7 @@
                           For="@(() => Form.NativeName)"
                           Disabled="IsSaving" />
         </MudCardContent>
+
         <MudCardActions Class="gap-4">
             <MudSwitch Label="Go to details"
                        @bind-Value="Form.GoToDetails"
@@ -46,6 +47,7 @@
 
             <TbMudSaveButton Loading="IsSaving" Disabled="IsSaving"/>
         </MudCardActions>
+
         <MudCardContent>
             <MudText Color="Color.Error">
                 <ValidationSummary />

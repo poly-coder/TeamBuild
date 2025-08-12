@@ -1,7 +1,8 @@
 @using TeamBuild.Projects.Application.CultureFeature
 @attribute [Route(CultureRoutes.NewRoute)]
+
 @inject NavigationManager Nav
-@inject ICultureCommandService Service
+@inject ICultureCommandService CommandService
 
 <TbPageComponent Title="New Culture" Breadcrumbs="@Breadcrumbs">
     <ChildContent>
@@ -18,7 +19,7 @@
 
     private async Task HandleOnSave(CultureNewView.FormModel form)
     {
-        var success = await Service.Define(form.MapToCommand());
+        var success = await CommandService.Define(form.MapToCommand());
 
         var route = form.GoToDetails
             ? CultureRoutes.Details(success.Culture.CultureCode)

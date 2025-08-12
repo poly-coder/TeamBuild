@@ -1,4 +1,11 @@
+@using TeamBuild.Projects.Application.CultureFeature
+@using TeamBuild.Projects.Domain.CultureFeature
 @attribute [Route(CultureRoutes.DeleteRoute)]
+
+@inject NavigationManager Nav
+@inject ICultureCommandService CommandService
+@inject ICultureQueryService QueryService
+@inject IToastService Toasts
 
 @if (CultureId is null)
 {
@@ -6,17 +13,16 @@
 }
 
 <TbPageComponent Title="Delete Culture" Breadcrumbs="@Breadcrumbs">
-    <ChildContent>Hello world</ChildContent>
+    <ChildContent>
+        <CultureDeleteView Culture="@Culture"
+            Exception="@(LoadException ?? DeleteException)"
+            IsLoading="@(IsLoading || IsDeleting)"
+            OnDeleteClick="HandleOnDeleteClick" />
 
-    <BottomBar>
-        <TbCancelButton Href="@CultureRoutes.List()" />
-
-        <TbDeleteButton OnClick="HandleDeleteClick" Loading="isSaving" Disabled="isSaving">
-            <LoadingContent>
-                Deleting...
-            </LoadingContent>
-        </TbDeleteButton>
-    </BottomBar>
+        <TbJsonView Value="@IsLoading"/>
+        <TbJsonView Value="@Culture"/>
+        <TbJsonView Value="@LoadException"/>
+    </ChildContent>
 </TbPageComponent>
 
 @code
@@ -29,11 +35,66 @@
         TbBreadcrumbItem.Current("Edit Culture", TbIcon.Edit)
     ];
 
-    private bool isSaving;
-
-    private void HandleDeleteClick()
+    protected override async Task OnInitializedAsync()
     {
-        isSaving = !isSaving;
+        await base.OnInitializedAsync();
+
+    }
+
+    protected bool IsLoading;
+    protected Exception? LoadException;
+    protected CultureDetails? Culture;
+
+    private async Task HandleLoad()
+    {
+        if (string.IsNullOrWhiteSpace(CultureId)) return;
+
+        IsLoading = true;
+        LoadException = null;
+        Culture = null;
+
+        StateHasChanged();
+
+        try
+        {
+            Culture = (await QueryService.GetById(new(CultureId))).Culture;
+        }
+        catch (Exception exception)
+        {
+            LoadException = exception;
+            Toasts.ShowToast("Failed to load culture.", TbSeverity.Error);
+        }
+
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+
+    protected bool IsDeleting;
+    protected Exception? DeleteException;
+
+    private async Task HandleOnDeleteClick()
+    {
+        if (string.IsNullOrWhiteSpace(CultureId)) return;
+
+        IsDeleting = true;
+        DeleteException = null;
+
+        StateHasChanged();
+
+        try
+        {
+            await CommandService.Delete(new(CultureId));
+            Toasts.ShowToast("Culture deleted successfully.", TbSeverity.Success);
+            Nav.NavigateTo(CultureRoutes.List());
+        }
+        catch (Exception exception)
+        {
+            DeleteException = exception;
+            Toasts.ShowToast("Failed to delete culture.", TbSeverity.Error);
+        }
+
+        IsDeleting = false;
+        StateHasChanged();
     }
 }
-

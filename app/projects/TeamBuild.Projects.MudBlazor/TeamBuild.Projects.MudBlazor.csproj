@@ -16,8 +16,4 @@
     <ProjectReference Include="..\..\..\core\TeamBuild.Core.MudBlazor\TeamBuild.Core.MudBlazor.csproj" />
     <ProjectReference Include="..\TeamBuild.Projects.Blazor\TeamBuild.Projects.Blazor.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CultureFeature\" />
-  </ItemGroup>
 </Project>

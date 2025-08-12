@@ -72,6 +72,19 @@ public static class TbMudComponentExtensions
         };
     }
 
+    public static Severity? MapToMudSeverity(this TbSeverity? source)
+    {
+        return source switch
+        {
+            TbSeverity.Normal => Severity.Normal,
+            TbSeverity.Info => Severity.Info,
+            TbSeverity.Success => Severity.Success,
+            TbSeverity.Warning => Severity.Warning,
+            TbSeverity.Error => Severity.Error,
+            _ => null,
+        };
+    }
+
     public static BreadcrumbItem MapToBreadcrumbItem(this TbBreadcrumbItem source)
     {
         ArgumentNullException.ThrowIfNull(source);

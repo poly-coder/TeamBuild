@@ -4,7 +4,7 @@
 @attribute [Route(CultureRoutes.ListRoute)]
 
 @inject NavigationManager Nav
-@inject ICultureQueryService Service
+@inject ICultureQueryService QueryService
 
 <TbPageComponent Title="Cultures" Breadcrumbs="@Breadcrumbs">
     <TopBar>
@@ -48,7 +48,7 @@
 
             StateHasChanged();
 
-            var success = await Service.List(form.MapToQuery());
+            var success = await QueryService.List(form.MapToQuery());
 
             cultureList = success.CultureList;
 
