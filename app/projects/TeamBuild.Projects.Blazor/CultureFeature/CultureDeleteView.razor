@@ -1,8 +1,45 @@
+@using MudBlazor
 @using TeamBuild.Projects.Domain.CultureFeature
-@inherits TbCustomView
 
-@{
-    Render(__builder);
+@if (Culture is not null)
+{
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">Are you sure you want to delete culture?</MudText>
+        </MudCardHeader>
+
+        <MudCardContent>
+            <MudTextField Label="Culture Code"
+                          Value="Culture.CultureCode"
+                          ReadOnly="true"/>
+
+            <MudTextField Label="English Name"
+                          Value="Culture.EnglishName"
+                          ReadOnly="true"/>
+
+            <MudTextField Label="Native Name"
+                          Value="Culture.NativeName"
+                          ReadOnly="true"/>
+        </MudCardContent>
+
+        <MudCardActions Class="gap-4">
+            <MudSpacer/>
+
+            <TbCancelButton Loading="IsLoading"
+                            Disabled="IsLoading"
+                            OnClick="() => OnCancelClick.InvokeAsync()"/>
+
+            <TbDeleteButton Loading="IsLoading"
+                            Disabled="IsLoading"
+                            ButtonType="TbButtonType.Button"
+                            OnClick="() => OnDeleteClick.InvokeAsync()"/>
+        </MudCardActions>
+    </MudCard>
+}
+
+@if (Exception is not null)
+{
+    <TbExceptionAlert Exception="Exception" />
 }
 
 @code
@@ -17,10 +54,8 @@
     public bool IsLoading { get; set; }
 
     [Parameter]
-    public EventCallback OnDeleteClick { get; set; }
+    public EventCallback OnCancelClick { get; set; }
 
-    protected async Task HandleDeleteClick()
-    {
-        await OnDeleteClick.InvokeAsync();
-    }
+    [Parameter]
+    public EventCallback OnDeleteClick { get; set; }
 }
