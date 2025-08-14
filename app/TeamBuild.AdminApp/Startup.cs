@@ -12,7 +12,6 @@ using TeamBuild.Core.MudBlazor;
 using TeamBuild.Core.Services;
 using TeamBuild.Projects.Blazor;
 using TeamBuild.Projects.Infrastructure;
-using TeamBuild.Projects.MudBlazor;
 
 namespace TeamBuild.AdminApp;
 
@@ -85,11 +84,7 @@ public class Startup
                 new(
                     "Team Build Admin",
                     TeamBuildCoreMudBlazor.UiSelector,
-                    [
-                        TeamBuildCoreMudBlazor.Assembly,
-                        TeamBuildProjectsBlazor.Assembly,
-                        TeamBuildProjectsMudBlazor.Assembly,
-                    ]
+                    [TeamBuildCoreMudBlazor.Assembly, TeamBuildProjectsBlazor.Assembly]
                 )
             );
 

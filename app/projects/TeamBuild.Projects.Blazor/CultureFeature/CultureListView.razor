@@ -1,14 +1,28 @@
+@using MudBlazor
 @using TeamBuild.Projects.Domain.CultureFeature
-@inherits TbCustomFormView<CultureListView.FormModel>
 
-@{
-    Render(__builder);
+@if (CultureList is { Count: > 0 })
+{
+    <MudList T="CultureDetails"
+             SelectionMode="SelectionMode.SingleSelection"
+             SelectedValueChanged="HandleSelectedCulture">
+        @foreach (var culture in CultureList)
+        {
+            <MudListItem Value="@culture">
+                <CultureListItemView Culture="@culture"/>
+            </MudListItem>
+        }
+    </MudList>
+}
+else
+{
+    <MudText Typo="Typo.caption">No cultures found.</MudText>
 }
 
 @code
 {
     [Parameter]
-    public IReadOnlyList<CultureDetails>? CultureList { get; set; }
+    public IReadOnlyList<CultureDetails> CultureList { get; set; } = [];
 
     [Parameter]
     public EventCallback<CultureDetails> OnCultureSelected { get; set; }
@@ -17,25 +31,5 @@
     {
         if (culture is not null)
             await OnCultureSelected.InvokeAsync(culture);
-    }
-
-    public class FormModel : FormModelBase
-    {
-        public string TextSearch { get; set; } = "";
-
-        public override FormModel Clone()
-        {
-            return new FormModel
-            {
-                TextSearch = TextSearch,
-            };
-        }
-
-        public override bool IsEqualTo(FormModel? newOne)
-        {
-            if (newOne is null) return false;
-
-            return TextSearch == newOne.TextSearch;
-        }
     }
 }

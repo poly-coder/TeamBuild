@@ -1,0 +1,43 @@
+@using MudBlazor
+@using TeamBuild.Projects.Domain.CultureFeature
+
+@inherits TbFormView<CultureListSearchView.FormModel>
+
+<EditForm Model="@Form" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+
+    <MudStack Row="true" Spacing="4">
+        <MudTextField Label="Search"
+                      @bind-Value="Form.TextSearch"
+                      For="@(() => Form.TextSearch)"
+                      Disabled="IsSubmitting"
+                      Class="flex-grow-1" />
+
+        <MudIconButton Icon="@Icons.Material.Filled.Search"
+                       Disabled="IsSubmitting"
+                       ButtonType="ButtonType.Submit" />
+    </MudStack>
+</EditForm>
+
+@code
+{
+    public class FormModel : FormModelBase<FormModel>
+    {
+        public string TextSearch { get; set; } = "";
+
+        public override FormModel Clone()
+        {
+            return new FormModel
+            {
+                TextSearch = TextSearch,
+            };
+        }
+
+        public override bool IsEqualTo(FormModel? newOne)
+        {
+            if (newOne is null) return false;
+
+            return TextSearch == newOne.TextSearch;
+        }
+    }
+}

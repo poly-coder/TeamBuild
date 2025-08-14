@@ -13,7 +13,6 @@
     <ProjectReference Include="..\..\core\TeamBuild.Core.Services\TeamBuild.Core.Services.csproj" />
     <ProjectReference Include="..\projects\TeamBuild.Projects.Blazor\TeamBuild.Projects.Blazor.csproj" />
     <ProjectReference Include="..\projects\TeamBuild.Projects.Infrastructure\TeamBuild.Projects.Infrastructure.csproj" />
-    <ProjectReference Include="..\projects\TeamBuild.Projects.MudBlazor\TeamBuild.Projects.MudBlazor.csproj" />
     <ProjectReference Include="..\TeamBuild.ServiceDefaults\TeamBuild.ServiceDefaults.csproj" />
   </ItemGroup>
 

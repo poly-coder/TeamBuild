@@ -13,14 +13,7 @@ internal static class CultureMapper
         );
     }
 
-    //public static CultureDeleteCommand MapToCommand(this CultureDeleteView.FormModel form)
-    //{
-    //    return new CultureDeleteCommand(
-    //        CultureCode: form.CultureCode,
-    //    );
-    //}
-
-    public static CultureListQuery MapToQuery(this CultureListView.FormModel form)
+    public static CultureListQuery MapToQuery(this CultureListSearchView.FormModel form)
     {
         return new CultureListQuery(TextSearch: form.TextSearch);
     }

@@ -12,51 +12,58 @@
     </TopBar>
 
     <ChildContent>
-        <CultureListView OnSave="HandleOnSearch"
-                         OnCultureSelected="HandleOnCultureSelected"
-                         CultureList="cultureList"/>
+        @if (search is not null)
+        {
+            <CultureListSearchView OnSubmit="f => search?.Execute(f)"
+                                   IsSubmitting="search.Stage == TbOperationStage.Running" />
+
+            if (search.TryGetException(out var exception))
+            {
+                <TbExceptionAlert Exception="exception" />
+            }
+
+            <CultureListView CultureList="cultureList"
+                             OnCultureSelected="HandleOnCultureSelected"/>
+        }
+
     </ChildContent>
 </TbPageComponent>
 
 @code
 {
-    private IReadOnlyList<CultureDetails> cultureList = [];
+    private List<CultureDetails> cultureList = [];
 
     private IReadOnlyCollection<TbBreadcrumbItem> Breadcrumbs => [
         TbBreadcrumbItem.Current("Cultures", TbIcon.List)
     ];
 
+    private TbAsyncOperation<CultureListSearchView.FormModel, CultureListQuerySuccess>? search;
+
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await HandleOnSearch(new CultureListView.FormModel());
+        search = new(ExecuteSearch) { OnCompleted = HandleSearchCompleted };
+        search.Execute(new());
     }
 
-    private async Task HandleOnSearch(CultureListView.FormModel form)
+    private async Task<CultureListQuerySuccess> ExecuteSearch(
+        CultureListSearchView.FormModel form,
+        CancellationToken cancel)
     {
         var activity = TeamBuildProjectsBlazor.ActivitySource.StartActivity(
-            name: $"{nameof(CultureListPage)}.{nameof(HandleOnSearch)}",
-            kind: ActivityKind.Client,
-            tags: new ActivityTagsCollection
-            {
-                { "filter.text", form.TextSearch }
-            });
+            name: $"{nameof(CultureListPage)}.{nameof(ExecuteSearch)}",
+            kind: ActivityKind.Client);
 
         try
         {
-            cultureList = [];
+            var success = await QueryService.List(form.MapToQuery(), cancel);
 
-            StateHasChanged();
-
-            var success = await QueryService.List(form.MapToQuery());
-
-            cultureList = success.CultureList;
-
-            StateHasChanged();
-
-            activity?.SetTag("result.count", cultureList.Count);
+            activity?.SetTag("result.count", success.CultureList.Count);
             activity?.SetStatus(ActivityStatusCode.Ok);
             activity?.Stop();
+
+            return success;
         }
         catch (Exception exception)
         {
@@ -68,6 +75,11 @@
         }
     }
 
+    private void HandleSearchCompleted(CultureListQuerySuccess success)
+    {
+        cultureList.AddRange(success.CultureList);
+        StateHasChanged();
+    }
 
     private void HandleOnCultureSelected(CultureDetails culture)
     {
