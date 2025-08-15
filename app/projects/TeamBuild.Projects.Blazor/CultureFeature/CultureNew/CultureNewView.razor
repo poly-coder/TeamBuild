@@ -1,0 +1,21 @@
+<TbMudLoadingBar IsLoading="IsCreating" />
+
+@if (CreateException is not null)
+{
+    <TbMudExceptionAlert Exception="CreateException" />
+}
+
+<CultureNewFormView OnSubmit="@OnCreate"
+                    IsSubmitting="@IsCreating" />
+
+@code
+{
+    [Parameter]
+    public EventCallback<CultureNewFormView.FormModel> OnCreate { get; set; }
+
+    [Parameter]
+    public bool IsCreating { get; set; }
+
+    [Parameter]
+    public Exception? CreateException { get; set; }
+}

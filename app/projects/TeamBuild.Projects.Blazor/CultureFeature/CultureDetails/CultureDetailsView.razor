@@ -1,0 +1,51 @@
+@using TeamBuild.Projects.Domain.CultureFeature
+@using MudBlazor
+
+<TbMudLoadingBar IsLoading="IsLoading" />
+
+@if (LoadException is not null)
+{
+    <TbMudExceptionAlert Exception="LoadException" />
+}
+
+@if (Culture is not null)
+{
+    <MudSimpleTable>
+        <thead>
+            <tr>
+                <th><MudText Typo="Typo.button">Field</MudText></th>
+                <th><MudText Typo="Typo.button">Value</MudText></th>
+                <th style="width: 48px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><MudText Typo="Typo.button">Culture code</MudText></td>
+                <td><MudText Typo="Typo.body1">@Culture.CultureCode</MudText></td>
+                <td><TdMudCopyButton CopyText="@Culture.CultureCode" /></td>
+            </tr>
+            <tr>
+                <td><MudText Typo="Typo.button">English name</MudText></td>
+                <td><MudText Typo="Typo.body1">@Culture.EnglishName</MudText></td>
+                <td><TdMudCopyButton CopyText="@Culture.EnglishName" /></td>
+            </tr>
+            <tr>
+                <td><MudText Typo="Typo.button">Native name</MudText></td>
+                <td><MudText Typo="Typo.body1">@Culture.NativeName</MudText></td>
+                <td><TdMudCopyButton CopyText="@Culture.NativeName" /></td>
+            </tr>
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code
+{
+    [Parameter]
+    public bool IsLoading { get; set; }
+
+    [Parameter]
+    public Exception? LoadException { get; set; }
+
+    [Parameter]
+    public CultureDetails? Culture { get; set; }
+}

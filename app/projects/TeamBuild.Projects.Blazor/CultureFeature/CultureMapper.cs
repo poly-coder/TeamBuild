@@ -1,11 +1,12 @@
 ﻿using TeamBuild.Projects.Blazor.CultureFeature.CultureList;
+using TeamBuild.Projects.Blazor.CultureFeature.CultureNew;
 using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Blazor.CultureFeature;
 
 internal static class CultureMapper
 {
-    public static CultureDefineCommand MapToCommand(this CultureNewView.FormModel form)
+    public static CultureDefineCommand MapToCommand(this CultureNewFormView.FormModel form)
     {
         return new CultureDefineCommand(
             CultureCode: form.CultureCode,

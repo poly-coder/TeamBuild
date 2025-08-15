@@ -1,7 +1,7 @@
 @using TeamBuild.Projects.Application.CultureFeature
 @using TeamBuild.Projects.Domain.CultureFeature
 @attribute [Route(CultureRoutes.DeleteRoute)]
-
+@*
 @inject NavigationManager Nav
 @inject ICultureCommandService CommandService
 @inject ICultureQueryService QueryService
@@ -96,4 +96,4 @@
         IsDeleting = false;
         StateHasChanged();
     }
-}
+} *@

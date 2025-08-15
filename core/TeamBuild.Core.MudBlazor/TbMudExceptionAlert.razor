@@ -1,6 +1,6 @@
 @using global::MudBlazor
 @using MudBlazor
-@inherits TbExceptionAlert
+
 @attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
 
 @if (Exception is null)
@@ -66,7 +66,17 @@
 
 @code
 {
+    [Parameter]
+    public Exception? Exception { get; set; }
+
+    protected string Title => Exception?.Message ?? "An error occurred";
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        StateHasChanged();
+    }
+
     private bool expanded;
     private string ButtonIcon => expanded ? Icons.Material.Filled.KeyboardArrowUp : Icons.Material.Filled.KeyboardArrowDown;
-
 }

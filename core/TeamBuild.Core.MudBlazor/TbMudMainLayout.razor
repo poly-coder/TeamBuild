@@ -1,0 +1,4 @@
+@inherits LayoutComponentBase
+@inject IMainMenuContainer MainMenuContainer
+
+<TbMudMainLayoutView Body="@Body" MainMenu="@MainMenuContainer.GetMenuItems()" />

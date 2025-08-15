@@ -1,6 +1,8 @@
-﻿using System.Diagnostics.Metrics;
+﻿using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using TeamBuild.Core;
 using TeamBuild.Core.Application.Decorators;
+using TeamBuild.Core.Domain;
 using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Application.CultureFeature;
@@ -20,7 +22,7 @@ public interface ICultureCommandService
 
 public class CultureCommandServiceDecorator(
     ICultureCommandService service,
-    TracingAspect tracingAspect,
+    CultureCommandServiceTracingAspect tracingAspect,
     LoggingAspect loggingAspect,
     FluentValidationAspect validationAspect,
     CultureCommandServiceMetricsAspect metricsAspect
@@ -54,6 +56,31 @@ public class CultureCommandServiceDecorator(
     public void Dispose()
     {
         service.DisposeIfNeeded();
+    }
+}
+
+public class CultureCommandServiceTracingAspect(ActivitySource activitySource)
+    : TracingAspect(activitySource)
+{
+    protected override IEnumerable<KeyValuePair<string, object?>>? CreateTags(
+        Type targetType,
+        string methodName
+    )
+    {
+        return methodName switch
+        {
+            nameof(ICultureCommandService.Define) => TeamBuildProjectsApplication.OperationTags(
+                CultureEntity.Caption,
+                TeamBuildCoreDomain.OperationCreateName
+            ),
+
+            nameof(ICultureCommandService.Delete) => TeamBuildProjectsApplication.OperationTags(
+                CultureEntity.Caption,
+                TeamBuildCoreDomain.OperationDeleteName
+            ),
+
+            _ => null,
+        };
     }
 }
 

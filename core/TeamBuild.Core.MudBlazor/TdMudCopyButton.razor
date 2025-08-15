@@ -1,0 +1,64 @@
+@using global::MudBlazor
+@using Microsoft.Extensions.Logging
+@using MudBlazor
+
+<MudIconButton Icon="@Icon"
+               Color="@Color"
+               Variant="Variant.Text"
+               Size="Size.Small"
+               OnClick="HandleOnClick"
+               Disabled="@IsDisabled"/>
+
+@code
+{
+    [Parameter]
+    public string? CopyText { get; set; }
+
+    [Inject]
+    public IClipboardService? Clipboard { get; set; }
+
+    [Inject]
+    public ILogger<TdMudCopyButton>? Logger { get; set; }
+
+    private bool IsDisabled => string.IsNullOrWhiteSpace(CopyText);
+
+    private bool? copied;
+
+    private Color Color => copied switch
+    {
+        null => Color.Info,
+        true => Color.Success,
+        false => Color.Error,
+    };
+
+    private string Icon => copied switch
+    {
+        null => TbMudIcons.Copy,
+        true => TbMudIcons.Check,
+        false => TbMudIcons.Denied,
+    };
+
+    private async Task HandleOnClick()
+    {
+        if (Clipboard is not null && IsDisabled is false && copied.HasValue is false)
+        {
+            try
+            {
+                await Clipboard.CopyText(CopyText!);
+
+                copied = true;
+            }
+            catch (Exception exception)
+            {
+                copied = false;
+                Logger?.LogError(exception, "Failed to copy text");
+            }
+
+            StateHasChanged();
+
+            await Task.Delay(2000);
+
+            copied = null;
+        }
+    }
+}

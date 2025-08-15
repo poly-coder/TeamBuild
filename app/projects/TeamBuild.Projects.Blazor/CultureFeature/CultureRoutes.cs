@@ -36,36 +36,44 @@ public static class CultureRoutes
     public static MainMenuItem ListMenuItem =>
         new MainMenuItem("Cultures", ProjectsRoutes.ProjectsCategory, List());
 
+    // Titles
+
+    public const string ListTitle = "Culture List";
+    public const string NewTitle = "Add Culture";
+    public const string DetailsTitle = "Culture Details";
+    public const string EditTitle = "Edit Culture";
+    public const string DeleteTitle = "Delete Culture";
+
     // Breadcrumbs
 
     public static readonly IReadOnlyList<BreadcrumbItem> ListBreadcrumbs =
     [
-        TbMudBreadcrumb.CurrentList("Culture List"),
+        TbMudBreadcrumb.CurrentList(ListTitle),
     ];
 
     public static readonly IReadOnlyList<BreadcrumbItem> NewBreadcrumbs =
     [
-        TbMudBreadcrumb.CreateList("Culture List", List()),
-        TbMudBreadcrumb.CurrentAdd("Add Culture"),
+        TbMudBreadcrumb.CreateList(ListTitle, List()),
+        TbMudBreadcrumb.CurrentAdd(NewTitle),
     ];
 
     public static IReadOnlyList<BreadcrumbItem> DetailsBreadcrumbs =>
         [
-            TbMudBreadcrumb.CreateList("Cultures", List()),
-            TbMudBreadcrumb.CurrentDetails("Culture Details"),
+            TbMudBreadcrumb.CreateList(ListTitle, List()),
+            TbMudBreadcrumb.CurrentDetails(DetailsTitle),
         ];
 
     public static IReadOnlyList<BreadcrumbItem> DeleteBreadcrumbs(string cultureId) =>
         [
-            TbMudBreadcrumb.CreateList("Cultures", List()),
-            TbMudBreadcrumb.CreateDetails("Culture Details", Details(cultureId)),
-            TbMudBreadcrumb.CurrentDelete("Delete Culture"),
+            TbMudBreadcrumb.CreateList(ListTitle, List()),
+            TbMudBreadcrumb.CreateDetails(DetailsTitle, Details(cultureId)),
+            TbMudBreadcrumb.CurrentDelete(DeleteTitle),
         ];
 
     public static IReadOnlyList<BreadcrumbItem> EditBreadcrumbs(string cultureId) =>
         [
-            TbMudBreadcrumb.CreateList("Cultures", List()),
-            TbMudBreadcrumb.CreateDetails("Culture Details", Details(cultureId)),
-            TbMudBreadcrumb.CurrentEdit("Edit Culture"),
+            TbMudBreadcrumb.CreateList(ListTitle, List()),
+            TbMudBreadcrumb.CreateDetails(DetailsTitle, Details(cultureId)),
+            TbMudBreadcrumb.CurrentEdit(EditTitle),
         ];
 }

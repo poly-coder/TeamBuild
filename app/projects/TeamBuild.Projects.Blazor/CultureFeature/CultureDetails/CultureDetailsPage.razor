@@ -1,0 +1,59 @@
+@using TeamBuild.Core.Domain
+@using TeamBuild.Projects.Application.CultureFeature
+@using TeamBuild.Projects.Domain.CultureFeature
+
+@attribute [Route(CultureRoutes.DetailsRoute)]
+
+@inject ICultureQueryService QueryService
+
+@if (CultureId is null)
+{
+    return;
+}
+
+<TbMudPage Title="@CultureRoutes.DetailsTitle"
+           Breadcrumbs="@CultureRoutes.DetailsBreadcrumbs">
+    <TopBar>
+        <TbMudGoToEditButton Href="@CultureRoutes.Edit(CultureId)" />
+        <TbMudGoToDeleteButton Href="@CultureRoutes.Delete(CultureId)" />
+    </TopBar>
+
+    <ChildContent>
+        @if (load is not null)
+        {
+            <CultureDetailsView IsLoading="@load.IsRunning"
+                                LoadException="@load.Exception"
+                                Culture="@culture" />
+        }
+
+    </ChildContent>
+</TbMudPage>
+
+@code
+{
+    [Parameter]
+    public string? CultureId { get; set; }
+
+    private CultureDetails? culture;
+
+    private TbAsyncOperation<CultureGetByIdQuerySuccess>? load;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        load = new(cancel => QueryService.GetById(new(CultureId!), cancel))
+        {
+            OnCompleted = success => culture = success.Culture,
+            OnStageChanged = _ => StateHasChanged(),
+            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
+            ActivityName = $"{nameof(CultureDetailsPage)}.Submit",
+            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
+                entity: CultureEntity.Caption,
+                operation: TeamBuildCoreDomain.OperationFetchName
+            ),
+        };
+
+        load.Execute();
+    }
+}

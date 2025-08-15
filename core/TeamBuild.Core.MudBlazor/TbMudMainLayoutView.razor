@@ -1,7 +1,7 @@
 @using global::MudBlazor
 @using MudBlazor
-@inherits TbMainLayoutView
-@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
+
+@inject AppInfo AppInfo
 
 @* Required *@
 <MudThemeProvider />
@@ -48,7 +48,14 @@
     </MudMainContent>
 </MudLayout>
 
-@code {
+@code
+{
+    [Parameter]
+    public RenderFragment Body { get; set; } = @<text />;
+
+    [Parameter]
+    public IEnumerable<(MainMenuCategory, IEnumerable<MainMenuItem>)> MainMenu { get; set; } = [];
+
     bool drawerOpen = true;
 
     void DrawerToggle()

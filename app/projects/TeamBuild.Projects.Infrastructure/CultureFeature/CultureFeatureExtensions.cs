@@ -1,7 +1,6 @@
 ﻿using Marten;
 using Microsoft.Extensions.DependencyInjection;
 using TeamBuild.Core.Application;
-using TeamBuild.Core.Application.Decorators;
 using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Application.CultureFeature;
 
@@ -23,7 +22,9 @@ public static class CultureFeatureExtensions
             .AddScoped<ICultureCommandService>(provider =>
                 provider.CreateInstance<CultureCommandServiceDecorator>(
                     provider.CreateInstance<CultureMartenCommandService>(),
-                    new TracingAspect(TeamBuildProjectsApplication.ActivitySource)
+                    new CultureCommandServiceTracingAspect(
+                        TeamBuildProjectsApplication.ActivitySource
+                    )
                 )
             )
             // ICultureQueryService
@@ -31,7 +32,9 @@ public static class CultureFeatureExtensions
             .AddScoped<ICultureQueryService>(provider =>
                 provider.CreateInstance<CultureQueryServiceDecorator>(
                     provider.CreateInstance<CultureMartenQueryService>(),
-                    new TracingAspect(TeamBuildProjectsApplication.ActivitySource)
+                    new CultureQueryServiceTracingAspect(
+                        TeamBuildProjectsApplication.ActivitySource
+                    )
                 )
             );
     }

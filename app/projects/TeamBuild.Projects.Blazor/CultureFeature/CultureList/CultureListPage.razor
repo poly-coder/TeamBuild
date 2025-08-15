@@ -1,14 +1,16 @@
 @using TeamBuild.Core.Domain
 @using TeamBuild.Projects.Application.CultureFeature
 @using TeamBuild.Projects.Domain.CultureFeature
+
 @attribute [Route(CultureRoutes.ListRoute)]
 
 @inject NavigationManager Nav
 @inject ICultureQueryService QueryService
 
-<TbMudPage Title="Cultures" Breadcrumbs="@CultureRoutes.ListBreadcrumbs">
+<TbMudPage Title="@CultureRoutes.ListTitle"
+           Breadcrumbs="@CultureRoutes.ListBreadcrumbs">
     <TopBar>
-        <TbAddButton Href="@CultureRoutes.New()" />
+        <TbMudGoToAddButton Href="@CultureRoutes.New()" />
     </TopBar>
 
     <ChildContent>
@@ -30,36 +32,26 @@
 
     private TbAsyncOperation<CultureListSearchView.FormModel, CultureListQuerySuccess>? search;
 
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        search = new(ExecuteSearch)
+
+        search = new((form, cancel) => QueryService.List(form.MapToQuery(), cancel))
         {
-            OnCompleted = HandleSearchCompleted,
+            OnCompleted = (_, success) =>
+            {
+                cultureList.Clear();
+                cultureList.AddRange(success.CultureList);
+            },
             OnStageChanged = _ => StateHasChanged(),
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
-            ActivityName = $"{nameof(CultureListPage)}.{nameof(ExecuteSearch)}",
+            ActivityName = $"{nameof(CultureListPage)}.Search",
             ActivityTags = TeamBuildProjectsBlazor.OperationTags(
                 entity: CultureEntity.Caption,
                 operation: TeamBuildCoreDomain.OperationListName
             ),
         };
         search.Execute(new());
-    }
-
-    private async Task<CultureListQuerySuccess> ExecuteSearch(
-        CultureListSearchView.FormModel form,
-        CancellationToken cancel)
-    {
-        await Task.Delay(3000, cancel);
-        return await QueryService.List(form.MapToQuery(), cancel);
-    }
-
-    private void HandleSearchCompleted(CultureListQuerySuccess success)
-    {
-        cultureList.AddRange(success.CultureList);
-        StateHasChanged();
     }
 
     private void HandleOnCultureSelected(CultureDetails culture)

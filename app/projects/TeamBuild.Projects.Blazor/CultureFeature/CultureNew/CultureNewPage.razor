@@ -1,0 +1,46 @@
+@using TeamBuild.Core.Domain
+@using TeamBuild.Projects.Application.CultureFeature
+@using TeamBuild.Projects.Domain.CultureFeature
+
+@attribute [Route(CultureRoutes.NewRoute)]
+
+@inject NavigationManager Nav
+@inject ICultureCommandService CommandService
+
+<TbMudPage Title="@CultureRoutes.NewTitle"
+           Breadcrumbs="@CultureRoutes.NewBreadcrumbs">
+    @if (define is not null)
+    {
+        <CultureNewView OnCreate="form => define.Execute(form)"
+                        IsCreating="@define.IsRunning" />
+    }
+</TbMudPage>
+
+@code
+{
+    private TbAsyncOperation<CultureNewFormView.FormModel, CultureDefineCommandSuccess>? define;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        define = new((form, cancel) => CommandService.Define(form.MapToCommand(), cancel))
+        {
+            OnCompleted = (form, success) =>
+            {
+                var route = form.GoToDetails
+                    ? CultureRoutes.Details(success.Culture.CultureCode)
+                    : CultureRoutes.List();
+
+                Nav.NavigateTo(route);
+            },
+            OnStageChanged = _ => StateHasChanged(),
+            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
+            ActivityName = $"{nameof(CultureNewPage)}.Submit",
+            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
+                entity: CultureEntity.Caption,
+                operation: TeamBuildCoreDomain.OperationCreateName
+            ),
+        };
+    }
+}

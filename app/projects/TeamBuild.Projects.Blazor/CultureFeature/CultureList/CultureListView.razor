@@ -1,23 +1,32 @@
-@using MudBlazor
 @using TeamBuild.Projects.Domain.CultureFeature
+@using MudBlazor
 
 <CultureListSearchView OnSubmit="OnSearch"
                        IsSubmitting="@IsSearching"/>
 
-@if (IsSearching)
-{
-    <MudPaper Height="4" Elevation="0">
-        <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
-    </MudPaper>
-}
-
 @if (SearchException is not null)
 {
-    <TbExceptionAlert Exception="SearchException" />
+    <TbMudExceptionAlert Exception="SearchException" />
 }
 
-<CultureListItemsView CultureList="CultureList"
-                      OnCultureSelected="OnCultureSelected" />
+<MudTable Items="CultureList"
+          T="CultureDetails"
+          Hover="true"
+          Breakpoint="Breakpoint.Sm"
+          Loading="@IsSearching"
+          OnRowClick="a => HandleSelectedCulture(a.Item)">
+    <HeaderContent>
+        <MudTh>Code</MudTh>
+        <MudTh>English</MudTh>
+        <MudTh>Native</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Code">@context.CultureCode</MudTd>
+        <MudTd DataLabel="English">@context.EnglishName</MudTd>
+        <MudTd DataLabel="Native">@context.NativeName</MudTd>
+    </RowTemplate>
+</MudTable>
+
 
 @code
 {
@@ -35,4 +44,10 @@
 
     [Parameter]
     public EventCallback<CultureDetails> OnCultureSelected { get; set; }
+
+    protected async Task HandleSelectedCulture(CultureDetails? culture)
+    {
+        if (culture is not null)
+            await OnCultureSelected.InvokeAsync(culture);
+    }
 }

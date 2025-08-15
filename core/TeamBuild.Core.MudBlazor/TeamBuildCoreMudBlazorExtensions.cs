@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TeamBuild.Core.Blazor;
 
 namespace TeamBuild.Core.MudBlazor;
 
@@ -9,6 +8,6 @@ public static class TeamBuildCoreMudBlazorExtensions
         this IServiceCollection services
     )
     {
-        return services.AddScoped<IToastService, MudToastService>();
+        return services;
     }
 }

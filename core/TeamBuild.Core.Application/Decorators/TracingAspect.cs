@@ -7,7 +7,12 @@ public class TracingAspect(ActivitySource activitySource)
 {
     public State Before(Type targetType, string methodName)
     {
-        var activity = activitySource.StartActivity($"{targetType.Name}.{methodName}");
+        var activity = activitySource.StartActivity(
+            name: GetActivityName(targetType, methodName),
+            kind: GetKind(targetType, methodName),
+            tags: CreateTags(targetType, methodName),
+            links: CreateLinks(targetType, methodName)
+        );
 
         return new State(activity);
     }
@@ -32,6 +37,29 @@ public class TracingAspect(ActivitySource activitySource)
     }
 
     public record State(Activity? Activity);
+
+    protected virtual string GetActivityName(Type targetType, string methodName)
+    {
+        return $"{targetType.Name}.{methodName}";
+    }
+
+    protected virtual ActivityKind GetKind(Type targetType, string methodName)
+    {
+        return ActivityKind.Internal;
+    }
+
+    protected virtual IEnumerable<KeyValuePair<string, object?>>? CreateTags(
+        Type targetType,
+        string methodName
+    )
+    {
+        return null;
+    }
+
+    protected virtual IEnumerable<ActivityLink>? CreateLinks(Type targetType, string methodName)
+    {
+        return null;
+    }
 
     public TResult Execute<TResult>(
         Type targetType,

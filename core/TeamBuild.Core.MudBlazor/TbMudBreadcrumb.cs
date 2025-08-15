@@ -20,10 +20,10 @@ public static class TbMudBreadcrumb
     public static BreadcrumbItem CreateAdd(string text, string route) =>
         Create(text, route, TbMudIcons.Add);
 
-    public static BreadcrumbItem CurrentDetails(string text) => Current(text, TbMudIcons.Details);
+    public static BreadcrumbItem CurrentDetails(string text) => Current(text, TbMudIcons.View);
 
     public static BreadcrumbItem CreateDetails(string text, string route) =>
-        Create(text, route, TbMudIcons.Details);
+        Create(text, route, TbMudIcons.View);
 
     public static BreadcrumbItem CurrentDelete(string text) => Current(text, TbMudIcons.Delete);
 

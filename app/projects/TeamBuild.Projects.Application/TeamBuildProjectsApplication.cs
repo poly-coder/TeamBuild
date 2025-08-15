@@ -2,6 +2,8 @@
 using System.Diagnostics.Metrics;
 using System.Reflection;
 using TeamBuild.Core;
+using TeamBuild.Core.Domain;
+using TeamBuild.Projects.Domain;
 
 namespace TeamBuild.Projects.Application;
 
@@ -15,4 +17,17 @@ public class TeamBuildProjectsApplication
     public static readonly ActivitySource ActivitySource = new(Name, Version);
 
     public static readonly Meter Meter = new(Name, Version);
+
+    public static IEnumerable<KeyValuePair<string, object?>> OperationTags(
+        string? entity = null,
+        string? operation = null
+    )
+    {
+        return TeamBuildCoreDomain.OperationTags(
+            project: ProjectsModule.Caption,
+            layer: TeamBuildCoreDomain.LayerApplicationName,
+            entity: entity,
+            operation: operation
+        );
+    }
 }

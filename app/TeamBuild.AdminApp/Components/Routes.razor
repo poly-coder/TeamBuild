@@ -5,14 +5,14 @@
         AdditionalAssemblies="@GetUiAssemblies()">
     <Found Context="routeData">
         <RouteView RouteData="routeData"
-                   DefaultLayout="typeof(TbMainLayout)" />
+                   DefaultLayout="typeof(TbMudMainLayout)" />
         <FocusOnNavigate RouteData="routeData"
                          Selector="h1" />
     </Found>
     <NotFound>
-        <LayoutView Layout="typeof(TbMainLayout)">
+        <LayoutView Layout="typeof(TbMudMainLayout)">
             <TbAppPageTitle Title="Not Found"/>
-            
+
             <p>
                 Sorry, there's nothing at this address.
             </p>
