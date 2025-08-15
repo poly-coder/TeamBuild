@@ -1,0 +1,69 @@
+@using TeamBuild.Core.Domain
+@using TeamBuild.Projects.Application.CultureFeature
+@using TeamBuild.Projects.Domain.CultureFeature
+@attribute [Route(CultureRoutes.ListRoute)]
+
+@inject NavigationManager Nav
+@inject ICultureQueryService QueryService
+
+<TbMudPage Title="Cultures" Breadcrumbs="@CultureRoutes.ListBreadcrumbs">
+    <TopBar>
+        <TbAddButton Href="@CultureRoutes.New()" />
+    </TopBar>
+
+    <ChildContent>
+        @if (search is not null)
+        {
+            <CultureListView OnSearch="f => search?.Execute(f)"
+                             IsSearching="@search.IsRunning"
+                             SearchException="@search.Exception"
+                             CultureList="@cultureList"
+                             OnCultureSelected="HandleOnCultureSelected" />
+        }
+
+    </ChildContent>
+</TbMudPage>
+
+@code
+{
+    private List<CultureDetails> cultureList = [];
+
+    private TbAsyncOperation<CultureListSearchView.FormModel, CultureListQuerySuccess>? search;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        search = new(ExecuteSearch)
+        {
+            OnCompleted = HandleSearchCompleted,
+            OnStageChanged = _ => StateHasChanged(),
+            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
+            ActivityName = $"{nameof(CultureListPage)}.{nameof(ExecuteSearch)}",
+            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
+                entity: CultureEntity.Caption,
+                operation: TeamBuildCoreDomain.OperationListName
+            ),
+        };
+        search.Execute(new());
+    }
+
+    private async Task<CultureListQuerySuccess> ExecuteSearch(
+        CultureListSearchView.FormModel form,
+        CancellationToken cancel)
+    {
+        await Task.Delay(3000, cancel);
+        return await QueryService.List(form.MapToQuery(), cancel);
+    }
+
+    private void HandleSearchCompleted(CultureListQuerySuccess success)
+    {
+        cultureList.AddRange(success.CultureList);
+        StateHasChanged();
+    }
+
+    private void HandleOnCultureSelected(CultureDetails culture)
+    {
+        Nav.NavigateTo(CultureRoutes.Details(culture.CultureCode));
+    }
+}

@@ -1,0 +1,38 @@
+@using MudBlazor
+@using TeamBuild.Projects.Domain.CultureFeature
+
+<CultureListSearchView OnSubmit="OnSearch"
+                       IsSubmitting="@IsSearching"/>
+
+@if (IsSearching)
+{
+    <MudPaper Height="4" Elevation="0">
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true"/>
+    </MudPaper>
+}
+
+@if (SearchException is not null)
+{
+    <TbExceptionAlert Exception="SearchException" />
+}
+
+<CultureListItemsView CultureList="CultureList"
+                      OnCultureSelected="OnCultureSelected" />
+
+@code
+{
+    [Parameter]
+    public EventCallback<CultureListSearchView.FormModel> OnSearch { get; set; }
+
+    [Parameter]
+    public bool IsSearching { get; set; }
+
+    [Parameter]
+    public Exception? SearchException { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<CultureDetails> CultureList { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<CultureDetails> OnCultureSelected { get; set; }
+}

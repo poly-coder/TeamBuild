@@ -1,9 +1,16 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TeamBuild.Core.Blazor;
 
 public abstract class TbOperation<TResult> : IDisposable
 {
+    public ActivitySource? ActivitySource { get; set; }
+    public string? ActivityName { get; set; }
+    public ActivityKind ActivityKind { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? ActivityTags { get; set; }
+    public IEnumerable<ActivityLink>? ActivityLinks { get; set; }
+
     public bool ClearOnStart { get; set; } = true;
     public bool ClearOnCancel { get; set; } = true;
 
@@ -30,6 +37,13 @@ public abstract class TbOperation<TResult> : IDisposable
         exception = HasException ? Exception : null;
         return HasException;
     }
+
+    public bool IsRunning => Stage == TbOperationStage.Running;
+    public bool IsFinished =>
+        Stage
+            is TbOperationStage.Completed
+                or TbOperationStage.Failed
+                or TbOperationStage.Cancelled;
 
     public Action<TbOperationStage>? OnStageChanged { get; set; }
     public Action? OnRunning { get; set; }
@@ -129,6 +143,15 @@ public abstract class TbAsyncOperationBase<TResult> : TbOperation<TResult>
 
     protected void ExecuteInternal(Func<CancellationToken, Task<TResult>> runner)
     {
+        var activity = !string.IsNullOrWhiteSpace(ActivityName)
+            ? ActivitySource?.StartActivity(
+                name: ActivityName,
+                kind: ActivityKind,
+                tags: ActivityTags,
+                links: ActivityLinks
+            )
+            : null;
+
         StopCurrent(false);
 
         SetRunning();
@@ -145,14 +168,24 @@ public abstract class TbAsyncOperationBase<TResult> : TbOperation<TResult>
                 var result = await runner(cts.Token).ConfigureAwait(true);
 
                 SetCompleted(result);
+
+                activity?.SetStatus(ActivityStatusCode.Ok);
+                activity?.Stop();
             }
             catch (OperationCanceledException)
             {
                 SetCancelled();
+
+                activity?.SetStatus(ActivityStatusCode.Unset);
+                activity?.Stop();
             }
             catch (Exception exception)
             {
                 SetFailed(exception);
+
+                activity?.AddException(exception);
+                activity?.SetStatus(ActivityStatusCode.Error);
+                activity?.Stop();
             }
         }
     }

@@ -1,7 +1,5 @@
 @using global::MudBlazor
 @using MudBlazor
-@inherits TbPageComponent
-@attribute [CustomView(TeamBuildCoreMudBlazor.UiSelector)]
 
 <MudStack Row="false" Spacing="4">
     <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Baseline">
@@ -17,7 +15,7 @@
 
     @if (Breadcrumbs is { Count: > 0 })
     {
-        <MudBreadcrumbs Items="@Breadcrumbs.MapToBreadcrumbItems()" />
+        <MudBreadcrumbs Items="@Breadcrumbs" />
     }
 
     @ChildContent
@@ -39,3 +37,24 @@
         </MudStack>
     }
 </MudStack>
+
+@code
+{
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<BreadcrumbItem>? Breadcrumbs { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? TopBar { get; set; }
+
+    [Parameter]
+    public RenderFragment? BottomBar { get; set; }
+
+    [Parameter]
+    public RenderFragment? BottomLeftBar { get; set; }
+}

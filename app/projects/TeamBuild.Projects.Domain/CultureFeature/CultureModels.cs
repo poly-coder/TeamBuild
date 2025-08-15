@@ -4,6 +4,5 @@ public record CultureDetails(string CultureCode, string EnglishName, string Nati
 
 public class CultureEntity
 {
-    public const string Caption = "Culture";
-    public const string PluralCaption = "Cultures";
+    public const string Caption = "culture";
 }
