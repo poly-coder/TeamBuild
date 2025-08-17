@@ -1,9 +1,15 @@
-# Remove the line below if you want to inherit .editorconfig settings from higher directories
+# editorconfig.org
+
+# top-most EditorConfig file
 root = true
 
-# All files
+# Default settings:
+# A newline ending every file
+# Use 4 spaces as indentation
 [*]
 insert_final_newline = true
+indent_style = space
+indent_size = 4
 trim_trailing_whitespace = true
 
 # .proto files
@@ -24,10 +30,13 @@ tab_width = 2
 indent_size = 2
 indent_style = space
 
-# Build props
-[*.props]
-indent_size = 4
-indent_style = space
+# Xml config files
+[*.{props,targets,config,nuspec}]
+indent_size = 2
+
+# Generated code
+[*{_AssemblyInfo.cs,.notsupported.cs,AsmOffsets.cs}]
+generated_code = true
 
 # C# files
 [*.cs]
@@ -51,10 +60,10 @@ file_header_template = unset
 dotnet_diagnostic.IDE0005.severity = warning
 
 # this. and Me. preferences
-dotnet_style_qualification_for_event = false
-dotnet_style_qualification_for_field = false
-dotnet_style_qualification_for_method = false
-dotnet_style_qualification_for_property = false
+dotnet_style_qualification_for_event = false:suggestion
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
 
 # Language keywords vs BCL types preferences
 dotnet_style_predefined_type_for_locals_parameters_members = true
@@ -137,7 +146,7 @@ csharp_style_prefer_readonly_struct = true
 csharp_style_prefer_readonly_struct_member = true
 
 # Code-block preferences
-csharp_prefer_braces = true
+csharp_prefer_braces = true:silent
 csharp_prefer_simple_using_statement = true
 csharp_style_namespace_declarations = file_scoped
 csharp_style_prefer_method_group_conversion = true
@@ -160,7 +169,7 @@ csharp_style_unused_value_assignment_preference = discard_variable
 csharp_style_unused_value_expression_statement_preference = discard_variable
 
 # 'using' directive preferences
-csharp_using_directive_placement = outside_namespace
+csharp_using_directive_placement = outside_namespace:suggestion
 
 # New line preferences
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true
@@ -263,7 +272,36 @@ dotnet_naming_style.begins_with_i.capitalization = pascal_case
 dotnet_diagnostic.RMG012.severity = error # Unmapped target member
 dotnet_diagnostic.RMG020.severity = warning # Unmapped source member
 
-# C# files
+# C# Verify files
 [*.verified.*]
 insert_final_newline = false
 trim_trailing_whitespace = false
+
+# Xml project files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
+indent_size = 2
+
+[*.{csproj,vbproj,proj,nativeproj,locproj}]
+charset = utf-8
+
+# Xml build files
+[*.builds]
+indent_size = 2
+
+# Xml files
+[*.{xml,stylecop,resx,ruleset}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,config,nuspec}]
+indent_size = 2
+
+# YAML config files
+[*.{yml,yaml}]
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+end_of_line = lf
+[*.{cmd,bat}]
+end_of_line = crlf
