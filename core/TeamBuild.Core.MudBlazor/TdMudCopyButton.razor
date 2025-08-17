@@ -1,18 +1,50 @@
+@using System.Text.Encodings.Web
+@using System.Text.Json
+@using System.Text.Json.Serialization
 @using global::MudBlazor
 @using Microsoft.Extensions.Logging
 @using MudBlazor
 
-<MudIconButton Icon="@Icon"
-               Color="@Color"
-               Variant="Variant.Text"
+@if (string.IsNullOrWhiteSpace(Label))
+{
+    <MudIconButton Icon="@CurrentIcon"
+                   Color="@CurrentColor"
+                   Variant="@Variant"
+                   Size="Size.Small"
+                   OnClick="HandleOnClick"
+                   Disabled="@IsDisabled" />
+}
+else
+{
+    <MudButton StartIcon="@CurrentIcon"
+               Color="@CurrentColor"
+               Variant="@Variant"
                Size="Size.Small"
                OnClick="HandleOnClick"
-               Disabled="@IsDisabled"/>
+               Disabled="@IsDisabled">
+        @Label
+    </MudButton>
+}
 
 @code
 {
     [Parameter]
     public string? CopyText { get; set; }
+
+    [Parameter]
+    public object? CopyJson { get; set; }
+
+    [Parameter]
+    public string? Label { get; set; }
+
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Text;
+
+    [Parameter]
+    public TimeSpan ActiveDuration { get; set; } = TimeSpan.FromSeconds(2);
+
+    [Parameter]
+    public JsonSerializerOptions? JsonOptions { get; set; }
 
     [Inject]
     public IClipboardService? Clipboard { get; set; }
@@ -20,18 +52,38 @@
     [Inject]
     public ILogger<TdMudCopyButton>? Logger { get; set; }
 
-    private bool IsDisabled => string.IsNullOrWhiteSpace(CopyText);
+    private static readonly JsonSerializerOptions DefaultJsonOptions = new()
+    {
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        PropertyNameCaseInsensitive = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+    };
+
+    private string? CopyValue()
+    {
+        if (string.IsNullOrWhiteSpace(CopyText) is false)
+            return CopyText;
+
+        if (CopyJson is not null)
+            return JsonSerializer.Serialize(CopyJson, JsonOptions ?? DefaultJsonOptions);
+
+        return null;
+    }
+
+    private bool IsDisabled => string.IsNullOrWhiteSpace(CopyText) && CopyJson is null;
 
     private bool? copied;
 
-    private Color Color => copied switch
+    private Color CurrentColor => copied switch
     {
-        null => Color.Info,
+        null => Color.Default,
         true => Color.Success,
         false => Color.Error,
     };
 
-    private string Icon => copied switch
+    private string CurrentIcon => copied switch
     {
         null => TbMudIcons.Copy,
         true => TbMudIcons.Check,
@@ -44,7 +96,7 @@
         {
             try
             {
-                await Clipboard.CopyText(CopyText!);
+                await Clipboard.CopyText(CopyValue() ?? "");
 
                 copied = true;
             }
@@ -56,7 +108,7 @@
 
             StateHasChanged();
 
-            await Task.Delay(2000);
+            await Task.Delay(ActiveDuration);
 
             copied = null;
         }

@@ -1,0 +1,31 @@
+@using global::MudBlazor
+@using MudBlazor
+
+<MudTable Items="FieldValues"
+          T="FieldValue"
+          Hover="false"
+          Elevation="0"
+          Breakpoint="Breakpoint.Xxl"
+          Loading="@IsLoading">
+    <HeaderContent>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;"></MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold;"></MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;"></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Field" Style="text-transform: uppercase; font-weight: bold;">@context.Field</MudTd>
+        <MudTd DataLabel="Value">@context.Value</MudTd>
+        <MudTd DataLabel="Actions" HideSmall="true">
+            <TdMudCopyButton CopyText="@context.Value" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code
+{
+    [Parameter]
+    public IEnumerable<FieldValue> FieldValues { get; set; } = [];
+
+    [Parameter]
+    public bool IsLoading { get; set; }
+}

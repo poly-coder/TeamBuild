@@ -14,16 +14,21 @@
           Hover="true"
           Breakpoint="Breakpoint.Sm"
           Loading="@IsSearching"
+          Elevation="0"
           OnRowClick="a => HandleSelectedCulture(a.Item)">
     <HeaderContent>
-        <MudTh>Code</MudTh>
-        <MudTh>English</MudTh>
-        <MudTh>Native</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;">Code</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold;">English</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold;">Native</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;"></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Code">@context.CultureCode</MudTd>
         <MudTd DataLabel="English">@context.EnglishName</MudTd>
         <MudTd DataLabel="Native">@context.NativeName</MudTd>
+        <MudTd DataLabel="Actions" HideSmall="false">
+            <MudIcon Icon="@TbMudIcons.View" Color="Color.Default" />
+        </MudTd>
     </RowTemplate>
 </MudTable>
 

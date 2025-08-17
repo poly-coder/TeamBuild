@@ -14,6 +14,7 @@
 <TbMudPage Title="@CultureRoutes.DetailsTitle"
            Breadcrumbs="@CultureRoutes.DetailsBreadcrumbs">
     <TopBar>
+        <TdMudCopyButton CopyJson="@culture" Label="Copy Json" />
         <TbMudGoToEditButton Href="@CultureRoutes.Edit(CultureId)" />
         <TbMudGoToDeleteButton Href="@CultureRoutes.Delete(CultureId)" />
     </TopBar>

@@ -8,7 +8,7 @@ public sealed class CustomViewAttribute : Attribute
     public CustomViewAttribute(string selector)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(selector);
-        
+
         Selector = selector;
     }
 }
