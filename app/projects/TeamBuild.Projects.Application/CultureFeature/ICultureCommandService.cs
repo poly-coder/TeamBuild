@@ -20,7 +20,7 @@ public interface ICultureCommandService
     );
 }
 
-public class CultureCommandServiceDecorator(
+public sealed class CultureCommandServiceDecorator(
     ICultureCommandService service,
     CultureCommandServiceTracingAspect tracingAspect,
     LoggingAspect loggingAspect,
@@ -53,10 +53,9 @@ public class CultureCommandServiceDecorator(
             cancel: cancel
         );
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
         service.DisposeIfNeeded();
-        GC.SuppressFinalize(this);
     }
 }
 

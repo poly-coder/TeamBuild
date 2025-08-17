@@ -7,7 +7,7 @@ using TeamBuild.Projects.Domain;
 
 namespace TeamBuild.Projects.Application;
 
-public class TeamBuildProjectsApplication
+public static class TeamBuildProjectsApplication
 {
     public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 

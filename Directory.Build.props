@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;S1125</NoWarn>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>Recommended</AnalysisMode>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -23,6 +23,13 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectExtension)'!='.dcproj'">
+    <PackageReference Include="SonarAnalyzer.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <PropertyGroup Label="PackageProperties">
     <Version>0.1.0</Version>

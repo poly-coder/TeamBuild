@@ -76,7 +76,7 @@ public class PermanentCachedSyncFunction<TKey, TValue> : ISyncFunction<TKey, TVa
     }
 }
 
-public class WeakCachedSyncFunction<TKey, TValue> : ISyncFunction<TKey, TValue>, IDisposable
+public sealed class WeakCachedSyncFunction<TKey, TValue> : ISyncFunction<TKey, TValue>, IDisposable
     where TKey : notnull
 {
     private readonly Func<TKey, TValue> factory;
@@ -135,9 +135,8 @@ public class WeakCachedSyncFunction<TKey, TValue> : ISyncFunction<TKey, TValue>,
         public TValue Value => value;
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
         cacheLock.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

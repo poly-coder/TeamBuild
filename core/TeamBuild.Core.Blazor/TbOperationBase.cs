@@ -70,9 +70,17 @@ public abstract class TbOperationBase<TResult> : IDisposable
         }
     }
 
-    public virtual void Dispose()
+    public void Dispose()
     {
-        IsDisposed = true;
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            IsDisposed = true;
+        }
     }
 }

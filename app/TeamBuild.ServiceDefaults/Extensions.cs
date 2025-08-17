@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+#pragma warning disable S125
 
 namespace Microsoft.Extensions.Hosting;
 

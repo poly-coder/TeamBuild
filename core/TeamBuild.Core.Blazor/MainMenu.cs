@@ -96,7 +96,7 @@ public record MainMenuItem(
         ArgumentNullException.ThrowIfNull(category);
         ArgumentNullException.ThrowIfNull(label);
         ArgumentNullException.ThrowIfNull(children);
-        ArgumentOutOfRangeException.ThrowIfZero(children.Count, nameof(children));
+        ArgumentOutOfRangeException.ThrowIfZero(children.Count);
     }
 
     public MainMenuItem(
@@ -110,7 +110,7 @@ public record MainMenuItem(
         ArgumentNullException.ThrowIfNull(category);
         ArgumentException.ThrowIfNullOrWhiteSpace(label);
         ArgumentNullException.ThrowIfNull(children);
-        ArgumentOutOfRangeException.ThrowIfZero(children.Count, nameof(children));
+        ArgumentOutOfRangeException.ThrowIfZero(children.Count);
     }
 
     public MainMenuItem(Func<string> label, IReadOnlyList<MainMenuItem> children, int priority = 0)
@@ -118,7 +118,7 @@ public record MainMenuItem(
     {
         ArgumentNullException.ThrowIfNull(label);
         ArgumentNullException.ThrowIfNull(children);
-        ArgumentOutOfRangeException.ThrowIfZero(children.Count, nameof(children));
+        ArgumentOutOfRangeException.ThrowIfZero(children.Count);
     }
 
     public MainMenuItem(string label, IReadOnlyList<MainMenuItem> children, int priority = 0)
@@ -126,6 +126,6 @@ public record MainMenuItem(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(label);
         ArgumentNullException.ThrowIfNull(children);
-        ArgumentOutOfRangeException.ThrowIfZero(children.Count, nameof(children));
+        ArgumentOutOfRangeException.ThrowIfZero(children.Count);
     }
 }

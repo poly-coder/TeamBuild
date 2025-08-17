@@ -14,12 +14,13 @@ using TeamBuild.Core.MudBlazor;
 using TeamBuild.Core.Services;
 using TeamBuild.Projects.Blazor;
 using TeamBuild.Projects.Infrastructure;
+#pragma warning disable S125
 
 namespace TeamBuild.AdminApp;
 
-internal sealed class Startup
+internal static class Startup
 {
-    public void ConfigureServices(WebApplicationBuilder builder)
+    public static void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.AddServiceDefaults();
 
@@ -97,7 +98,7 @@ internal sealed class Startup
         builder.Services.AddTeamBuildProjectsBlazorServices();
     }
 
-    public void ConfigureApplication(WebApplication app)
+    public static void ConfigureApplication(WebApplication app)
     {
         app.MapDefaultEndpoints();
 

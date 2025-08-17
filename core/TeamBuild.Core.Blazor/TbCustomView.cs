@@ -17,6 +17,7 @@ public abstract class TbCustomView : ComponentBase
         {
             var sequence = 0;
             builder.OpenComponent(sequence++, viewType);
+
             foreach (
                 var property in viewBaseType.GetProperties(
                     BindingFlags.Public | BindingFlags.Instance
@@ -25,7 +26,7 @@ public abstract class TbCustomView : ComponentBase
             {
                 if (
                     property is { CanRead: true, CanWrite: true }
-                    && property.GetCustomAttribute<ParameterAttribute>() is { } attr
+                    && property.GetCustomAttribute<ParameterAttribute>() is { }
                 )
                 {
                     var value = property.GetValue(this);
@@ -35,6 +36,7 @@ public abstract class TbCustomView : ComponentBase
                     }
                 }
             }
+
             builder.CloseComponent();
             return true;
         }

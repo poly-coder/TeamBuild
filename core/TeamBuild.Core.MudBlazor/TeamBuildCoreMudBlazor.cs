@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace TeamBuild.Core.MudBlazor;
 
-public class TeamBuildCoreMudBlazor
+public static class TeamBuildCoreMudBlazor
 {
     public const string UiSelector = "MudBlazor";
 

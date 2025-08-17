@@ -22,7 +22,7 @@ public interface ICultureQueryService
     );
 }
 
-public class CultureQueryServiceDecorator(
+public sealed class CultureQueryServiceDecorator(
     ICultureQueryService service,
     CultureQueryServiceTracingAspect tracingAspect,
     LoggingAspect loggingAspect,
@@ -66,10 +66,9 @@ public class CultureQueryServiceDecorator(
             cancel: cancel
         );
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
         service.DisposeIfNeeded();
-        GC.SuppressFinalize(this);
     }
 }
 

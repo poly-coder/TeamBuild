@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace TeamBuild.Core.Services;
 
-public class TeamBuildCoreServices
+public static class TeamBuildCoreServices
 {
     public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 

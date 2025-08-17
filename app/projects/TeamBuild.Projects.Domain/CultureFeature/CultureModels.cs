@@ -2,7 +2,7 @@
 
 public record CultureDetails(string CultureCode, string EnglishName, string NativeName);
 
-public class CultureEntity
+public static class CultureEntity
 {
     public const string Caption = "culture";
 }

@@ -133,7 +133,7 @@ public class TbAsyncOperation<TResult> : TbOperation<TResult>
         StopCurrent(true);
     }
 
-    private bool StopCurrent(bool notify)
+    private void StopCurrent(bool notify)
     {
         if (currentTokenSource is { } cts)
         {
@@ -141,10 +141,6 @@ public class TbAsyncOperation<TResult> : TbOperation<TResult>
             currentTokenSource = null;
 
             SetCancelled(notify);
-
-            return true;
         }
-
-        return false;
     }
 }

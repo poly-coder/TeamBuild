@@ -90,13 +90,15 @@ else
         false => TbMudIcons.Denied,
     };
 
+    private bool CanHandleCopy => Clipboard is not null && IsDisabled is false && copied.HasValue is false;
+
     private async Task HandleOnClick()
     {
-        if (Clipboard is not null && IsDisabled is false && copied.HasValue is false)
+        if (CanHandleCopy)
         {
             try
             {
-                await Clipboard.CopyText(CopyValue() ?? "");
+                await Clipboard!.CopyText(CopyValue() ?? "");
 
                 copied = true;
             }

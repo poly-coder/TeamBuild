@@ -31,7 +31,9 @@ public class UncachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>
         await factory(key, cancel);
 }
 
-public class PermanentCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>, IDisposable
+public sealed class PermanentCachedAsyncFunction<TKey, TValue>
+    : IAsyncFunction<TKey, TValue>,
+        IDisposable
     where TKey : notnull
 {
     private readonly Func<TKey, CancellationToken, Task<TValue>> factory;
@@ -65,14 +67,15 @@ public class PermanentCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, T
         return value;
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
         cacheLock.Dispose();
-        GC.SuppressFinalize(this);
     }
 }
 
-public class WeakCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>, IDisposable
+public sealed class WeakCachedAsyncFunction<TKey, TValue>
+    : IAsyncFunction<TKey, TValue>,
+        IDisposable
     where TKey : notnull
 {
     private readonly Func<TKey, CancellationToken, Task<TValue>> factory;
@@ -131,9 +134,8 @@ public class WeakCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue
         return value;
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
         cacheLock.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

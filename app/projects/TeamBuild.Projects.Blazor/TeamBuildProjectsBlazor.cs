@@ -7,7 +7,7 @@ using TeamBuild.Projects.Domain;
 
 namespace TeamBuild.Projects.Blazor;
 
-public class TeamBuildProjectsBlazor
+public static class TeamBuildProjectsBlazor
 {
     public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 

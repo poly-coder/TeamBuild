@@ -5,7 +5,7 @@ using TeamBuild.Core;
 
 namespace TeamBuild.Projects.Infrastructure;
 
-public class TeamBuildProjectsInfrastructure
+public static class TeamBuildProjectsInfrastructure
 {
     public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 

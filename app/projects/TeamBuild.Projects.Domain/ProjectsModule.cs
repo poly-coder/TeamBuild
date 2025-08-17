@@ -1,6 +1,6 @@
 ﻿namespace TeamBuild.Projects.Domain;
 
-public class ProjectsModule
+public static class ProjectsModule
 {
     public const string Caption = "projects";
 }

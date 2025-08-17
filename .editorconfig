@@ -275,6 +275,10 @@ dotnet_diagnostic.RMG020.severity = warning # Unmapped source member
 # Custom rules
 
 dotnet_diagnostic.CA1863.severity = none        # Cache a 'CompositeFormat' for repeated use in this formatting operation (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1863)
+dotnet_diagnostic.S101.severity = none          # Rename class 'x' to match pascal case naming rules, consider using 'x'. (https://rules.sonarsource.com/csharp/RSPEC-101)
+dotnet_diagnostic.S1125.severity = none         # Remove the unnecessary Boolean literal(s). (https://rules.sonarsource.com/csharp/RSPEC-1125)
+dotnet_diagnostic.S1135.severity = suggestion   # Complete the task associated to this 'TODO' comment. (https://rules.sonarsource.com/csharp/RSPEC-1135)
+dotnet_diagnostic.S3267.severity = suggestion   # Loops should be simplified using the "Where" LINQ method (https://rules.sonarsource.com/csharp/RSPEC-3267)
 
 
 # C# Verify files
