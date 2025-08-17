@@ -8,7 +8,7 @@ public static partial class CultureValidations
     [GeneratedRegex(@"^([a-z][a-z0-9]+)(\-([a-z][a-z0-9]+))*$", RegexOptions.IgnoreCase)]
     internal static partial Regex CultureCodeRegex();
 
-    public static StringValidator CultureCode = StringValidations.Create(
+    public static readonly StringValidator CultureCode = StringValidations.Create(
         new(
             MaxLength: 10,
             Pattern: CultureCodeRegex(),
@@ -16,7 +16,7 @@ public static partial class CultureValidations
         )
     );
 
-    public static StringValidator EnglishName = StringValidations.DisplayName;
+    public static readonly StringValidator EnglishName = StringValidations.DisplayName;
 
-    public static StringValidator NativeName = StringValidations.DisplayName;
+    public static readonly StringValidator NativeName = StringValidations.DisplayName;
 }

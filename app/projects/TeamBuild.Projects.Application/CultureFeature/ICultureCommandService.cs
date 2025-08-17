@@ -53,9 +53,10 @@ public class CultureCommandServiceDecorator(
             cancel: cancel
         );
 
-    public void Dispose()
+    void IDisposable.Dispose()
     {
         service.DisposeIfNeeded();
+        GC.SuppressFinalize(this);
     }
 }
 

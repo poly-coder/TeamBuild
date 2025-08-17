@@ -2,99 +2,102 @@
 
 namespace TeamBuild.Core;
 
-public abstract record Result<TValue, TError>
+public abstract record Result<TValue, TFailure>
 {
     private Result() { }
 
     public abstract bool IsOk { get; }
 
-    public bool IsError => !IsOk;
+    public bool IsFailure => !IsOk;
 
-    public abstract TResult Match<TResult>(Func<TValue, TResult> ok, Func<TError, TResult> error);
+    public abstract TResult Match<TResult>(
+        Func<TValue, TResult> onOk,
+        Func<TFailure, TResult> onFailure
+    );
 
-    public static implicit operator Result<TValue, TError>(TValue value) =>
-        Result.Ok<TValue, TError>(value);
+    public static implicit operator Result<TValue, TFailure>(TValue value) =>
+        Result.Ok<TValue, TFailure>(value);
 
-    public static implicit operator Result<TValue, TError>(TError error) =>
-        Result.Error<TValue, TError>(error);
+    public static implicit operator Result<TValue, TFailure>(TFailure failure) =>
+        Result.Failure<TValue, TFailure>(failure);
 
-    public sealed record Error(TError Err) : Result<TValue, TError>
+    public sealed record Failure(TFailure Err) : Result<TValue, TFailure>
     {
         public override bool IsOk => false;
 
         public override TResult Match<TResult>(
-            Func<TValue, TResult> ok,
-            Func<TError, TResult> error
+            Func<TValue, TResult> onOk,
+            Func<TFailure, TResult> onFailure
         )
         {
-            return error(Err);
+            return onFailure(Err);
         }
     }
 
-    public sealed record Ok(TValue Value) : Result<TValue, TError>
+    public sealed record Ok(TValue Value) : Result<TValue, TFailure>
     {
         public override bool IsOk => true;
 
         public override TResult Match<TResult>(
-            Func<TValue, TResult> ok,
-            Func<TError, TResult> error
+            Func<TValue, TResult> onOk,
+            Func<TFailure, TResult> onFailure
         )
         {
-            return ok(Value);
+            return onOk(Value);
         }
     }
 }
 
 public static class Result
 {
-    public static Result<TValue, TError> Error<TValue, TError>(TError error) =>
-        new Result<TValue, TError>.Error(error);
+    public static Result<TValue, TFailure> Failure<TValue, TFailure>(TFailure failure) =>
+        new Result<TValue, TFailure>.Failure(failure);
 
-    public static Result<TValue, TError> Ok<TValue, TError>(TValue value) =>
-        new Result<TValue, TError>.Ok(value);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<TOutput, TError> Bind<TInput, TOutput, TError>(
-        this Result<TInput, TError> option,
-        Func<TInput, Result<TOutput, TError>> binder
-    ) => option.Match(ok: binder, error: Error<TOutput, TError>);
+    public static Result<TValue, TFailure> Ok<TValue, TFailure>(TValue value) =>
+        new Result<TValue, TFailure>.Ok(value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<TOutput, TError> Map<TInput, TOutput, TError>(
-        this Result<TInput, TError> option,
+    public static Result<TOutput, TFailure> Bind<TInput, TOutput, TFailure>(
+        this Result<TInput, TFailure> option,
+        Func<TInput, Result<TOutput, TFailure>> binder
+    ) => option.Match(onOk: binder, onFailure: Failure<TOutput, TFailure>);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Result<TOutput, TFailure> Map<TInput, TOutput, TFailure>(
+        this Result<TInput, TFailure> option,
         Func<TInput, TOutput> mapper
-    ) => option.Match(ok: value => mapper(value), error: Error<TOutput, TError>);
+    ) => option.Match(onOk: value => mapper(value), onFailure: Failure<TOutput, TFailure>);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<TValue, TOutputError> BindError<TValue, TInputError, TOutputError>(
-        this Result<TValue, TInputError> result,
-        Func<TInputError, Result<TValue, TOutputError>> binder
-    ) => result.Match(ok: Ok<TValue, TOutputError>, error: binder);
+    public static Result<TValue, TOutputFailure> BindFailure<TValue, TInputFailure, TOutputFailure>(
+        this Result<TValue, TInputFailure> result,
+        Func<TInputFailure, Result<TValue, TOutputFailure>> binder
+    ) => result.Match(onOk: Ok<TValue, TOutputFailure>, onFailure: binder);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Result<TValue, TOutputError> MapError<TValue, TInputError, TOutputError>(
-        this Result<TValue, TInputError> result,
-        Func<TInputError, TOutputError> mapper
+    public static Result<TValue, TOutputFailure> MapFailure<TValue, TInputFailure, TOutputFailure>(
+        this Result<TValue, TInputFailure> result,
+        Func<TInputFailure, TOutputFailure> mapper
     ) =>
         result.Match(
-            ok: Ok<TValue, TOutputError>,
-            error: err => Error<TValue, TOutputError>(mapper(err))
+            onOk: Ok<TValue, TOutputFailure>,
+            onFailure: err => Failure<TValue, TOutputFailure>(mapper(err))
         );
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IReadOnlyList<TValue> ToEnumerable<TValue, TError>(
-        this Result<TValue, TError> option
+    public static IReadOnlyList<TValue> ToEnumerable<TValue, TFailure>(
+        this Result<TValue, TFailure> option
     )
     {
-        return option.Match<IReadOnlyList<TValue>>(ok: value => [value], error: _ => []);
+        return option.Match<IReadOnlyList<TValue>>(onOk: value => [value], onFailure: _ => []);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IReadOnlyList<TError> ToEnumerableError<TValue, TError>(
-        this Result<TValue, TError> option
+    public static IReadOnlyList<TFailure> ToEnumerableFailure<TValue, TFailure>(
+        this Result<TValue, TFailure> option
     )
     {
-        return option.Match<IReadOnlyList<TError>>(ok: _ => [], error: err => [err]);
+        return option.Match<IReadOnlyList<TFailure>>(onOk: _ => [], onFailure: err => [err]);
     }
 
     public static Result<T, Exception> OfFunc<T>(Func<T> func)
@@ -109,18 +112,18 @@ public static class Result
         }
     }
 
-    public static bool TryGetValue<TValue, TError>(
-        this Result<TValue, TError> result,
+    public static bool TryGetValue<TValue, TFailure>(
+        this Result<TValue, TFailure> result,
         out TValue value
     )
     {
         switch (result)
         {
-            case Result<TValue, TError>.Ok ok:
+            case Result<TValue, TFailure>.Ok ok:
                 value = ok.Value;
                 return true;
 
-            case Result<TValue, TError>.Error:
+            case Result<TValue, TFailure>.Failure:
                 value = default!;
                 return false;
 
@@ -130,45 +133,45 @@ public static class Result
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TValue GetValueOrThrow<TValue, TError>(this Result<TValue, TError> option)
+    public static TValue GetValueOrThrow<TValue, TFailure>(this Result<TValue, TFailure> option)
     {
         return option.Match(
-            ok: x => x,
-            error: _ => throw new InvalidOperationException("Result is in error state")
+            onOk: x => x,
+            onFailure: _ => throw new InvalidOperationException("Result is in failure state")
         );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TValue GetValueOrDefault<TValue, TError>(
-        this Result<TValue, TError> option,
+    public static TValue GetValueOrDefault<TValue, TFailure>(
+        this Result<TValue, TFailure> option,
         TValue defaultValue
     )
     {
-        return option.Match(ok: x => x, error: _ => defaultValue);
+        return option.Match(onOk: x => x, onFailure: _ => defaultValue);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TValue GetValueOrDefault<TValue, TError>(
-        this Result<TValue, TError> option,
+    public static TValue GetValueOrDefault<TValue, TFailure>(
+        this Result<TValue, TFailure> option,
         Func<TValue> defaultValueFactory
     )
     {
-        return option.Match(ok: x => x, error: _ => defaultValueFactory());
+        return option.Match(onOk: x => x, onFailure: _ => defaultValueFactory());
     }
 
-    public static bool TryGetError<TValue, TError>(
-        this Result<TValue, TError> result,
-        out TError error
+    public static bool TryGetFailure<TValue, TFailure>(
+        this Result<TValue, TFailure> result,
+        out TFailure failure
     )
     {
         switch (result)
         {
-            case Result<TValue, TError>.Ok:
-                error = default!;
+            case Result<TValue, TFailure>.Ok:
+                failure = default!;
                 return false;
 
-            case Result<TValue, TError>.Error err:
-                error = err.Err;
+            case Result<TValue, TFailure>.Failure err:
+                failure = err.Err;
                 return true;
 
             default:
@@ -177,29 +180,29 @@ public static class Result
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TError GetErrorOrThrow<TValue, TError>(this Result<TValue, TError> option)
+    public static TFailure GetFailureOrThrow<TValue, TFailure>(this Result<TValue, TFailure> option)
     {
         return option.Match(
-            ok: _ => throw new InvalidOperationException("Result is in Ok state"),
-            error: x => x
+            onOk: _ => throw new InvalidOperationException("Result is in Ok state"),
+            onFailure: x => x
         );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TError GetErrorOrDefault<TValue, TError>(
-        this Result<TValue, TError> option,
-        TError defaultError
+    public static TFailure GetFailureOrDefault<TValue, TFailure>(
+        this Result<TValue, TFailure> option,
+        TFailure defaultFailure
     )
     {
-        return option.Match(ok: _ => defaultError, error: x => x);
+        return option.Match(onOk: _ => defaultFailure, onFailure: x => x);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TError GetErrorOrDefault<TValue, TError>(
-        this Result<TValue, TError> option,
-        Func<TError> defaultErrorFactory
+    public static TFailure GetFailureOrDefault<TValue, TFailure>(
+        this Result<TValue, TFailure> option,
+        Func<TFailure> defaultFailureFactory
     )
     {
-        return option.Match(ok: _ => defaultErrorFactory(), error: x => x);
+        return option.Match(onOk: _ => defaultFailureFactory(), onFailure: x => x);
     }
 }

@@ -9,11 +9,11 @@ public class LoggingAspect(IServiceProvider provider)
 {
     public virtual LogLevel BeforeLogLevel => LogLevel.Information;
     public virtual LogLevel AfterLogLevel => LogLevel.Information;
-    public virtual LogLevel CatchLogLevel => LogLevel.Error;
+    public virtual LogLevel CaughtLogLevel => LogLevel.Error;
 
     public virtual string BeforeStageName => "Before";
     public virtual string AfterStageName => "After";
-    public virtual string CatchStageName => "Catch";
+    public virtual string CaughtStageName => "Caught";
 
     public State Before(Type targetType, int parameterCount, string methodName)
     {
@@ -22,7 +22,7 @@ public class LoggingAspect(IServiceProvider provider)
 
         var caption = $"{targetType.Name}.{methodName}({parameterCount} params)";
 
-        logger.Log(BeforeLogLevel, "{Stage}: {Caption}.", BeforeStageName, caption);
+        logger.LogLoggingAspectBefore(BeforeLogLevel, BeforeStageName, caption);
 
         var startTimestamp = Stopwatch.GetTimestamp();
 
@@ -33,24 +33,22 @@ public class LoggingAspect(IServiceProvider provider)
     {
         var elapsed = Stopwatch.GetElapsedTime(state.StartTimestamp);
 
-        state.Logger.Log(
+        state.Logger.LogLoggingAspectAfter(
             AfterLogLevel,
-            "{Stage}: {Caption}. Elapsed: {Elapsed:##.000}ms",
             AfterStageName,
             state.Caption,
             elapsed.TotalMilliseconds
         );
     }
 
-    public void Catch(State state, Exception exception)
+    public void Caught(State state, Exception exception)
     {
         var elapsed = Stopwatch.GetElapsedTime(state.StartTimestamp);
 
-        state.Logger.Log(
-            CatchLogLevel,
+        state.Logger.LogLoggingAspectCaught(
+            CaughtLogLevel,
             exception,
-            "{Stage}: {Caption}. Elapsed: {Elapsed:##.000}ms",
-            CatchStageName,
+            CaughtStageName,
             state.Caption,
             elapsed.TotalMilliseconds
         );
@@ -74,7 +72,7 @@ public class LoggingAspect(IServiceProvider provider)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
@@ -94,7 +92,7 @@ public class LoggingAspect(IServiceProvider provider)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
@@ -115,7 +113,7 @@ public class LoggingAspect(IServiceProvider provider)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
@@ -135,8 +133,38 @@ public class LoggingAspect(IServiceProvider provider)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
+}
+
+internal static partial class LoggingAspectLogs
+{
+    [LoggerMessage("{Stage}: {Caption}.")]
+    public static partial void LogLoggingAspectBefore(
+        this ILogger logger,
+        LogLevel logLevel,
+        string stage,
+        string caption
+    );
+
+    [LoggerMessage("{Stage}: {Caption}. Elapsed: {Elapsed:##.000}ms")]
+    public static partial void LogLoggingAspectAfter(
+        this ILogger logger,
+        LogLevel logLevel,
+        string stage,
+        string caption,
+        double elapsed
+    );
+
+    [LoggerMessage("{Stage}: {Caption}. Elapsed: {Elapsed:##.000}ms")]
+    public static partial void LogLoggingAspectCaught(
+        this ILogger logger,
+        LogLevel logLevel,
+        Exception exception,
+        string stage,
+        string caption,
+        double elapsed
+    );
 }

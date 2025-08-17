@@ -31,7 +31,7 @@ public class UncachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>
         await factory(key, cancel);
 }
 
-public class PermanentCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>
+public class PermanentCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>, IDisposable
     where TKey : notnull
 {
     private readonly Func<TKey, CancellationToken, Task<TValue>> factory;
@@ -64,6 +64,12 @@ public class PermanentCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, T
         cache[key] = value;
         return value;
     }
+
+    void IDisposable.Dispose()
+    {
+        cacheLock.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }
 
 public class WeakCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue>, IDisposable
@@ -88,7 +94,7 @@ public class WeakCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue
     }
 
     // BoxedKey is a reference type wrapper for the key, required by ConditionalWeakTable.
-    private class BoxedKey(TKey key, IEqualityComparer<TKey> comparer)
+    private sealed class BoxedKey(TKey key, IEqualityComparer<TKey> comparer)
     {
         public TKey Key { get; } = key;
 
@@ -101,7 +107,7 @@ public class WeakCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue
     }
 
     // BoxedValue is a reference type wrapper for the value.
-    private class BoxedValue(TValue value)
+    private sealed class BoxedValue(TValue value)
     {
         public TValue Value => value;
     }
@@ -125,8 +131,9 @@ public class WeakCachedAsyncFunction<TKey, TValue> : IAsyncFunction<TKey, TValue
         return value;
     }
 
-    public void Dispose()
+    void IDisposable.Dispose()
     {
         cacheLock.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

@@ -2,18 +2,18 @@
 
 namespace TeamBuild.Core;
 
-public abstract record Option<T>
+public abstract record Maybe<T>
 {
-    private Option() { }
+    private Maybe() { }
 
     public abstract bool IsSome { get; }
     public bool IsNone => !IsSome;
 
     public abstract TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none);
 
-    public static implicit operator Option<T>(T value) => Option.Some(value);
+    public static implicit operator Maybe<T>(T value) => Maybe.Some(value);
 
-    public sealed record None : Option<T>
+    public sealed record None : Maybe<T>
     {
         public static readonly None Instance = new();
 
@@ -25,7 +25,7 @@ public abstract record Option<T>
         }
     }
 
-    public sealed record Some(T Value) : Option<T>
+    public sealed record Some(T Value) : Maybe<T>
     {
         public override bool IsSome => true;
 
@@ -36,51 +36,51 @@ public abstract record Option<T>
     }
 }
 
-public static class Option
+public static class Maybe
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<T> None<T>() => Option<T>.None.Instance;
+    public static Maybe<T> None<T>() => Maybe<T>.None.Instance;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<T> Some<T>(T value) => new Option<T>.Some(value);
+    public static Maybe<T> Some<T>(T value) => new Maybe<T>.Some(value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<TOutput> Bind<TInput, TOutput>(
-        this Option<TInput> option,
-        Func<TInput, Option<TOutput>> binder
-    ) => option.Match(some: binder, none: None<TOutput>);
+    public static Maybe<TOutput> Bind<TInput, TOutput>(
+        this Maybe<TInput> optional,
+        Func<TInput, Maybe<TOutput>> binder
+    ) => optional.Match(some: binder, none: None<TOutput>);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<TOutput> Map<TInput, TOutput>(
-        this Option<TInput> option,
+    public static Maybe<TOutput> Map<TInput, TOutput>(
+        this Maybe<TInput> optional,
         Func<TInput, TOutput> mapper
-    ) => option.Match(some: value => mapper(value), none: None<TOutput>);
+    ) => optional.Match(some: value => mapper(value), none: None<TOutput>);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<T> OfObj<T>(T? value)
+    public static Maybe<T> OfObj<T>(T? value)
         where T : class => value is null ? None<T>() : Some(value);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? ToObj<T>(this Option<T> option)
+    public static T? ToObj<T>(this Maybe<T> optional)
         where T : class
     {
-        return option.Match(some: value => value, none: () => (T?)null);
+        return optional.Match(some: value => value, none: () => (T?)null);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IReadOnlyList<T> ToEnumerable<T>(this Option<T> option)
+    public static IReadOnlyList<T> ToEnumerable<T>(this Maybe<T> optional)
     {
-        return option.Match<IReadOnlyList<T>>(some: value => [value], none: () => []);
+        return optional.Match<IReadOnlyList<T>>(some: value => [value], none: () => []);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Option<T> OfNullable<T>(T? value)
+    public static Maybe<T> OfNullable<T>(T? value)
         where T : struct
     {
         return value.HasValue ? Some(value.Value) : None<T>();
     }
 
-    public static Option<T> OfFunc<T>(Func<T> func)
+    public static Maybe<T> OfFunc<T>(Func<T> func)
     {
         try
         {
@@ -92,15 +92,15 @@ public static class Option
         }
     }
 
-    public static bool TryGetValue<T>(this Option<T> option, out T value)
+    public static bool TryGetValue<T>(this Maybe<T> optional, out T value)
     {
-        switch (option)
+        switch (optional)
         {
-            case Option<T>.Some someOption:
+            case Maybe<T>.Some someOption:
                 value = someOption.Value;
                 return true;
 
-            case Option<T>.None:
+            case Maybe<T>.None:
                 value = default!;
                 return false;
 
@@ -110,23 +110,23 @@ public static class Option
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T GetValueOrThrow<T>(this Option<T> option)
+    public static T GetValueOrThrow<T>(this Maybe<T> optional)
     {
-        return option.Match(
+        return optional.Match(
             some: x => x,
             none: () => throw new InvalidOperationException("Option has no value")
         );
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T GetValueOrDefault<T>(this Option<T> option, T defaultValue)
+    public static T GetValueOrDefault<T>(this Maybe<T> optional, T defaultValue)
     {
-        return option.Match(some: x => x, none: () => defaultValue);
+        return optional.Match(some: x => x, none: () => defaultValue);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T GetValueOrDefault<T>(this Option<T> option, Func<T> defaultValueFactory)
+    public static T GetValueOrDefault<T>(this Maybe<T> optional, Func<T> defaultValueFactory)
     {
-        return option.Match(some: x => x, none: defaultValueFactory);
+        return optional.Match(some: x => x, none: defaultValueFactory);
     }
 }

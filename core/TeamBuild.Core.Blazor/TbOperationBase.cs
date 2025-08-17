@@ -73,5 +73,6 @@ public abstract class TbOperationBase<TResult> : IDisposable
     public virtual void Dispose()
     {
         IsDisposed = true;
+        GC.SuppressFinalize(this);
     }
 }

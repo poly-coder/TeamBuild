@@ -6,7 +6,7 @@ using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Infrastructure.CultureFeature;
 
-internal class CultureMartenQueryService(IQuerySession session) : ICultureQueryService
+public class CultureMartenQueryService(IQuerySession session) : ICultureQueryService
 {
     public async Task<CultureListQuerySuccess> List(
         CultureListQuery query,

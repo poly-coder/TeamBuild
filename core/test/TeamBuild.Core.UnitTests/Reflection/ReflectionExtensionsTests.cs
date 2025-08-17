@@ -60,7 +60,7 @@ public class ReflectionExtensionsTests
 
             // Failed cases
             Add((string x) => x.Contains(""), false, null);
-            Add(() => new String(new[] { 'x' }), false, null);
+            Add(() => new String(Array.Empty<char>()), false, null);
         }
     }
 
@@ -129,7 +129,7 @@ public class ReflectionExtensionsTests
 
             // Failed cases
             Add((string x) => x.Length, false, null);
-            Add(() => new String(new[] { 'x' }), false, null);
+            Add(() => new String(Array.Empty<char>()), false, null);
         }
     }
 

@@ -34,7 +34,7 @@ public abstract class StandardServiceDecorator(
             }
             catch (Exception exception)
             {
-                loggingAspect.Catch(loggingState, exception);
+                loggingAspect.Caught(loggingState, exception);
                 throw;
             }
 
@@ -42,7 +42,7 @@ public abstract class StandardServiceDecorator(
         }
         catch (Exception exception)
         {
-            tracingAspect.Catch(tracingState, exception);
+            tracingAspect.Caught(tracingState, exception);
             throw;
         }
 

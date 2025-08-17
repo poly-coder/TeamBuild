@@ -126,7 +126,7 @@ public class FluentValidationAspect(IServiceProvider provider)
         typeof(ValidationContext<>).MakeGenericType(inputType).GetConstructor([inputType])!
     );
 
-    private IValidationContext CreateContext(Type inputType, object input)
+    private static IValidationContext CreateContext(Type inputType, object input)
     {
         var constructor = ValidationContextConstructorCache.GetValue(inputType);
 

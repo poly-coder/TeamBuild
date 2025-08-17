@@ -8,6 +8,8 @@
         <IsPackable>false</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>Recommended</AnalysisMode>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -28,7 +30,7 @@
         <RepositoryUrl>https://github.com/poly-coder/TeamBuild</RepositoryUrl>
         <PackageTags>TeamBuild</PackageTags>
         <PackageIcon>icon-color.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/poly-coder/TeamBuild</PackageProjectUrl> 
+        <PackageProjectUrl>https://github.com/poly-coder/TeamBuild</PackageProjectUrl>
         <Authors>PolyCoder</Authors>
         <Copyright>Copyright © 2025</Copyright>
         <PackageOutputPath Condition="$(Build_ArtifactStagingDirectory) != ''">

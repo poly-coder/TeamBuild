@@ -5,7 +5,7 @@ using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Infrastructure.CultureFeature;
 
-internal class CultureMartenCommandService(IDocumentSession session) : ICultureCommandService
+public class CultureMartenCommandService(IDocumentSession session) : ICultureCommandService
 {
     public async Task<CultureDefineCommandSuccess> Define(
         CultureDefineCommand command,

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using FluentValidation;
@@ -94,7 +95,7 @@ public static class StringValidations
 
     #endregion [ PrefixedEntityId ]
 
-    public static class Optional
+    public static class Nullable
     {
         // ReSharper disable MemberHidesStaticFromOuterClass
 
@@ -278,10 +279,10 @@ public sealed partial record StringValidatorOptions(
     public static partial class PrefixedEntityId
     {
         [StringSyntax(StringSyntaxAttribute.Regex)]
-        internal const string PrefixPattern = $"{EntityId.CharClass}{{1,16}}";
+        private const string PrefixPattern = $"{EntityId.CharClass}{{1,16}}";
 
         [GeneratedRegex($@"^{PrefixPattern}$")]
-        internal static partial Regex PrefixRegex();
+        private static partial Regex PrefixRegex();
 
         public static StringValidatorOptions Create(string prefix)
         {
@@ -304,6 +305,7 @@ public sealed partial record StringValidatorOptions(
 
             string PatternMessage(string _) =>
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     ValidationsResources.StringValidation_PrefixedEntityId_ErrorMessage,
                     prefix
                 );

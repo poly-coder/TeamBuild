@@ -81,7 +81,7 @@ public class RequiredIfAttribute : ValidationAttribute
         );
     }
 
-    private bool IsConditionTrue(object? conditionValue)
+    private static bool IsConditionTrue(object? conditionValue)
     {
         if (conditionValue is bool boolValue)
         {

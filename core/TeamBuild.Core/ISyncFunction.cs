@@ -117,7 +117,7 @@ public class WeakCachedSyncFunction<TKey, TValue> : ISyncFunction<TKey, TValue>,
     }
 
     // BoxedKey is a reference type wrapper for the key, required by ConditionalWeakTable.
-    private class BoxedKey(TKey key, IEqualityComparer<TKey> comparer)
+    private sealed class BoxedKey(TKey key, IEqualityComparer<TKey> comparer)
     {
         public TKey Key { get; } = key;
 
@@ -130,13 +130,14 @@ public class WeakCachedSyncFunction<TKey, TValue> : ISyncFunction<TKey, TValue>,
     }
 
     // BoxedValue is a reference type wrapper for the value.
-    private class BoxedValue(TValue value)
+    private sealed class BoxedValue(TValue value)
     {
         public TValue Value => value;
     }
 
-    public void Dispose()
+    void IDisposable.Dispose()
     {
         cacheLock.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

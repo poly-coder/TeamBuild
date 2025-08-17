@@ -5,7 +5,7 @@ namespace TeamBuild.Core.Application.Decorators;
 
 public class TracingAspect(ActivitySource activitySource)
 {
-    public State Before(Type targetType, string methodName)
+    public virtual State Before(Type targetType, string methodName)
     {
         var activity = activitySource.StartActivity(
             name: GetActivityName(targetType, methodName),
@@ -17,7 +17,7 @@ public class TracingAspect(ActivitySource activitySource)
         return new State(activity);
     }
 
-    public void After(State state)
+    public virtual void After(State state)
     {
         if (state.Activity is { } activity)
         {
@@ -26,7 +26,7 @@ public class TracingAspect(ActivitySource activitySource)
         }
     }
 
-    public void Catch(State state, Exception exception)
+    public virtual void Caught(State state, Exception exception)
     {
         if (state.Activity is { } activity)
         {
@@ -76,7 +76,7 @@ public class TracingAspect(ActivitySource activitySource)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
@@ -91,7 +91,7 @@ public class TracingAspect(ActivitySource activitySource)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
@@ -111,7 +111,7 @@ public class TracingAspect(ActivitySource activitySource)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }
@@ -130,7 +130,7 @@ public class TracingAspect(ActivitySource activitySource)
         }
         catch (Exception exception)
         {
-            Catch(state, exception);
+            Caught(state, exception);
             throw;
         }
     }

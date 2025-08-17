@@ -1,4 +1,6 @@
-﻿using JasperFx;
+﻿#pragma warning disable CA1822
+
+using JasperFx;
 using JasperFx.CodeGeneration;
 using JasperFx.Events;
 using JasperFx.Events.Daemon;
@@ -15,7 +17,7 @@ using TeamBuild.Projects.Infrastructure;
 
 namespace TeamBuild.AdminApp;
 
-public class Startup
+internal sealed class Startup
 {
     public void ConfigureServices(WebApplicationBuilder builder)
     {
@@ -26,12 +28,12 @@ public class Startup
         ConfigureUiServices(builder);
     }
 
-    public void ConfigureApplicationServices(WebApplicationBuilder builder)
+    private static void ConfigureApplicationServices(WebApplicationBuilder builder)
     {
         builder.Services.AddCoreApplicationServices();
     }
 
-    public void ConfigureInfrastructureServices(WebApplicationBuilder builder)
+    private static void ConfigureInfrastructureServices(WebApplicationBuilder builder)
     {
         var martendbConnectionString =
             builder.Configuration.GetConnectionString("martendb")
@@ -75,7 +77,7 @@ public class Startup
         builder.Services.AddProjectsInfrastructureServices();
     }
 
-    public void ConfigureUiServices(WebApplicationBuilder builder)
+    private static void ConfigureUiServices(WebApplicationBuilder builder)
     {
         builder
             .Services.AddTeamBuildCoreBlazorServices()

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace TeamBuild.Core.Blazor;
+
 public interface IClipboardService
 {
     Task CopyText(string text);
@@ -26,10 +27,10 @@ public class ClipboardService : IClipboardService
 public enum ClipboardMessageType
 {
     Success,
-    Error
+    Error,
 }
 
-public static class ClipboardServiceExtensions
+public static partial class ClipboardServiceExtensions
 {
     public static async Task CopyText(
         this IClipboardService service,
@@ -50,7 +51,7 @@ public static class ClipboardServiceExtensions
         }
         catch (Exception exception)
         {
-            logger?.LogError(exception, "Failed to copy content to clipboard.");
+            logger?.LogFailedToCopyToClipboard(exception);
 
             // TODO: Use culture-specific message
             showMessage?.Invoke("Failed to copy content to clipboard.", ClipboardMessageType.Error);
@@ -84,4 +85,10 @@ public static class ClipboardServiceExtensions
             () => service.CopyText(getText(), logger, showMessage)
         );
     }
+
+    [LoggerMessage("Failed to copy content to clipboard.", Level = LogLevel.Error)]
+    private static partial void LogFailedToCopyToClipboard(
+        this ILogger logger,
+        Exception exception
+    );
 }
