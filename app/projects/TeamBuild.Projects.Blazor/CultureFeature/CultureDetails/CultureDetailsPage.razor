@@ -6,15 +6,14 @@
 
 @inject ICultureQueryService QueryService
 
-@if (CultureId is null)
-{
-    return;
-}
-
 <TbMudPage Title="@CultureRoutes.DetailsTitle"
            Breadcrumbs="@CultureRoutes.DetailsBreadcrumbs">
     <TopBar>
-        <TdMudCopyButton CopyJson="@culture" Label="Copy Json" />
+        @if (load?.ShowReload == true)
+        {
+            <TbMudReloadButton OnClick="() => load?.Execute()" />
+        }
+        <TbMudCopyButton CopyJson="@culture" Label="Copy Json" />
         <TbMudGoToEditButton Href="@CultureRoutes.Edit(CultureId)" />
         <TbMudGoToDeleteButton Href="@CultureRoutes.Delete(CultureId)" />
     </TopBar>
@@ -22,9 +21,17 @@
     <ChildContent>
         @if (load is not null)
         {
-            <CultureDetailsView IsLoading="@load.IsRunning"
-                                LoadException="@load.Exception"
-                                Culture="@culture" />
+            <TbMudLoadingBar IsLoading="@load.IsRunning" />
+
+            @if (load.TryGetException(out var loadException))
+            {
+                <TbMudExceptionAlert Exception="loadException" />
+            }
+        }
+
+        @if (culture is not null)
+        {
+            <CultureDetailsView Culture="@culture" />
         }
 
     </ChildContent>
@@ -33,7 +40,7 @@
 @code
 {
     [Parameter]
-    public string? CultureId { get; set; }
+    public string CultureId { get; set; } = "";
 
     private CultureDetails? culture;
 
@@ -43,12 +50,12 @@
     {
         await base.OnInitializedAsync();
 
-        load = new(cancel => QueryService.GetById(new(CultureId!), cancel))
+        load = new(LoadRunner)
         {
             OnCompleted = success => culture = success.Culture,
             OnStageChanged = _ => StateHasChanged(),
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
-            ActivityName = $"{nameof(CultureDetailsPage)}.Submit",
+            ActivityName = $"{nameof(CultureDetailsPage)}.Load",
             ActivityTags = TeamBuildProjectsBlazor.OperationTags(
                 entity: CultureEntity.Caption,
                 operation: TeamBuildCoreDomain.OperationFetchName
@@ -56,5 +63,10 @@
         };
 
         load.Execute();
+    }
+
+    private async Task<CultureGetByIdQuerySuccess> LoadRunner(CancellationToken cancel)
+    {
+        return await QueryService.GetById(new(CultureId), cancel);
     }
 }

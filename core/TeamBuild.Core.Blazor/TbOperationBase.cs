@@ -26,6 +26,8 @@ public abstract class TbOperationBase<TResult> : IDisposable
 
     public bool HasException { get; protected set; }
 
+    public bool ShowReload => !IsRunning && Stage != TbOperationStage.Completed;
+
     public bool TryGetResult([NotNullWhen(true)] out TResult? result)
     {
         result = HasResult ? Result : default;

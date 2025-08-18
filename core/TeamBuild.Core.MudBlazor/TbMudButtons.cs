@@ -72,6 +72,20 @@ public class TbMudCancelButton : MudButton
     }
 }
 
+public class TbMudReloadButton : MudButton
+{
+    public TbMudReloadButton()
+    {
+        Color = Color.Primary;
+        StartIcon = TbMudIcons.Reload;
+        Variant = Variant.Outlined;
+        ChildContent = tree =>
+        {
+            tree.AddContent(0, "Reload");
+        };
+    }
+}
+
 public class TbMudResetButton : MudButton
 {
     public TbMudResetButton()

@@ -14,6 +14,7 @@ public static class TbMudIcons
     public const string Edit = Icons.Material.Filled.Edit;
     public const string Forward = Icons.Material.Filled.ArrowForward;
     public const string List = Icons.Material.Filled.List;
+    public const string Reload = Icons.Material.Filled.Loop;
     public const string Reset = Icons.Material.Filled.Clear;
     public const string Submit = Icons.Material.Filled.Send;
     public const string Save = Icons.Material.Filled.Save;

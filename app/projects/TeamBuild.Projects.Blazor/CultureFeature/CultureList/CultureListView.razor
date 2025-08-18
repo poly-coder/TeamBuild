@@ -1,21 +1,12 @@
 @using TeamBuild.Projects.Domain.CultureFeature
 @using MudBlazor
 
-<CultureListSearchView OnSubmit="OnSearch"
-                       IsSubmitting="@IsSearching"/>
-
-@if (SearchException is not null)
-{
-    <TbMudExceptionAlert Exception="SearchException" />
-}
-
 <MudTable Items="CultureList"
           T="CultureDetails"
           Hover="true"
           Breakpoint="Breakpoint.Sm"
-          Loading="@IsSearching"
           Elevation="0"
-          OnRowClick="a => HandleSelectedCulture(a.Item)">
+          OnRowClick="a => HandleViewCulture(a.Item)">
     <HeaderContent>
         <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;">Code</MudTh>
         <MudTh Style="text-transform: uppercase; font-weight: bold;">English</MudTh>
@@ -27,7 +18,17 @@
         <MudTd DataLabel="English">@context.EnglishName</MudTd>
         <MudTd DataLabel="Native">@context.NativeName</MudTd>
         <MudTd DataLabel="Actions" HideSmall="false">
-            <MudIcon Icon="@TbMudIcons.View" Color="Color.Default" />
+            <MudButtonGroup Size="Size.Small" Variant="Variant.Text">
+                <MudIconButton Icon="@TbMudIcons.View"
+                               Color="Color.Info"
+                               OnClick="() => HandleViewCulture(context)"/>
+                <MudIconButton Icon="@TbMudIcons.Edit"
+                               Color="Color.Info"
+                               OnClick="() => HandleEditCulture(context)"/>
+                <MudIconButton Icon="@TbMudIcons.Delete"
+                               Color="Color.Error"
+                               OnClick="() => HandleDeleteCulture(context)"/>
+            </MudButtonGroup>
         </MudTd>
     </RowTemplate>
 </MudTable>
@@ -39,20 +40,32 @@
     public EventCallback<CultureListSearchView.FormModel> OnSearch { get; set; }
 
     [Parameter]
-    public bool IsSearching { get; set; }
-
-    [Parameter]
-    public Exception? SearchException { get; set; }
-
-    [Parameter]
     public IReadOnlyList<CultureDetails> CultureList { get; set; } = [];
 
     [Parameter]
-    public EventCallback<CultureDetails> OnCultureSelected { get; set; }
+    public EventCallback<CultureDetails> OnViewCulture { get; set; }
 
-    protected async Task HandleSelectedCulture(CultureDetails? culture)
+    [Parameter]
+    public EventCallback<CultureDetails> OnEditCulture { get; set; }
+
+    [Parameter]
+    public EventCallback<CultureDetails> OnDeleteCulture { get; set; }
+
+    protected async Task HandleViewCulture(CultureDetails? culture)
     {
         if (culture is not null)
-            await OnCultureSelected.InvokeAsync(culture);
+            await OnViewCulture.InvokeAsync(culture);
+    }
+
+    protected async Task HandleEditCulture(CultureDetails? culture)
+    {
+        if (culture is not null)
+            await OnEditCulture.InvokeAsync(culture);
+    }
+
+    protected async Task HandleDeleteCulture(CultureDetails? culture)
+    {
+        if (culture is not null)
+            await OnDeleteCulture.InvokeAsync(culture);
     }
 }

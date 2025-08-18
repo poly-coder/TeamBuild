@@ -24,16 +24,9 @@
     {
         await base.OnInitializedAsync();
 
-        define = new((form, cancel) => CommandService.Define(form.MapToCommand(), cancel))
+        define = new(DefineRunner)
         {
-            OnCompleted = (form, success) =>
-            {
-                var route = form.GoToDetails
-                    ? CultureRoutes.Details(success.Culture.CultureCode)
-                    : CultureRoutes.List();
-
-                Nav.NavigateTo(route);
-            },
+            OnCompleted = DefineCompleted,
             OnStageChanged = _ => StateHasChanged(),
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
             ActivityName = $"{nameof(CultureNewPage)}.Submit",
@@ -42,5 +35,21 @@
                 operation: TeamBuildCoreDomain.OperationCreateName
             ),
         };
+    }
+
+    private async Task<CultureDefineCommandSuccess> DefineRunner(
+        CultureNewFormView.FormModel form,
+        CancellationToken cancel)
+    {
+        return await CommandService.Define(form.MapToCommand(), cancel);
+    }
+
+    private void DefineCompleted(CultureNewFormView.FormModel form, CultureDefineCommandSuccess success)
+    {
+        var route = form.GoToDetails
+            ? CultureRoutes.Details(success.Culture.CultureCode)
+            : CultureRoutes.List();
+
+        Nav.NavigateTo(route);
     }
 }

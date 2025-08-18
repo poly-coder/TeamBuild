@@ -1,22 +1,9 @@
 @using TeamBuild.Projects.Domain.CultureFeature
 
-<TbMudLoadingBar IsLoading="IsLoading" />
-
-@if (LoadException is not null)
-{
-    <TbMudExceptionAlert Exception="LoadException" />
-}
-
-<TbMudFieldValues FieldValues="@FieldValues()" IsLoading="@IsLoading" />
+<TbMudFieldValues FieldValues="@FieldValues()" />
 
 @code
 {
-    [Parameter]
-    public bool IsLoading { get; set; }
-
-    [Parameter]
-    public Exception? LoadException { get; set; }
-
     [Parameter]
     public CultureDetails? Culture { get; set; }
 

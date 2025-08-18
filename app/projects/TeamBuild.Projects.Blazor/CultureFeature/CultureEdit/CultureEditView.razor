@@ -1,0 +1,93 @@
+@using MudBlazor
+
+@inherits TbFormView<CultureEditView.FormModel>
+
+<EditForm Model="@Form" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Culture Code"
+                          HelperText="ISO culture code"
+                          @bind-Value="Form.CultureCode"
+                          For="@(() => Form.CultureCode)"
+                          ReadOnly="true" />
+
+            <MudTextField Label="English Name"
+                          HelperText="English name of the culture"
+                          @bind-Value="Form.EnglishName"
+                          For="@(() => Form.EnglishName)"
+                          Disabled="IsSubmitting" />
+
+            <MudTextField Label="Native Name"
+                          HelperText="Native name of the culture"
+                          @bind-Value="Form.NativeName"
+                          For="@(() => Form.NativeName)"
+                          Disabled="IsSubmitting" />
+        </MudCardContent>
+
+        <MudCardActions Class="gap-4 flex-wrap">
+            <MudSwitch Label="Go to details"
+                       @bind-Value="Form.GoToDetails"
+                       For="@(() => Form.GoToDetails)"
+                       Disabled="IsSubmitting" />
+
+            <MudSpacer />
+
+            <TbMudCancelButton Href="@CultureRoutes.List()" Disabled="IsSubmitting" />
+
+            <TbMudResetButton Disabled="IsSubmitting" />
+
+            <TbMudSaveButton Disabled="IsSubmitting" />
+        </MudCardActions>
+
+        <MudCardContent>
+            <MudText Color="Color.Error">
+                <ValidationSummary />
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+</EditForm>
+
+@if (SubmitException is not null)
+{
+    <TbMudExceptionAlert Exception="SubmitException" />
+}
+
+@code
+{
+    [Parameter]
+    public Exception? SubmitException { get; set; }
+
+    public class FormModel : FormModelBase<FormModel>
+    {
+        [Required] public string CultureCode { get; set; } = "";
+
+        [Required] public string EnglishName { get; set; } = "";
+
+        [Required] public string NativeName { get; set; } = "";
+
+        public bool GoToDetails { get; set; }
+
+        public override FormModel Clone()
+        {
+            return new FormModel
+            {
+                CultureCode = CultureCode,
+                EnglishName = EnglishName,
+                NativeName = NativeName,
+                GoToDetails = GoToDetails
+            };
+        }
+
+        public override bool IsEqualTo(FormModel? newOne)
+        {
+            if (newOne is null) return false;
+
+            return CultureCode == newOne.CultureCode &&
+                   EnglishName == newOne.EnglishName &&
+                   NativeName == newOne.NativeName &&
+                   GoToDetails == newOne.GoToDetails;
+        }
+    }
+}

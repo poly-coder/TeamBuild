@@ -1,0 +1,110 @@
+@using TeamBuild.Core.Domain
+@using TeamBuild.Projects.Application.CultureFeature
+@using TeamBuild.Projects.Domain.CultureFeature
+
+@attribute [Route(CultureRoutes.EditRoute)]
+
+@inject NavigationManager Nav
+@inject ICultureCommandService CommandService
+@inject ICultureQueryService QueryService
+
+<TbMudPage Title="@CultureRoutes.EditTitle"
+           Breadcrumbs="@CultureRoutes.EditBreadcrumbs(CultureId)">
+    <TopBar>
+        @if (load?.ShowReload == true)
+        {
+            <TbMudReloadButton OnClick="() => load?.Execute()"/>
+        }
+        <TbMudCopyButton CopyJson="@culture" Label="Copy Json"/>
+        <TbMudGoToEditButton Href="@CultureRoutes.Edit(CultureId)"/>
+        <TbMudGoToDeleteButton Href="@CultureRoutes.Delete(CultureId)"/>
+    </TopBar>
+
+    <ChildContent>
+        @if (load is not null)
+        {
+            <TbMudLoadingBar IsLoading="@load.IsRunning" />
+
+            @if (load.TryGetException(out var loadException))
+            {
+                <TbMudExceptionAlert Exception="loadException" />
+            }
+        }
+
+        @if (culture?.MapToEditForm() is { } initialForm && load is not null && define is not null)
+        {
+            <CultureEditView IsSubmitting="@define.IsRunning"
+                             SubmitException="@define.Exception"
+                             InitialForm="@initialForm"
+                             OnSubmit="f => define.Execute(f)" />
+        }
+    </ChildContent>
+</TbMudPage>
+
+@code
+{
+    [Parameter]
+    public string CultureId { get; set; } = "";
+
+    private CultureDetails? culture;
+
+    private TbAsyncOperation<CultureGetByIdQuerySuccess>? load;
+    private TbAsyncOperation<CultureEditView.FormModel, CultureDefineCommandSuccess>? define;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        load = new(LoadRunner)
+        {
+            OnCompleted = success => culture = success.Culture,
+            OnStageChanged = _ => StateHasChanged(),
+            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
+            ActivityName = $"{nameof(CultureEditPage)}.Load",
+            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
+                entity: CultureEntity.Caption,
+                operation: TeamBuildCoreDomain.OperationFetchName
+            ),
+        };
+
+
+        define = new(DefineRunner)
+        {
+            OnCompleted = DefineCompleted,
+            OnStageChanged = _ => StateHasChanged(),
+            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
+            ActivityName = $"{nameof(CultureEditPage)}.Submit",
+            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
+                entity: CultureEntity.Caption,
+                operation: TeamBuildCoreDomain.OperationUpdateName
+            ),
+        };
+
+        load.Execute();
+
+    }
+
+    private async Task<CultureGetByIdQuerySuccess> LoadRunner(
+        CancellationToken cancel)
+    {
+        await Task.Delay(1000, cancel);
+        _ = await QueryService.GetById(new(CultureId), cancel);
+        throw new FormatException("WTH");
+    }
+
+    private Task<CultureDefineCommandSuccess> DefineRunner(
+        CultureEditView.FormModel form,
+        CancellationToken cancel)
+    {
+        return CommandService.Define(form.MapToCommand(), cancel);
+    }
+
+    private void DefineCompleted(CultureEditView.FormModel form, CultureDefineCommandSuccess success)
+    {
+        var route = form.GoToDetails
+            ? CultureRoutes.Details(success.Culture.CultureCode)
+            : CultureRoutes.List();
+
+        Nav.NavigateTo(route);
+    }
+}
