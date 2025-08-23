@@ -7,6 +7,22 @@ namespace TeamBuild.Core;
 
 public static partial class StringExtensions
 {
+    #region [ Is[Not]NullOr[Empty|WhiteSpace] ]
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNullOrEmpty(this string? text) => string.IsNullOrEmpty(text);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNotNullOrEmpty(this string? text) => !string.IsNullOrEmpty(text);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNullOrWhiteSpace(this string? text) => string.IsNullOrWhiteSpace(text);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNotNullOrWhiteSpace(this string? text) => !string.IsNullOrWhiteSpace(text);
+
+    #endregion [ Is[Not]NullOr[Empty|WhiteSpace] ]
+
     #region [ Coerce ]
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

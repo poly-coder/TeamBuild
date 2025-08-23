@@ -1,44 +1,48 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace TeamBuild.Core;
+﻿namespace TeamBuild.Core;
 
 public static class Disposable
 {
-    public static DeferDisposable Defer(
-        Action action,
-        [CallerFilePath] string filePath = "",
-        [CallerLineNumber] int lineNumber = 0
-    )
+    public static DeferDisposable Defer(Action action)
     {
-        ArgumentNullException.ThrowIfNull(action);
-        return new DeferDisposable(action, filePath, lineNumber);
+        return new DeferDisposable(action);
     }
 
-    public readonly struct DeferDisposable : IDisposable
+    public static DeferAsyncDisposable DeferAsync(Func<ValueTask> action)
     {
-        private readonly Action action;
-        private readonly string filePath;
-        private readonly int lineNumber;
+        return new DeferAsyncDisposable(action);
+    }
 
-        public DeferDisposable(Action action, string filePath, int lineNumber)
+    public struct DeferDisposable : IDisposable
+    {
+        private Action? action;
+
+        public DeferDisposable(Action action)
         {
+            ArgumentNullException.ThrowIfNull(action);
             this.action = action;
-            this.filePath = filePath;
-            this.lineNumber = lineNumber;
         }
 
         public void Dispose()
         {
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(
-                    $"Error in deferred action at {filePath}:{lineNumber} - {ex.Message}"
-                );
-            }
+            Action? toDispose = Interlocked.Exchange(ref action, null);
+            toDispose?.Invoke();
+        }
+    }
+
+    public struct DeferAsyncDisposable : IAsyncDisposable
+    {
+        private Func<ValueTask>? action;
+
+        public DeferAsyncDisposable(Func<ValueTask> action)
+        {
+            ArgumentNullException.ThrowIfNull(action);
+            this.action = action;
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Func<ValueTask>? toDispose = Interlocked.Exchange(ref action, null);
+            return toDispose?.Invoke() ?? default;
         }
     }
 
