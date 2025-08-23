@@ -8,7 +8,9 @@ public abstract record CultureQuery : IDomainQuery;
 
 public abstract record CultureQuerySuccess : IDomainQuerySuccess;
 
-public record CultureListQuery(string? TextSearch) : CultureQuery;
+public record CultureListQuery(CultureListQueryFilter? Filter = null) : CultureQuery;
+
+public record CultureListQueryFilter(string? Search = null) : CultureQuery;
 
 public record CultureListQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
     : CultureQuerySuccess;

@@ -1,5 +1,8 @@
 ﻿using Marten;
+using Microsoft.Extensions.DependencyInjection;
 using TeamBuild.Core;
+using TeamBuild.Core.Application;
+using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
@@ -42,4 +45,19 @@ public class CultureMartenCommandService(IDocumentSession session) : ICultureCom
 
         return new CultureDeleteCommandSuccess();
     }
+}
+
+internal static class CultureMartenCommandServiceExtensions
+{
+    public static IServiceCollection AddCultureMartenCommandService(
+        this IServiceCollection services
+    ) =>
+        services.AddDecoratedInfrastructureService<
+            ICultureCommandService,
+            CultureMartenCommandService,
+            CultureCommandServiceDecorator,
+            CultureCommandServiceLoggingAspect,
+            CultureCommandServiceMetricsAspect,
+            CultureCommandServiceTracingAspect
+        >(TeamBuildProjectsApplication.ActivitySource);
 }

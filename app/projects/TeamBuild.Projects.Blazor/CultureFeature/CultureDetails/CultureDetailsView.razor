@@ -1,16 +1,1 @@
-@using TeamBuild.Projects.Domain.CultureFeature
-
 <TbMudFieldValues FieldValues="@FieldValues()" />
-
-@code
-{
-    [Parameter]
-    public CultureDetails? Culture { get; set; }
-
-    private IEnumerable<FieldValue> FieldValues()
-    {
-        yield return new FieldValue("Code", Culture?.CultureCode);
-        yield return new FieldValue("English", Culture?.EnglishName);
-        yield return new FieldValue("Native", Culture?.NativeName);
-    }
-}

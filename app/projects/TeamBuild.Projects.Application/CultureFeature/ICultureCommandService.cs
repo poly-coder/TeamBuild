@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using Microsoft.Extensions.Logging;
 using TeamBuild.Core;
 using TeamBuild.Core.Application.Decorators;
 using TeamBuild.Core.Domain;
@@ -23,7 +24,7 @@ public interface ICultureCommandService
 public sealed class CultureCommandServiceDecorator(
     ICultureCommandService service,
     CultureCommandServiceTracingAspect tracingAspect,
-    LoggingAspect loggingAspect,
+    CultureCommandServiceLoggingAspect loggingAspect,
     FluentValidationAspect validationAspect,
     CultureCommandServiceMetricsAspect metricsAspect
 )
@@ -80,6 +81,29 @@ public class CultureCommandServiceTracingAspect(ActivitySource activitySource)
             ),
 
             _ => null,
+        };
+    }
+}
+
+public class CultureCommandServiceLoggingAspect(ILoggerFactory loggerFactory)
+    : LoggingAspect(loggerFactory)
+{
+    protected override string GetObjectCaption(object? value)
+    {
+        return value switch
+        {
+            null => "null",
+
+            CultureDefineCommand command =>
+                $"Command[id:'{command.CultureCode}',en:'{command.EnglishName}',nat:'{command.NativeName}']",
+
+            CultureDeleteCommand command => $"Command[id:'{command.CultureCode}']",
+
+            CultureDefineCommandSuccess success => $"Success[id:{success.Culture.CultureCode}]",
+
+            CultureDeleteCommandSuccess => "Success",
+
+            _ => "***",
         };
     }
 }

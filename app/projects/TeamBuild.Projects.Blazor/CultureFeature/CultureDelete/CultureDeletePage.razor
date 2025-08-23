@@ -1,21 +1,21 @@
 @using TeamBuild.Projects.Application.CultureFeature
 
-@attribute [Route(CultureRoutes.EditRoute)]
+@attribute [Route(CultureRoutes.DeleteRoute)]
 
 @inject NavigationManager Nav
 @inject ICultureCommandService CommandService
 @inject ICultureQueryService QueryService
 
-<TbMudPage Title="@CultureRoutes.EditTitle"
-           Breadcrumbs="@CultureRoutes.EditBreadcrumbs(CultureId)">
+<TbMudPage Title="@CultureRoutes.DeleteTitle"
+           Breadcrumbs="@CultureRoutes.DeleteBreadcrumbs(CultureId)">
     <TopBar>
         @if (load?.ShowReload == true)
         {
             <TbMudReloadButton OnClick="() => load?.Execute()"/>
         }
         <TbMudCopyButton CopyJson="@JsonContent" Label="Copy Json"/>
+        <TbMudGoToDetailsButton Href="@CultureRoutes.Details(CultureId)"/>
         <TbMudGoToEditButton Href="@CultureRoutes.Edit(CultureId)"/>
-        <TbMudGoToDeleteButton Href="@CultureRoutes.Delete(CultureId)"/>
     </TopBar>
 
     <ChildContent>
@@ -29,12 +29,11 @@
             }
         }
 
-        @if (culture?.MapToEditForm() is { } initialForm && load is not null && define is not null)
+        @if (culture is not null && load is not null && delete is not null)
         {
-            <CultureEditView IsSubmitting="@define.IsRunning"
-                             SubmitException="@define.Exception"
-                             InitialForm="@initialForm"
-                             OnSubmit="f => define.Execute(f)" />
+            <CultureDeleteView IsSubmitting="@delete.IsRunning" Culture="@culture"
+                               SubmitException="@delete.Exception"
+                               OnSubmit="f => delete.Execute(f)" />
         }
     </ChildContent>
 </TbMudPage>

@@ -1,6 +1,4 @@
-@using TeamBuild.Core.Domain
 @using TeamBuild.Projects.Application.CultureFeature
-@using TeamBuild.Projects.Domain.CultureFeature
 
 @attribute [Route(CultureRoutes.ListRoute)]
 
@@ -10,7 +8,9 @@
 <TbMudPage Title="@CultureRoutes.ListTitle"
            Breadcrumbs="@CultureRoutes.ListBreadcrumbs">
     <TopBar>
-        <TbMudCopyButton CopyJson="@cultureList" Label="Copy Json" />
+        <TbMudReloadButton Disabled="search?.IsRunning == true"
+                           OnClick="() => search?.Execute(lastSearch)"/>
+        <TbMudCopyButton CopyJson="@JsonContent" Label="Copy Json" />
         <TbMudGoToAddButton Href="@CultureRoutes.New()" />
     </TopBar>
 
@@ -23,11 +23,8 @@
             {
                 <TbMudExceptionAlert Exception="searchException" />
             }
-        }
 
-        @if (search is not null)
-        {
-            <CultureListView OnSearch="f => search?.Execute(f)"
+            <CultureListView OnSearch="f => search.Execute(f)"
                              CultureList="@cultureList"
                              OnViewCulture="HandleOnViewCulture"
                              OnEditCulture="HandleOnEditCulture"
@@ -36,56 +33,3 @@
 
     </ChildContent>
 </TbMudPage>
-
-@code
-{
-    private readonly List<CultureDetails> cultureList = [];
-
-    private TbAsyncOperation<CultureListSearchView.FormModel, CultureListQuerySuccess>? search;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        search = new(SearchRunner)
-        {
-            OnCompleted = SearchCompleted,
-            OnStageChanged = _ => StateHasChanged(),
-            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
-            ActivityName = $"{nameof(CultureListPage)}.Search",
-            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
-                entity: CultureEntity.Caption,
-                operation: TeamBuildCoreDomain.OperationListName
-            ),
-        };
-        search.Execute(new());
-    }
-
-    private async Task<CultureListQuerySuccess> SearchRunner(
-        CultureListSearchView.FormModel form,
-        CancellationToken cancel)
-    {
-        return await QueryService.List(form.MapToQuery(), cancel);
-    }
-
-    private void SearchCompleted(CultureListSearchView.FormModel _, CultureListQuerySuccess success)
-    {
-        cultureList.Clear();
-        cultureList.AddRange(success.CultureList);
-    }
-
-    private void HandleOnViewCulture(CultureDetails culture)
-    {
-        Nav.NavigateTo(CultureRoutes.Details(culture.CultureCode));
-    }
-
-    private void HandleOnEditCulture(CultureDetails culture)
-    {
-        Nav.NavigateTo(CultureRoutes.Edit(culture.CultureCode));
-    }
-
-    private void HandleOnDeleteCulture(CultureDetails culture)
-    {
-        Nav.NavigateTo(CultureRoutes.Delete(culture.CultureCode));
-    }
-}

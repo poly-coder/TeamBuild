@@ -7,8 +7,8 @@
 
     <MudStack Row="true" Spacing="4">
         <MudTextField Label="Search"
-                      @bind-Value="Form.TextSearch"
-                      For="@(() => Form.TextSearch)"
+                      @bind-Value="Form.Search"
+                      For="@(() => Form.Search)"
                       Disabled="IsSubmitting"
                       Class="flex-grow-1" />
 
@@ -17,26 +17,3 @@
                        ButtonType="ButtonType.Submit" />
     </MudStack>
 </EditForm>
-
-@code
-{
-    public class FormModel : FormModelBase<FormModel>
-    {
-        public string TextSearch { get; set; } = "";
-
-        public override FormModel Clone()
-        {
-            return new FormModel
-            {
-                TextSearch = TextSearch,
-            };
-        }
-
-        public override bool IsEqualTo(FormModel? newOne)
-        {
-            if (newOne is null) return false;
-
-            return TextSearch == newOne.TextSearch;
-        }
-    }
-}

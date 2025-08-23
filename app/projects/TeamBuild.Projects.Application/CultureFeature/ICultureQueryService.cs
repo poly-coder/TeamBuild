@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using Microsoft.Extensions.Logging;
 using TeamBuild.Core;
 using TeamBuild.Core.Application.Decorators;
 using TeamBuild.Core.Domain;
@@ -25,7 +26,7 @@ public interface ICultureQueryService
 public sealed class CultureQueryServiceDecorator(
     ICultureQueryService service,
     CultureQueryServiceTracingAspect tracingAspect,
-    LoggingAspect loggingAspect,
+    CultureQueryServiceLoggingAspect loggingAspect,
     FluentValidationAspect validationAspect,
     CultureQueryServiceMetricsAspect metricsAspect
 )
@@ -102,6 +103,33 @@ public class CultureQueryServiceTracingAspect(ActivitySource activitySource)
     }
 }
 
+public class CultureQueryServiceLoggingAspect(ILoggerFactory loggerFactory)
+    : LoggingAspect(loggerFactory)
+{
+    protected override string GetObjectCaption(object? value)
+    {
+        return value switch
+        {
+            null => "null",
+
+            CultureListQuery query => $"Query[q:'{query.Filter?.Search}']",
+
+            CultureGetByIdQuery query => $"Query[id:{query.CultureCode}]",
+
+            CultureGetByIdsQuery query => $"Query[ids:({query.CultureCodes.Count})]",
+
+            CultureListQuerySuccess success => $"Success[count:{success.CultureList.Count}]",
+
+            CultureGetByIdQuerySuccess success =>
+                $"Success[Culture=Name:{success.Culture.EnglishName}]",
+
+            CultureGetByIdsQuerySuccess success => $"Success[count:{success.CultureList.Count}]",
+
+            _ => "***",
+        };
+    }
+}
+
 public class CultureQueryServiceMetricsAspect : MetricsAspect
 {
     private static readonly Counter<long> ListCounter =
@@ -128,11 +156,10 @@ public class CultureQueryServiceMetricsAspect : MetricsAspect
         object? result
     )
     {
-        switch (methodName)
+        switch (result)
         {
-            case nameof(ICultureQueryService.List):
+            case CultureListQuerySuccess success:
                 {
-                    var success = (CultureListQuerySuccess)result!;
                     ListCounter.Add(
                         1,
                         KeyValuePair.Create("count", (object?)success.CultureList.Count)
@@ -140,13 +167,12 @@ public class CultureQueryServiceMetricsAspect : MetricsAspect
                 }
                 break;
 
-            case nameof(ICultureQueryService.GetById):
+            case CultureGetByIdQuerySuccess:
                 GetByIdCounter.Add(1);
                 break;
 
-            case nameof(ICultureQueryService.GetByIds):
+            case CultureGetByIdsQuerySuccess success:
                 {
-                    var success = (CultureGetByIdsQuerySuccess)result!;
                     GetByIdsCounter.Add(
                         1,
                         KeyValuePair.Create("count", (object?)success.CultureList.Count)

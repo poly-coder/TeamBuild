@@ -21,7 +21,7 @@ public abstract class StandardServiceDecorator(
         var tracingState = tracingAspect.Before(targetType, methodName);
         try
         {
-            var loggingState = loggingAspect.Before(targetType, parameters.Count, methodName);
+            var loggingState = loggingAspect.Before(targetType, methodName, parameters);
             try
             {
                 await validationAspect.BeforeAsync(parameters, cancel);
@@ -30,7 +30,7 @@ public abstract class StandardServiceDecorator(
 
                 metricsAspect.After(parameters, result, methodName);
 
-                loggingAspect.After(loggingState);
+                loggingAspect.After(loggingState, result);
             }
             catch (Exception exception)
             {

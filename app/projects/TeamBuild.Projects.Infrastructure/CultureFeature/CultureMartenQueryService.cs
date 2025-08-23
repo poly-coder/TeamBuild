@@ -1,6 +1,9 @@
 ﻿using Marten;
+using Microsoft.Extensions.DependencyInjection;
+using TeamBuild.Core.Application;
 using TeamBuild.Core.Domain;
 using TeamBuild.Core.MartenExt;
+using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
@@ -13,10 +16,7 @@ public class CultureMartenQueryService(IQuerySession session) : ICultureQuerySer
         CancellationToken cancel = default
     )
     {
-        var dbQuery = session
-            .Query<CultureDocument>()
-            .ApplyFiltering(query.TextSearch)
-            .ApplySorting();
+        var dbQuery = session.Query<CultureDocument>().ApplyFiltering(query.Filter).ApplySorting();
 
         var docs = await dbQuery.ToListAsync(cancel);
 
@@ -55,12 +55,29 @@ public class CultureMartenQueryService(IQuerySession session) : ICultureQuerySer
 
 internal static class CultureMartenQueryExtensions
 {
+    public static IServiceCollection AddCultureMartenQueryService(
+        this IServiceCollection services
+    ) =>
+        services.AddDecoratedInfrastructureService<
+            ICultureQueryService,
+            CultureMartenQueryService,
+            CultureQueryServiceDecorator,
+            CultureQueryServiceLoggingAspect,
+            CultureQueryServiceMetricsAspect,
+            CultureQueryServiceTracingAspect
+        >(TeamBuildProjectsApplication.ActivitySource);
+
     public static IQueryable<CultureDocument> ApplyFiltering(
         this IQueryable<CultureDocument> query,
-        string? textSearch
+        CultureListQueryFilter? filter
     )
     {
-        return query.ApplyTextSearchData(textSearch, doc => doc.TextSearchData);
+        if (filter is null)
+            return query;
+
+        query = query.ApplyTextSearchData(filter.Search, doc => doc.TextSearchData);
+
+        return query;
     }
 
     public static IQueryable<CultureDocument> ApplySorting(this IQueryable<CultureDocument> query)

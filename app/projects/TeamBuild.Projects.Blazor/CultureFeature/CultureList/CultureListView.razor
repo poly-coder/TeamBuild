@@ -8,15 +8,15 @@
           Elevation="0"
           OnRowClick="a => HandleViewCulture(a.Item)">
     <HeaderContent>
-        <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;">Code</MudTh>
-        <MudTh Style="text-transform: uppercase; font-weight: bold;">English</MudTh>
-        <MudTh Style="text-transform: uppercase; font-weight: bold;">Native</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%; white-space: nowrap;">Code</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; white-space: nowrap;">English</MudTh>
+        <MudTh Style="text-transform: uppercase; font-weight: bold; white-space: nowrap;">Native</MudTh>
         <MudTh Style="text-transform: uppercase; font-weight: bold; width: 1%;"></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Code">@context.CultureCode</MudTd>
-        <MudTd DataLabel="English">@context.EnglishName</MudTd>
-        <MudTd DataLabel="Native">@context.NativeName</MudTd>
+        <MudTd DataLabel="Code" Style="white-space: nowrap;">@context.CultureCode</MudTd>
+        <MudTd DataLabel="English" Style="white-space: nowrap;">@context.EnglishName</MudTd>
+        <MudTd DataLabel="Native" Style="white-space: nowrap;">@context.NativeName</MudTd>
         <MudTd DataLabel="Actions" HideSmall="false">
             <MudButtonGroup Size="Size.Small" Variant="Variant.Text">
                 <MudIconButton Icon="@TbMudIcons.View"
@@ -32,40 +32,3 @@
         </MudTd>
     </RowTemplate>
 </MudTable>
-
-
-@code
-{
-    [Parameter]
-    public EventCallback<CultureListSearchView.FormModel> OnSearch { get; set; }
-
-    [Parameter]
-    public IReadOnlyList<CultureDetails> CultureList { get; set; } = [];
-
-    [Parameter]
-    public EventCallback<CultureDetails> OnViewCulture { get; set; }
-
-    [Parameter]
-    public EventCallback<CultureDetails> OnEditCulture { get; set; }
-
-    [Parameter]
-    public EventCallback<CultureDetails> OnDeleteCulture { get; set; }
-
-    protected async Task HandleViewCulture(CultureDetails? culture)
-    {
-        if (culture is not null)
-            await OnViewCulture.InvokeAsync(culture);
-    }
-
-    protected async Task HandleEditCulture(CultureDetails? culture)
-    {
-        if (culture is not null)
-            await OnEditCulture.InvokeAsync(culture);
-    }
-
-    protected async Task HandleDeleteCulture(CultureDetails? culture)
-    {
-        if (culture is not null)
-            await OnDeleteCulture.InvokeAsync(culture);
-    }
-}

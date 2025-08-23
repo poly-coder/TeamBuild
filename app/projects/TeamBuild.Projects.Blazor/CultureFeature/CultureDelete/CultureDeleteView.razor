@@ -1,0 +1,30 @@
+@using MudBlazor
+
+@inherits TbFormView<CultureDeleteView.FormModel>
+
+<TbMudFieldValues FieldValues="@FieldValues()" />
+
+<EditForm Model="@Form" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+
+    <MudCard>
+        <MudCardActions Class="gap-4 flex-wrap">
+            <MudSpacer />
+
+            <TbMudCancelButton Href="@CultureRoutes.List()" Disabled="IsSubmitting" />
+
+            <TbMudDeleteButton Disabled="IsSubmitting" />
+        </MudCardActions>
+
+        <MudCardContent>
+            <MudText Color="Color.Error">
+                <ValidationSummary />
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+</EditForm>
+
+@if (SubmitException is not null)
+{
+    <TbMudExceptionAlert Exception="SubmitException" />
+}

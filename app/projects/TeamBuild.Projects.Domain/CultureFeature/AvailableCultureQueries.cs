@@ -6,7 +6,10 @@ public abstract record AvailableCultureQuery : IDomainQuery;
 
 public abstract record AvailableCultureQuerySuccess : IDomainQuerySuccess;
 
-public record AvailableCultureListQuery(string? Search) : AvailableCultureQuery;
+public record AvailableCultureListQuery(AvailableCultureListQueryFilter? Filter = null)
+    : AvailableCultureQuery;
 
-public record AvailableCultureListQuerySuccess(IReadOnlyList<CultureDetails> Cultures)
+public record AvailableCultureListQueryFilter(string? Search = null) : AvailableCultureQuery;
+
+public record AvailableCultureListQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
     : AvailableCultureQuerySuccess;

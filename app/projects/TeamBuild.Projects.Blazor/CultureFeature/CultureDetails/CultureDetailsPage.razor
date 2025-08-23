@@ -1,6 +1,4 @@
-@using TeamBuild.Core.Domain
 @using TeamBuild.Projects.Application.CultureFeature
-@using TeamBuild.Projects.Domain.CultureFeature
 
 @attribute [Route(CultureRoutes.DetailsRoute)]
 
@@ -13,7 +11,7 @@
         {
             <TbMudReloadButton OnClick="() => load?.Execute()" />
         }
-        <TbMudCopyButton CopyJson="@culture" Label="Copy Json" />
+        <TbMudCopyButton CopyJson="@JsonContent" Label="Copy Json" />
         <TbMudGoToEditButton Href="@CultureRoutes.Edit(CultureId)" />
         <TbMudGoToDeleteButton Href="@CultureRoutes.Delete(CultureId)" />
     </TopBar>
@@ -36,37 +34,3 @@
 
     </ChildContent>
 </TbMudPage>
-
-@code
-{
-    [Parameter]
-    public string CultureId { get; set; } = "";
-
-    private CultureDetails? culture;
-
-    private TbAsyncOperation<CultureGetByIdQuerySuccess>? load;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        load = new(LoadRunner)
-        {
-            OnCompleted = success => culture = success.Culture,
-            OnStageChanged = _ => StateHasChanged(),
-            ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
-            ActivityName = $"{nameof(CultureDetailsPage)}.Load",
-            ActivityTags = TeamBuildProjectsBlazor.OperationTags(
-                entity: CultureEntity.Caption,
-                operation: TeamBuildCoreDomain.OperationFetchName
-            ),
-        };
-
-        load.Execute();
-    }
-
-    private async Task<CultureGetByIdQuerySuccess> LoadRunner(CancellationToken cancel)
-    {
-        return await QueryService.GetById(new(CultureId), cancel);
-    }
-}

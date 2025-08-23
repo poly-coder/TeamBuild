@@ -76,9 +76,9 @@ public class TbMudReloadButton : MudButton
 {
     public TbMudReloadButton()
     {
-        Color = Color.Primary;
+        Color = Color.Default;
         StartIcon = TbMudIcons.Reload;
-        Variant = Variant.Outlined;
+        Variant = Variant.Text;
         ChildContent = tree =>
         {
             tree.AddContent(0, "Reload");

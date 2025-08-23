@@ -1,0 +1,20 @@
+@using MudBlazor
+
+@if (Culture is null)
+{
+    <MudText Typo="Typo.body2" Color="Color.Error">No culture</MudText>
+    return;
+}
+
+<MudStack Row="true" Spacing="2">
+    <MudText Typo="Typo.body2">@Culture.CultureCode</MudText>
+    <MudText Typo="Typo.body2">@Culture.EnglishName</MudText>
+    <MudText Typo="Typo.body2">/</MudText>
+    <MudText Typo="Typo.body2">@Culture.NativeName</MudText>
+</MudStack>
+
+@code
+{
+    [Parameter]
+    public Domain.CultureFeature.CultureDetails? Culture { get; set; }
+}
