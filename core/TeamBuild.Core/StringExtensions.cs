@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,8 +7,13 @@ namespace TeamBuild.Core;
 
 public static partial class StringExtensions
 {
+    #region [ Coerce ]
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [return: NotNullIfNotNull(nameof(text))]
     public static string? CoerceTrim(this string? text) => text?.Trim();
+
+    #endregion [ Coerce ]
 
     #region [ ToTextSearchData/Query ]
 

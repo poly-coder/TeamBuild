@@ -5,6 +5,8 @@
 [Trait("Project", "Preamble")]
 public class StringExtensionsTests
 {
+    #region [ ToTextSearchData/Query ]
+
     [Theory]
     [ClassData(typeof(ToTextSearchDataTestData))]
     public void ToTextSearchDataTest(string[] inputs, string expected)
@@ -26,6 +28,29 @@ public class StringExtensionsTests
             Add(["á ⒝ Ċ", "Ẋ-Ỿ-Ⓩ", "₀\\①/⒉"], "abc/xyz/012");
         }
     }
+
+    [Theory]
+    [ClassData(typeof(ToTextSearchQueryTestData))]
+    public void ToTextSearchQueryTest(string query, string[] expected)
+    {
+        // Act
+        var actual = query.ToTextSearchQuery();
+
+        // Assert
+        actual.ShouldBeEquivalentTo(expected);
+    }
+
+    public class ToTextSearchQueryTestData : TheoryData<string, string[]>
+    {
+        public ToTextSearchQueryTestData()
+        {
+            Add("", []);
+        }
+    }
+
+    #endregion [ ToTextSearchData/Query ]
+
+    #region [ FoldToASCII ]
 
     [Theory]
     [ClassData(typeof(FoldToASCIITestData))]
@@ -137,6 +162,147 @@ public class StringExtensionsTests
             Add("J Ĵ Ɉ ᴊ Ⓙ Ｊ", "J J J J J J");
             Add("j ĵ ǰ ȷ ɉ ɟ ʄ ʝ ⓙ ⱼ ｊ", "j j j j j j j j j j j");
             Add("⒥", "(j)");
+
+            // k
+            Add("K Ķ Ƙ Ǩ ᴋ Ḱ Ḳ Ḵ Ⓚ Ⱪ Ꝁ Ꝃ Ꝅ Ｋ", "K K K K K K K K K K K K K K");
+            Add("k ķ ƙ ǩ ʞ ᶄ ḱ ḳ ḵ ⓚ ⱪ ꝁ ꝃ ꝅ ｋ", "k k k k k k k k k k k k k k k");
+            Add("⒦", "(k)");
+
+            // l
+            Add(
+                "L Ĺ Ļ Ľ Ŀ Ł Ƚ ʟ ᴌ Ḷ Ḹ Ḻ Ḽ Ⓛ Ⱡ Ɫ Ꝇ Ꝉ Ꞁ Ｌ",
+                "L L L L L L L L L L L L L L L L L L L L"
+            );
+            Add(
+                "l ĺ ļ ľ ŀ ł ƚ ȴ ɫ ɬ ɭ ᶅ ḷ ḹ ḻ ḽ ⓛ ⱡ ꝇ ꝉ ꞁ ｌ",
+                "l l l l l l l l l l l l l l l l l l l l l l"
+            );
+            Add("Ǉ", "LJ");
+            Add("Ỻ", "LL");
+            Add("ǈ", "Lj");
+            Add("⒧", "(l)");
+            Add("ǉ", "lj");
+            Add("ỻ", "ll");
+            Add("ʪ", "ls");
+            Add("ʫ", "lz");
+
+            // m
+            Add("M Ɯ ᴍ Ḿ Ṁ Ṃ Ⓜ Ɱ ꟽ ꟿ Ｍ", "M M M M M M M M M M M");
+            Add("m ɯ ɰ ɱ ᵯ ᶆ ḿ ṁ ṃ ⓜ ｍ", "m m m m m m m m m m m");
+            Add("⒨", "(m)");
+
+            // n
+            Add("N Ñ Ń Ņ Ň Ŋ Ɲ Ǹ Ƞ ɴ ᴎ Ṅ Ṇ Ṉ Ṋ Ⓝ Ｎ", "N N N N N N N N N N N N N N N N N");
+            Add(
+                "n ñ ń ņ ň ŉ ŋ ƞ ǹ ȵ ɲ ɳ ᵰ ᶇ ṅ ṇ ṉ ṋ ⁿ ⓝ ｎ",
+                "n n n n n n n n n n n n n n n n n n n n n"
+            );
+            Add("Ǌ", "NJ");
+            Add("ǋ", "Nj");
+            Add("⒩", "(n)");
+            Add("ǌ", "nj");
+
+            // o
+            Add(
+                "O Ò Ó Ô Õ Ö Ø Ō Ŏ Ő Ɔ Ɵ Ơ Ǒ Ǫ Ǭ Ǿ Ȍ Ȏ Ȫ Ȭ Ȯ Ȱ ᴏ ᴐ Ṍ Ṏ Ṑ Ṓ Ọ Ỏ Ố Ồ Ổ Ỗ Ộ Ớ Ờ Ở Ỡ Ợ Ⓞ Ꝋ Ꝍ Ｏ",
+                "O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O"
+            );
+            Add(
+                "o ò ó ô õ ö ø ō ŏ ő ơ ǒ ǫ ǭ ǿ ȍ ȏ ȫ ȭ ȯ ȱ ɔ ɵ ᴖ ᴗ ᶗ ṍ ṏ ṑ ṓ ọ ỏ ố ồ ổ ỗ ộ ớ ờ ở ỡ ợ ₒ ⓞ ⱺ ꝋ ꝍ ｏ",
+                "o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o o"
+            );
+            Add("Œ ɶ", "OE OE");
+            Add("Ꝏ", "OO");
+            Add("Ȣ ᴕ", "OU OU");
+            Add("⒪", "(o)");
+            Add("œ ᴔ", "oe oe");
+            Add("ꝏ", "oo");
+            Add("ȣ", "ou");
+
+            // p
+            Add("P Ƥ ᴘ Ṕ Ṗ Ⓟ Ᵽ Ꝑ Ꝓ Ꝕ Ｐ", "P P P P P P P P P P P");
+            Add("p ƥ ᵱ ᵽ ᶈ ṕ ṗ ⓟ ꝑ ꝓ ꝕ ꟼ ｐ", "p p p p p p p p p p p p p");
+            Add("⒫", "(p)");
+
+            // q
+            Add("Q Ɋ Ⓠ Ꝗ Ꝙ Ｑ", "Q Q Q Q Q Q");
+            Add("q ĸ ɋ ʠ ⓠ ꝗ ꝙ ｑ", "q q q q q q q q");
+            Add("⒬", "(q)");
+            Add("ȹ", "qp");
+
+            // r
+            Add(
+                "R Ŕ Ŗ Ř Ȓ Ȓ Ɍ ʀ ʁ ᴙ ᴚ Ṙ Ṛ Ṝ Ṟ Ⓡ Ɽ Ꝛ Ꞃ Ｒ",
+                "R R R R R R R R R R R R R R R R R R R R"
+            );
+            Add(
+                "r ŕ ŗ ř ȑ ȓ ɍ ɼ ɽ ɾ ɿ ᵣ ᵲ ᵳ ᶉ ṙ ṛ ṝ ṟ ⓡ ꝛ ꞃ ｒ",
+                "r r r r r r r r r r r r r r r r r r r r r r r"
+            );
+            Add("⒭", "(r)");
+
+            // s
+            Add("S Ś Ŝ Ş Š Ș Ṡ Ṣ Ṥ Ṧ Ṩ Ⓢ ꜱ ꞅ Ｓ", "S S S S S S S S S S S S S S S");
+            Add(
+                "s ś ŝ ş š ſ ș ȿ ʂ ᵴ ᶊ ṡ ṣ ṥ ṧ ṩ ẜ ẝ ⓢ Ꞅ ｓ",
+                "s s s s s s s s s s s s s s s s s s s s s"
+            );
+            Add("ẞ", "SS");
+            Add("⒮", "(s)");
+            Add("ß", "ss");
+            Add("ﬆ", "st");
+
+            // t
+            Add("T Ţ Ť Ŧ Ƭ Ʈ Ț Ⱦ ᴛ Ṫ Ṭ Ṯ Ṱ Ⓣ Ꞇ Ｔ", "T T T T T T T T T T T T T T T T");
+            Add("t ţ ť ŧ ƫ ƭ ț ȶ ʇ ʈ ᵵ ṫ ṭ ṯ ṱ ẗ ⓣ ⱦ ｔ", "t t t t t t t t t t t t t t t t t t t");
+            Add("Þ Ꝧ", "TH TH");
+            Add("Ꜩ", "TZ");
+            Add("⒯", "(t)");
+            Add("ʨ", "tc");
+            Add("þ ᵺ ꝧ", "th th th");
+            Add("ʦ", "ts");
+            Add("ꜩ", "tz");
+
+            // u
+            Add(
+                "U Ù Ú Û Ü Ũ Ū Ŭ Ů Ű Ų Ư Ǔ Ǖ Ǘ Ǚ Ǜ Ȕ Ȗ Ʉ ᴜ ᵾ Ṳ Ṵ Ṷ Ṹ Ṻ Ụ Ủ Ứ Ừ Ử Ữ Ự Ⓤ Ｕ",
+                "U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U U"
+            );
+            Add(
+                "u ù ú û ü ũ ū ŭ ů ű ų ư ǔ ǖ ǘ ǚ ǜ ȕ ȗ ʉ ᵤ ᶙ ṳ ṵ ṷ ṹ ṻ ụ ủ ứ ừ ử ữ ự ⓤ ｕ",
+                "u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u u"
+            );
+            Add("⒰", "(u)");
+            Add("ᵫ", "ue");
+
+            // v
+            Add("V Ʋ Ʌ ᴠ Ṽ Ṿ Ỽ Ⓥ Ꝟ Ꝩ Ｖ", "V V V V V V V V V V V");
+            Add("v ʋ ʌ ᵥ ᶌ ṽ ṿ ⓥ ⱱ ⱴ ꝟ ｖ", "v v v v v v v v v v v v");
+            Add("Ꝡ", "VY");
+            Add("⒱", "(v)");
+            Add("ꝡ", "vy");
+
+            // w
+            Add("W Ŵ Ƿ ᴡ Ẁ Ẃ Ẅ Ẇ Ẉ Ⓦ Ⱳ Ｗ", "W W W W W W W W W W W W");
+            Add("w ŵ ƿ ʍ ẁ ẃ ẅ ẇ ẉ ẘ ⓦ ⱳ ｗ", "w w w w w w w w w w w w w");
+            Add("⒲", "(w)");
+
+            // x
+            Add("X Ẋ Ẍ Ⓧ Ｘ", "X X X X X");
+            Add("x ᶍ ẋ ẍ ₓ ⓧ ｘ", "x x x x x x x");
+            Add("⒳", "(x)");
+
+            // y
+            Add("Y Ý Ŷ Ÿ Ƴ Ȳ Ɏ ʏ Ẏ Ỳ Ỵ Ỷ Ỹ Ỿ Ⓨ Ｙ", "Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y Y");
+            Add("y ý ÿ ŷ ƴ ȳ ɏ ʎ ẏ ẙ ỳ ỵ ỷ ỹ ỿ ⓨ ｙ", "y y y y y y y y y y y y y y y y y");
+            Add("⒴", "(y)");
+
+            // z
+            Add("Z Ź Ż Ž Ƶ Ȝ Ȥ ᴢ Ẑ Ẓ Ẕ Ⓩ Ⱬ Ꝣ Ｚ", "Z Z Z Z Z Z Z Z Z Z Z Z Z Z Z");
+            Add("z ź ż ž ƶ ȝ ȥ ɀ ʐ ʑ ᵶ ᶎ ẑ ẓ ẕ ⓩ ⱬ ꝣ ｚ", "z z z z z z z z z z z z z z z z z z z");
+            Add("⒵", "(z)");
         }
     }
+
+    #endregion [ FoldToASCII ]
 }
