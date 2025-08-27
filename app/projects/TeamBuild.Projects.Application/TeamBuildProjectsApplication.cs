@@ -24,7 +24,7 @@ public static class TeamBuildProjectsApplication
     )
     {
         return TeamBuildCoreDomain.OperationTags(
-            project: ProjectsModule.Caption,
+            project: ProjectsModule.DefinitionName,
             layer: TeamBuildCoreDomain.LayerApplicationName,
             entity: entity,
             operation: operation

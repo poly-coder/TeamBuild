@@ -24,7 +24,7 @@ public sealed partial class CultureListPage : IDisposable
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
             ActivityName = $"{nameof(CultureListPage)}.Search",
             ActivityTags = TeamBuildProjectsBlazor.OperationTags(
-                entity: CultureEntity.Caption,
+                entity: CultureResource.DefinitionName,
                 operation: TeamBuildCoreDomain.OperationListName
             ),
         };

@@ -17,5 +17,3 @@ public interface IDomainQuery : IDomainRequest;
 public interface IDomainCommandSuccess : IDomainResponse;
 
 public interface IDomainQuerySuccess : IDomainResponse;
-
-public record AggregateCommandSuccess(int EmittedEventCount) : IDomainCommandSuccess;

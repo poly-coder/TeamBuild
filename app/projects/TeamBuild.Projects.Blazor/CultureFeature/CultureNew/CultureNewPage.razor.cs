@@ -19,7 +19,7 @@ public sealed partial class CultureNewPage : IDisposable
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
             ActivityName = $"{nameof(CultureNewPage)}.Submit",
             ActivityTags = TeamBuildProjectsBlazor.OperationTags(
-                entity: CultureEntity.Caption,
+                entity: CultureResource.DefinitionName,
                 operation: TeamBuildCoreDomain.OperationCreateName
             ),
         };

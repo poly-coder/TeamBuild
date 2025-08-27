@@ -27,8 +27,8 @@ public sealed partial class CultureEditPage : IDisposable
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
             ActivityName = $"{nameof(CultureEditPage)}.Load",
             ActivityTags = TeamBuildProjectsBlazor.OperationTags(
-                entity: CultureEntity.Caption,
-                operation: TeamBuildCoreDomain.OperationFetchName
+                entity: CultureResource.DefinitionName,
+                operation: TeamBuildCoreDomain.OperationGetByIdName
             ),
         };
 
@@ -39,7 +39,7 @@ public sealed partial class CultureEditPage : IDisposable
             ActivitySource = TeamBuildProjectsBlazor.ActivitySource,
             ActivityName = $"{nameof(CultureEditPage)}.Submit",
             ActivityTags = TeamBuildProjectsBlazor.OperationTags(
-                entity: CultureEntity.Caption,
+                entity: CultureResource.DefinitionName,
                 operation: TeamBuildCoreDomain.OperationUpdateName
             ),
         };

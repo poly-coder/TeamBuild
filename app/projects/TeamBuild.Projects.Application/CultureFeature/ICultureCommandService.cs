@@ -71,12 +71,12 @@ public class CultureCommandServiceTracingAspect(ActivitySource activitySource)
         return methodName switch
         {
             nameof(ICultureCommandService.Define) => TeamBuildProjectsApplication.OperationTags(
-                CultureEntity.Caption,
+                CultureResource.DefinitionName,
                 TeamBuildCoreDomain.OperationCreateName
             ),
 
             nameof(ICultureCommandService.Delete) => TeamBuildProjectsApplication.OperationTags(
-                CultureEntity.Caption,
+                CultureResource.DefinitionName,
                 TeamBuildCoreDomain.OperationDeleteName
             ),
 

@@ -1,17 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
+  <PropertyGroup></PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\TeamBuild.Core.Services\TeamBuild.Core.Services.csproj" />
   </ItemGroup>
-
 </Project>

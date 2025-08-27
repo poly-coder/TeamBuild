@@ -24,7 +24,7 @@ public static class TeamBuildProjectsBlazor
     )
     {
         return TeamBuildCoreDomain.OperationTags(
-            project: ProjectsModule.Caption,
+            project: ProjectsModule.DefinitionName,
             layer: TeamBuildCoreDomain.LayerUiName,
             entity: entity,
             operation: operation

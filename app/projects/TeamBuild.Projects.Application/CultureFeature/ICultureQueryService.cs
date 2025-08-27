@@ -84,18 +84,18 @@ public class CultureQueryServiceTracingAspect(ActivitySource activitySource)
         return methodName switch
         {
             nameof(ICultureQueryService.List) => TeamBuildProjectsApplication.OperationTags(
-                CultureEntity.Caption,
+                CultureResource.DefinitionName,
                 TeamBuildCoreDomain.OperationListName
             ),
 
             nameof(ICultureQueryService.GetById) => TeamBuildProjectsApplication.OperationTags(
-                CultureEntity.Caption,
-                TeamBuildCoreDomain.OperationFetchName
+                CultureResource.DefinitionName,
+                TeamBuildCoreDomain.OperationGetByIdName
             ),
 
             nameof(ICultureQueryService.GetByIds) => TeamBuildProjectsApplication.OperationTags(
-                CultureEntity.Caption,
-                TeamBuildCoreDomain.OperationFetchName
+                CultureResource.DefinitionName,
+                TeamBuildCoreDomain.OperationGetByIdsName
             ),
 
             _ => null,

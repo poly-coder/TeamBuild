@@ -24,7 +24,10 @@ public static class TeamBuildCoreDomain
     public const string TeamBuildSystemName = "TeamBuild";
 
     public const string OperationListName = "list";
-    public const string OperationFetchName = "fetch";
+
+    public const string OperationGetByIdName = "get-one";
+    public const string OperationGetByIdsName = "get-many";
+    public const string OperationDefineName = "define";
     public const string OperationCreateName = "create";
     public const string OperationUpdateName = "update";
     public const string OperationDeleteName = "delete";

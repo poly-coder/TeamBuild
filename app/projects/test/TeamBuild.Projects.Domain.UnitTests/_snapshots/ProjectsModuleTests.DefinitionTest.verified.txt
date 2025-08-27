@@ -1,0 +1,62 @@
+﻿{
+  definition: {
+    Resources: [
+      {
+        Resources: [],
+        Operations: [
+          {
+            Id: M:projects.R:available-culture.O:list.,
+            Name: list,
+            FullName: projects.available-culture.list
+          }
+        ],
+        Id: M:projects.R:available-culture.,
+        Name: available-culture,
+        FullName: projects.available-culture
+      },
+      {
+        Resources: [],
+        Operations: [
+          {
+            Id: M:projects.R:culture.O:define.,
+            Name: define,
+            FullName: projects.culture.define
+          },
+          {
+            Id: M:projects.R:culture.O:delete.,
+            Name: delete,
+            FullName: projects.culture.delete
+          },
+          {
+            Id: M:projects.R:culture.O:list.,
+            Name: list,
+            FullName: projects.culture.list
+          },
+          {
+            Id: M:projects.R:culture.O:get-one.,
+            Name: get-one,
+            FullName: projects.culture.get-one
+          },
+          {
+            Id: M:projects.R:culture.O:get-many.,
+            Name: get-many,
+            FullName: projects.culture.get-many
+          }
+        ],
+        Id: M:projects.R:culture.,
+        Name: culture,
+        FullName: projects.culture
+      },
+      {
+        Resources: [],
+        Operations: [],
+        Id: M:projects.R:module.,
+        Name: module,
+        FullName: projects.module
+      }
+    ],
+    Id: M:projects.,
+    Name: projects,
+    FullName: projects
+  }
+}

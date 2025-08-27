@@ -1,4 +1,6 @@
-﻿namespace TeamBuild.Core.Domain;
+﻿using System.Globalization;
+
+namespace TeamBuild.Core.Domain;
 
 public class DomainException : Exception
 {
@@ -11,8 +13,26 @@ public class DomainException : Exception
         : base(message, inner) { }
 }
 
-public class EntityNotFoundException : DomainException
+public class NotFoundException : DomainException
 {
-    public EntityNotFoundException(string entityType, string entityId)
-        : base($"Entity '{entityType}' with ID '{entityId}' was not found.") { }
+    public NotFoundException() { }
+
+    public NotFoundException(string message)
+        : base(message) { }
+
+    public NotFoundException(string message, Exception inner)
+        : base(message, inner) { }
+}
+
+public class ResourceNotFoundException : NotFoundException
+{
+    public ResourceNotFoundException(string entityType, string entityId)
+        : base(
+            string.Format(
+                CultureInfo.CurrentCulture,
+                LangResources.ResourceNotFound_Message,
+                entityType,
+                entityId
+            )
+        ) { }
 }

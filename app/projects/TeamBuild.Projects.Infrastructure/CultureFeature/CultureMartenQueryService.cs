@@ -34,7 +34,7 @@ public class CultureMartenQueryService(IQuerySession session) : ICultureQuerySer
 
         if (doc is null)
         {
-            throw new EntityNotFoundException(CultureEntity.Caption, query.CultureCode);
+            throw new ResourceNotFoundException(CultureResource.DefinitionName, query.CultureCode);
         }
 
         return new CultureGetByIdQuerySuccess(doc.MapToDetails());

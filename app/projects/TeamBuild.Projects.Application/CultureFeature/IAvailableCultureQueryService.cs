@@ -56,7 +56,7 @@ public class AvailableCultureQueryServiceTracingAspect(ActivitySource activitySo
         {
             nameof(IAvailableCultureQueryService.List) =>
                 TeamBuildProjectsApplication.OperationTags(
-                    AvailableCultureEntity.Caption,
+                    AvailableCultureResource.DefinitionName,
                     TeamBuildCoreDomain.OperationListName
                 ),
 
