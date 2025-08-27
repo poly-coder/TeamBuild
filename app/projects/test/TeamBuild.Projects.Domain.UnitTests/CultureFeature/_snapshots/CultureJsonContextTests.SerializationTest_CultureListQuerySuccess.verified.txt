@@ -1,0 +1,46 @@
+﻿{
+  input: {
+    CultureList: [
+      {
+        CultureCode: es,
+        EnglishName: Spanish,
+        NativeName: Español
+      },
+      {
+        CultureCode: en,
+        EnglishName: English,
+        NativeName: English
+      }
+    ]
+  },
+  output: {
+    CultureList: [
+      {
+        CultureCode: es,
+        EnglishName: Spanish,
+        NativeName: Español
+      },
+      {
+        CultureCode: en,
+        EnglishName: English,
+        NativeName: English
+      }
+    ]
+  },
+  json:
+{
+  "$type": "list",
+  "CultureList": [
+    {
+      "CultureCode": "es",
+      "EnglishName": "Spanish",
+      "NativeName": "Español"
+    },
+    {
+      "CultureCode": "en",
+      "EnglishName": "English",
+      "NativeName": "English"
+    }
+  ]
+}
+}

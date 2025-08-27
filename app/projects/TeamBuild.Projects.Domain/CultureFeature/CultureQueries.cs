@@ -12,6 +12,9 @@ namespace TeamBuild.Projects.Domain.CultureFeature;
 [JsonDerivedType(typeof(CultureGetByIdsQuery), "get-many")]
 public abstract record CultureQuery : IDomainQuery;
 
+[JsonDerivedType(typeof(CultureListQuerySuccess), "list")]
+[JsonDerivedType(typeof(CultureGetByIdQuerySuccess), "get-one")]
+[JsonDerivedType(typeof(CultureGetByIdsQuerySuccess), "get-many")]
 public abstract record CultureQuerySuccess : IDomainQuerySuccess;
 
 // List
@@ -41,7 +44,7 @@ public record CultureListQuery(CultureListQueryFilter? Filter = null) : CultureQ
     }
 }
 
-public record CultureListQueryFilter(string? Search = null) : CultureQuery;
+public record CultureListQueryFilter(string? Search = null);
 
 public record CultureListQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
     : CultureQuerySuccess;
@@ -105,17 +108,17 @@ public record CultureGetByIdsQuery(IReadOnlyList<string> CultureCodes) : Culture
 public record CultureGetByIdsQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
     : CultureQuerySuccess;
 
-public class CultureCreateQueryValidator : AbstractValidator<CultureGetByIdQuery>
+public class CultureGetByIdQueryValidator : AbstractValidator<CultureGetByIdQuery>
 {
-    public CultureCreateQueryValidator()
+    public CultureGetByIdQueryValidator()
     {
         RuleFor(e => e.CultureCode).ValidateWith(CultureValidations.CultureCode);
     }
 }
 
-public class CultureUpdateQueryValidator : AbstractValidator<CultureGetByIdsQuery>
+public class CultureGetByIdsQueryValidator : AbstractValidator<CultureGetByIdsQuery>
 {
-    public CultureUpdateQueryValidator()
+    public CultureGetByIdsQueryValidator()
     {
         RuleFor(e => e.CultureCodes).NotNull();
         RuleForEach(e => e.CultureCodes).ValidateWith(CultureValidations.CultureCode);

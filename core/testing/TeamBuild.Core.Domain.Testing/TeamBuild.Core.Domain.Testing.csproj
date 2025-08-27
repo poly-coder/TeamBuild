@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TeamBuild.Core.Domain\TeamBuild.Core.Domain.csproj" />
+    <ProjectReference Include="..\TeamBuild.Core.Testing\TeamBuild.Core.Testing.csproj" />
+  </ItemGroup>
+</Project>

@@ -16,12 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\core\testing\TeamBuild.Core.Domain.Testing\TeamBuild.Core.Domain.Testing.csproj" />
     <ProjectReference Include="..\..\..\..\core\testing\TeamBuild.Core.Testing\TeamBuild.Core.Testing.csproj" />
     <ProjectReference Include="..\..\TeamBuild.Projects.Domain\TeamBuild.Projects.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CultureFeature\_snapshots\" />
   </ItemGroup>
 
 </Project>

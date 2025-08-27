@@ -36,7 +36,7 @@ public record AvailableCultureListQuery(AvailableCultureListQueryFilter? Filter 
     }
 }
 
-public record AvailableCultureListQueryFilter(string? Search = null) : AvailableCultureQuery;
+public record AvailableCultureListQueryFilter(string? Search = null);
 
 public record AvailableCultureListQuerySuccess(IReadOnlyList<CultureDetails> CultureList)
     : AvailableCultureQuerySuccess;

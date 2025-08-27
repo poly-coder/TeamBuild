@@ -1,0 +1,19 @@
+﻿{
+  input: {
+    Filter: {
+      Search: text filter
+    }
+  },
+  output: {
+    Filter: {
+      Search: text filter
+    }
+  },
+  json:
+{
+  "$type": "list",
+  "Filter": {
+    "Search": "text filter"
+  }
+}
+}

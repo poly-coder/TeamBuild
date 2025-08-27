@@ -1,0 +1,8 @@
+﻿{
+  input: {},
+  output: {},
+  json:
+{
+  "$type": "delete"
+}
+}

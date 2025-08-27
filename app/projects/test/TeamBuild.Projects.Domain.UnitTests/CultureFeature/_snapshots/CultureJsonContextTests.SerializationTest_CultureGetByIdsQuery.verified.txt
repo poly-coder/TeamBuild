@@ -1,0 +1,22 @@
+﻿{
+  input: {
+    CultureCodes: [
+      es,
+      en
+    ]
+  },
+  output: {
+    CultureCodes: [
+      es,
+      en
+    ]
+  },
+  json:
+{
+  "$type": "get-many",
+  "CultureCodes": [
+    "es",
+    "en"
+  ]
+}
+}

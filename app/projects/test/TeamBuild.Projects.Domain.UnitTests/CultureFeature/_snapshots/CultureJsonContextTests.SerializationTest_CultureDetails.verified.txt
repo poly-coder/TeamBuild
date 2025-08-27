@@ -1,0 +1,18 @@
+﻿{
+  input: {
+    CultureCode: es,
+    EnglishName: Spanish,
+    NativeName: Español
+  },
+  output: {
+    CultureCode: es,
+    EnglishName: Spanish,
+    NativeName: Español
+  },
+  json:
+{
+  "CultureCode": "es",
+  "EnglishName": "Spanish",
+  "NativeName": "Español"
+}
+}

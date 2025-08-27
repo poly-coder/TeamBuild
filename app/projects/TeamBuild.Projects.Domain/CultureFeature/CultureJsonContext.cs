@@ -2,8 +2,6 @@
 
 namespace TeamBuild.Projects.Domain.CultureFeature;
 
-// Models
-[JsonSerializable(typeof(CultureDetails))]
 // Queries
 [JsonSerializable(typeof(AvailableCultureQuery))]
 [JsonSerializable(typeof(AvailableCultureQuerySuccess))]

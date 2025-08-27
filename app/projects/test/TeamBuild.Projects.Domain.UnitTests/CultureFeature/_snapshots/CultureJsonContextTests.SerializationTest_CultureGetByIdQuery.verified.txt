@@ -1,0 +1,13 @@
+﻿{
+  input: {
+    CultureCode: es
+  },
+  output: {
+    CultureCode: es
+  },
+  json:
+{
+  "$type": "get-one",
+  "CultureCode": "es"
+}
+}

@@ -1,0 +1,25 @@
+﻿{
+  input: {
+    Culture: {
+      CultureCode: es,
+      EnglishName: Spanish,
+      NativeName: Español
+    }
+  },
+  output: {
+    Culture: {
+      CultureCode: es,
+      EnglishName: Spanish,
+      NativeName: Español
+    }
+  },
+  json:
+{
+  "$type": "define",
+  "Culture": {
+    "CultureCode": "es",
+    "EnglishName": "Spanish",
+    "NativeName": "Español"
+  }
+}
+}
