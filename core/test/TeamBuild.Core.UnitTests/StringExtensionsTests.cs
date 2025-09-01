@@ -1,8 +1,10 @@
-﻿namespace TeamBuild.Core.UnitTests;
+﻿using TeamBuild.Core.Testing;
 
-[Trait("Category", "Unit")]
-[Trait("Area", "Core")]
-[Trait("Project", "Preamble")]
+namespace TeamBuild.Core.UnitTests;
+
+[UnitTest]
+[CoreProjectTest]
+[PreambleLayerTest]
 public class StringExtensionsTests
 {
     #region [ ToTextSearchData/Query ]

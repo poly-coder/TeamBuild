@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\TeamBuild.Core\TeamBuild.Core.csproj" />
+    <ProjectReference Include="..\..\testing\TeamBuild.Core.Testing\TeamBuild.Core.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup>

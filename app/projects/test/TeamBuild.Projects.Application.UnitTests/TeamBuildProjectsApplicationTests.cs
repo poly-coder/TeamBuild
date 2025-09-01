@@ -5,10 +5,13 @@ using TeamBuild.Projects.Domain;
 
 namespace TeamBuild.Projects.Application.UnitTests;
 
+[UnitTest]
+[ProjectsTest]
+[ApplicationLayerTest]
 public class TeamBuildProjectsApplicationTests
 {
     [Fact]
-    public void CoreTest()
+    public void DefinitionTest()
     {
         typeof(TeamBuildProjectsApplication).ShouldBeProperlyDefined(
             TeamBuildProjectsApplication.Assembly,

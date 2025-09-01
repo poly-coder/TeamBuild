@@ -1,12 +1,13 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using TeamBuild.Core.Reflection;
+using TeamBuild.Core.Testing;
 
 namespace TeamBuild.Core.UnitTests.Reflection;
 
-[Trait("Category", "Unit")]
-[Trait("Area", "Core")]
-[Trait("Project", "Preamble")]
+[UnitTest]
+[CoreProjectTest]
+[PreambleLayerTest]
 public class ReflectionExtensionsTests
 {
     #region [ ExtractProperty ]

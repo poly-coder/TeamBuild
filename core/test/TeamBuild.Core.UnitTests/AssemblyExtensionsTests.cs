@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
+using TeamBuild.Core.Testing;
 
 namespace TeamBuild.Core.UnitTests;
 
-[Trait("Category", "Unit")]
-[Trait("Area", "Core")]
-[Trait("Project", "Preamble")]
+[UnitTest]
+[CoreProjectTest]
+[PreambleLayerTest]
 public class AssemblyExtensionsTests
 {
     [Theory]

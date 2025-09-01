@@ -1,8 +1,10 @@
-﻿namespace TeamBuild.Core.Domain.UnitTests;
+﻿using TeamBuild.Core.Testing;
 
-[Trait("Category", "Unit")]
-[Trait("Area", "Core")]
-[Trait("Project", "Domain")]
+namespace TeamBuild.Core.Domain.UnitTests;
+
+[UnitTest]
+[CoreProjectTest]
+[DomainLayerTest]
 public class DefinitionKeyTests
 {
     [Theory]

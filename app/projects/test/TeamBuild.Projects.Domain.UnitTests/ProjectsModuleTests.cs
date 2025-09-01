@@ -2,9 +2,9 @@
 
 namespace TeamBuild.Projects.Domain.UnitTests;
 
-[Trait("Category", "Unit")]
-[Trait("Area", "App")]
-[Trait("Project", "Projects")]
+[UnitTest]
+[ProjectsTest]
+[DomainLayerTest]
 public class ProjectsModuleTests
 {
     [Fact]

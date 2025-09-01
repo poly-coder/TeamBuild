@@ -1,11 +1,12 @@
 ﻿using TeamBuild.Core.Domain.Testing;
+using TeamBuild.Core.Testing;
 using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Domain.UnitTests.CultureFeature;
 
-[Trait("Category", "Unit")]
-[Trait("Area", "App")]
-[Trait("Project", "Projects")]
+[UnitTest]
+[ProjectsTest]
+[DomainLayerTest]
 public class CultureValidationsTests
 {
     [Theory]
