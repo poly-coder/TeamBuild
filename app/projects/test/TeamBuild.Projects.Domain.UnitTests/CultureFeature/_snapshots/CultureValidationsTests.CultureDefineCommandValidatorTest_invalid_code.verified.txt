@@ -1,0 +1,27 @@
+﻿{
+  instance: {
+    CultureCode: not valid,
+    EnglishName: Any display name,
+    NativeName: is actually valid
+  },
+  validation: {
+    IsValid: false,
+    Errors: [
+      {
+        PropertyName: CultureCode,
+        ErrorMessage: Invalid culture code.,
+        AttemptedValue: not valid,
+        ErrorCode: RegularExpressionValidator,
+        FormattedMessagePlaceholderValues: {
+          PropertyName: Culture Code,
+          PropertyPath: CultureCode,
+          PropertyValue: not valid,
+          RegularExpression: ^([a-z][a-z0-9]+)(\-([a-z][a-z0-9]+))*$
+        }
+      }
+    ],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+﻿{
+  instance: {
+    CultureCode: ,
+    EnglishName: ,
+    NativeName: 
+  },
+  validation: {
+    IsValid: false,
+    Errors: [
+      {
+        PropertyName: CultureCode,
+        ErrorMessage: 'Culture Code' must not be empty.,
+        AttemptedValue: ,
+        ErrorCode: NotEmptyValidator,
+        FormattedMessagePlaceholderValues: {
+          PropertyName: Culture Code,
+          PropertyPath: CultureCode,
+          PropertyValue: 
+        }
+      },
+      {
+        PropertyName: EnglishName,
+        ErrorMessage: 'English Name' must not be empty.,
+        AttemptedValue: ,
+        ErrorCode: NotEmptyValidator,
+        FormattedMessagePlaceholderValues: {
+          PropertyName: English Name,
+          PropertyPath: EnglishName,
+          PropertyValue: 
+        }
+      },
+      {
+        PropertyName: NativeName,
+        ErrorMessage: 'Native Name' must not be empty.,
+        AttemptedValue: ,
+        ErrorCode: NotEmptyValidator,
+        FormattedMessagePlaceholderValues: {
+          PropertyName: Native Name,
+          PropertyPath: NativeName,
+          PropertyValue: 
+        }
+      }
+    ],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}

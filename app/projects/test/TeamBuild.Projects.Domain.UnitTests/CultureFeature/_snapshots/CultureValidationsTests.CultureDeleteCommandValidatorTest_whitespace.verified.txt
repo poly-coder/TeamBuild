@@ -1,0 +1,24 @@
+﻿{
+  instance: {
+    CultureCode: 
+  },
+  validation: {
+    IsValid: false,
+    Errors: [
+      {
+        PropertyName: CultureCode,
+        ErrorMessage: 'Culture Code' must not be empty.,
+        AttemptedValue: ,
+        ErrorCode: NotEmptyValidator,
+        FormattedMessagePlaceholderValues: {
+          PropertyName: Culture Code,
+          PropertyPath: CultureCode,
+          PropertyValue: 
+        }
+      }
+    ],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}

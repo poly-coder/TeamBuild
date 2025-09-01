@@ -1,0 +1,12 @@
+﻿{
+  instance: {
+    CultureCode: zh-CN
+  },
+  validation: {
+    IsValid: true,
+    Errors: [],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup></PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\TeamBuild.Core.Domain.FluentValidations\TeamBuild.Core.Domain.FluentValidations.csproj" />
     <ProjectReference Include="..\..\TeamBuild.Core.Domain\TeamBuild.Core.Domain.csproj" />
     <ProjectReference Include="..\TeamBuild.Core.Testing\TeamBuild.Core.Testing.csproj" />
   </ItemGroup>

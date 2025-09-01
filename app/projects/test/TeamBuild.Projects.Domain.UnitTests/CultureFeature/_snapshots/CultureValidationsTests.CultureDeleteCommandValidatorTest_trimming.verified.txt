@@ -1,0 +1,12 @@
+﻿{
+  instance: {
+    CultureCode: es
+  },
+  validation: {
+    IsValid: true,
+    Errors: [],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}

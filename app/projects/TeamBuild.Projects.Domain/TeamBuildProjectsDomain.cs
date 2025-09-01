@@ -19,8 +19,10 @@ public static class TeamBuildProjectsDomain
 
     public static readonly Meter Meter = new(Name, Version);
 
-    public static IEnumerable<JsonSerializerContext> GetJsonContexts(JsonSerializerOptions options)
+    public static IEnumerable<JsonSerializerContext> GetJsonContexts(
+        JsonSerializerOptions? options = null
+    )
     {
-        yield return new CultureJsonContext(options);
+        yield return new CultureJsonContext(options!);
     }
 }

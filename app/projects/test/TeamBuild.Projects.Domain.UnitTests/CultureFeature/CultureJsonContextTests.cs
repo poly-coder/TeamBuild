@@ -1,4 +1,5 @@
-﻿using TeamBuild.Core.Domain.Testing;
+﻿using Shouldly;
+using TeamBuild.Core.Domain.Testing;
 using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Domain.UnitTests.CultureFeature;
@@ -105,5 +106,11 @@ public class CultureJsonContextTests
     public void AllModelsSerializerTested()
     {
         SerializationTestDatas().ShouldBeTestedFor<CultureJsonContext>();
+    }
+
+    [Fact]
+    public void GetJsonContextsHasContextTest()
+    {
+        TeamBuildProjectsDomain.GetJsonContexts().ShouldContain(c => c is CultureJsonContext);
     }
 }

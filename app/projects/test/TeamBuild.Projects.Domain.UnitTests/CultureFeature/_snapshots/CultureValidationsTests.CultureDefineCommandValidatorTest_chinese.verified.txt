@@ -1,0 +1,14 @@
+﻿{
+  instance: {
+    CultureCode: zh-CN,
+    EnglishName: Chinese (Simplified),
+    NativeName: 中文(简体)
+  },
+  validation: {
+    IsValid: true,
+    Errors: [],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+﻿{
+  instance: {
+    CultureCode: es,
+    EnglishName: Spanish,
+    NativeName: Español
+  },
+  validation: {
+    IsValid: true,
+    Errors: [],
+    RuleSetsExecuted: [
+      default
+    ]
+  }
+}
