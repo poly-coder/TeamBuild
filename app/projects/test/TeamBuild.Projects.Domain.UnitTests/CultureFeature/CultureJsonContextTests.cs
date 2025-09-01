@@ -1,5 +1,4 @@
-﻿using Shouldly;
-using TeamBuild.Core.Domain.Testing;
+﻿using TeamBuild.Core.Domain.Testing;
 using TeamBuild.Projects.Domain.CultureFeature;
 
 namespace TeamBuild.Projects.Domain.UnitTests.CultureFeature;

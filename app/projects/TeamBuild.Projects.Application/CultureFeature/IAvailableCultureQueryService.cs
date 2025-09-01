@@ -18,20 +18,14 @@ public interface IAvailableCultureQueryService
 
 public sealed class AvailableCultureQueryServiceDecorator(
     IAvailableCultureQueryService service,
-    AvailableCultureQueryServiceTracingAspect tracingAspect,
-    AvailableCultureQueryServiceLoggingAspect loggingAspect,
-    FluentValidationAspect validationAspect,
-    AvailableCultureQueryServiceMetricsAspect metricsAspect
-)
-    : StandardServiceDecorator(tracingAspect, loggingAspect, validationAspect, metricsAspect),
-        IAvailableCultureQueryService,
-        IDisposable
+    AvailableCultureQueryServiceAspect aspect
+) : IAvailableCultureQueryService, IDisposable
 {
     public Task<AvailableCultureListQuerySuccess> List(
         AvailableCultureListQuery query,
         CancellationToken cancel = default
     ) =>
-        ExecuteAsync(
+        aspect.ExecuteAsync(
             targetType: service.GetType(),
             parameters: [query],
             action: () => service.List(query, cancel),
@@ -43,6 +37,17 @@ public sealed class AvailableCultureQueryServiceDecorator(
         service.DisposeIfNeeded();
     }
 }
+
+public sealed class AvailableCultureQueryServiceAspect(
+    ILoggerFactory loggerFactory,
+    FluentValidationAspect validationAspect
+)
+    : StandardServiceAspect(
+        new AvailableCultureQueryServiceTracingAspect(TeamBuildProjectsApplication.ActivitySource),
+        new AvailableCultureQueryServiceLoggingAspect(loggerFactory),
+        validationAspect,
+        new AvailableCultureQueryServiceMetricsAspect()
+    );
 
 public class AvailableCultureQueryServiceTracingAspect(ActivitySource activitySource)
     : TracingAspect(activitySource)

@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using TeamBuild.Core.Application;
 using TeamBuild.Core.Domain;
 using TeamBuild.Core.MartenExt;
-using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
@@ -62,10 +61,8 @@ internal static class CultureMartenQueryExtensions
             ICultureQueryService,
             CultureMartenQueryService,
             CultureQueryServiceDecorator,
-            CultureQueryServiceLoggingAspect,
-            CultureQueryServiceMetricsAspect,
-            CultureQueryServiceTracingAspect
-        >(TeamBuildProjectsApplication.ActivitySource);
+            CultureQueryServiceAspect
+        >();
 
     public static IQueryable<CultureDocument> ApplyFiltering(
         this IQueryable<CultureDocument> query,

@@ -23,20 +23,14 @@ public interface ICultureCommandService
 
 public sealed class CultureCommandServiceDecorator(
     ICultureCommandService service,
-    CultureCommandServiceTracingAspect tracingAspect,
-    CultureCommandServiceLoggingAspect loggingAspect,
-    FluentValidationAspect validationAspect,
-    CultureCommandServiceMetricsAspect metricsAspect
-)
-    : StandardServiceDecorator(tracingAspect, loggingAspect, validationAspect, metricsAspect),
-        ICultureCommandService,
-        IDisposable
+    CultureCommandServiceAspect aspect
+) : ICultureCommandService, IDisposable
 {
     public Task<CultureDefineCommandSuccess> Define(
         CultureDefineCommand command,
         CancellationToken cancel = default
     ) =>
-        ExecuteAsync(
+        aspect.ExecuteAsync(
             targetType: service.GetType(),
             parameters: [command],
             action: () => service.Define(command, cancel),
@@ -47,7 +41,7 @@ public sealed class CultureCommandServiceDecorator(
         CultureDeleteCommand command,
         CancellationToken cancel = default
     ) =>
-        ExecuteAsync(
+        aspect.ExecuteAsync(
             targetType: service.GetType(),
             parameters: [command],
             action: () => service.Delete(command, cancel),
@@ -59,6 +53,17 @@ public sealed class CultureCommandServiceDecorator(
         service.DisposeIfNeeded();
     }
 }
+
+public sealed class CultureCommandServiceAspect(
+    ILoggerFactory loggerFactory,
+    FluentValidationAspect validationAspect
+)
+    : StandardServiceAspect(
+        new CultureCommandServiceTracingAspect(TeamBuildProjectsApplication.ActivitySource),
+        new CultureCommandServiceLoggingAspect(loggerFactory),
+        validationAspect,
+        new CultureCommandServiceMetricsAspect()
+    );
 
 public class CultureCommandServiceTracingAspect(ActivitySource activitySource)
     : TracingAspect(activitySource)

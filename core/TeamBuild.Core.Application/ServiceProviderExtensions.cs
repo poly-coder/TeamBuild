@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using TeamBuild.Core.Application.Decorators;
 
 namespace TeamBuild.Core.Application;
@@ -18,21 +17,15 @@ public static class ServiceProviderExtensions
         TService,
         TImplementation,
         TDecorator,
-        TLogging,
-        TMetrics,
-        TTracing
-    >(this IServiceCollection services, ActivitySource activitySource)
-        where TLogging : LoggingAspect
-        where TMetrics : MetricsAspect
-        where TTracing : TracingAspect
+        TServiceAspect
+    >(this IServiceCollection services)
+        where TServiceAspect : StandardServiceAspect
         where TService : class
         where TImplementation : TService
         where TDecorator : TService
     {
         return services
-            .AddSingleton<TLogging>()
-            .AddSingleton<TMetrics>()
-            .AddSingleton<TTracing>(provider => provider.CreateInstance<TTracing>(activitySource))
+            .AddSingleton<TServiceAspect>()
             .AddScoped<TService>(provider =>
                 provider.CreateInstance<TDecorator>(provider.CreateInstance<TImplementation>())
             );

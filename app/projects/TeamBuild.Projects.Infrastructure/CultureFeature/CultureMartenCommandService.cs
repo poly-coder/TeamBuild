@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using TeamBuild.Core;
 using TeamBuild.Core.Application;
-using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
@@ -56,8 +55,6 @@ internal static class CultureMartenCommandServiceExtensions
             ICultureCommandService,
             CultureMartenCommandService,
             CultureCommandServiceDecorator,
-            CultureCommandServiceLoggingAspect,
-            CultureCommandServiceMetricsAspect,
-            CultureCommandServiceTracingAspect
-        >(TeamBuildProjectsApplication.ActivitySource);
+            CultureCommandServiceAspect
+        >();
 }

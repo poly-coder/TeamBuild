@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using TeamBuild.Core;
 using TeamBuild.Core.Application;
-using TeamBuild.Projects.Application;
 using TeamBuild.Projects.Application.CultureFeature;
 using TeamBuild.Projects.Domain.CultureFeature;
 
@@ -39,10 +38,8 @@ internal static class AvailableCultureQueryExtensions
             IAvailableCultureQueryService,
             AvailableCultureQueryService,
             AvailableCultureQueryServiceDecorator,
-            AvailableCultureQueryServiceLoggingAspect,
-            AvailableCultureQueryServiceMetricsAspect,
-            AvailableCultureQueryServiceTracingAspect
-        >(TeamBuildProjectsApplication.ActivitySource);
+            AvailableCultureQueryServiceAspect
+        >();
 
     public static IEnumerable<CultureInfo> ApplyFiltering(
         this IEnumerable<CultureInfo> query,

@@ -40,6 +40,37 @@ public class FluentValidationAspect(IServiceProvider provider)
             throw new ValidationException(errors.SelectMany(e => e.Errors));
     }
 
+    public void Before(IReadOnlyList<object?> inputs)
+    {
+        var errors = new List<ValidationResult>();
+
+        foreach (var input in inputs)
+        {
+            if (input is null)
+                continue;
+
+            var inputType = input.GetType();
+
+            var validatorType = ValidatorEnumerableTypeCache.GetValue(inputType);
+
+            if (provider.GetRequiredService(validatorType) is not IEnumerable validators)
+                continue;
+
+            foreach (IValidator validator in validators)
+            {
+                var context = CreateContext(inputType, input);
+
+                var validation = validator.Validate(context);
+
+                if (validation is { IsValid: false })
+                    errors.Add(validation);
+            }
+        }
+
+        if (errors is not [])
+            throw new ValidationException(errors.SelectMany(e => e.Errors));
+    }
+
     public async Task BeforeAsync(IReadOnlyList<object?> inputs, CancellationToken cancel = default)
     {
         var validationTasks = new ConcurrentBag<Task<ValidationResult>>();

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging;
 using TeamBuild.Core;
@@ -25,42 +26,36 @@ public interface ICultureQueryService
 
 public sealed class CultureQueryServiceDecorator(
     ICultureQueryService service,
-    CultureQueryServiceTracingAspect tracingAspect,
-    CultureQueryServiceLoggingAspect loggingAspect,
-    FluentValidationAspect validationAspect,
-    CultureQueryServiceMetricsAspect metricsAspect
-)
-    : StandardServiceDecorator(tracingAspect, loggingAspect, validationAspect, metricsAspect),
-        ICultureQueryService,
-        IDisposable
+    CultureQueryServiceAspect aspect
+) : ICultureQueryService, IDisposable
 {
     public Task<CultureListQuerySuccess> List(
         CultureListQuery query,
         CancellationToken cancel = default
     ) =>
-        ExecuteAsync(
+        aspect.ExecuteAsync(
             targetType: service.GetType(),
             parameters: [query],
             action: () => service.List(query, cancel),
             cancel: cancel
         );
 
-    public Task<CultureGetByIdQuerySuccess> GetById(
+    public async Task<CultureGetByIdQuerySuccess> GetById(
         CultureGetByIdQuery query,
         CancellationToken cancel = default
     ) =>
-        ExecuteAsync(
+        await aspect.ExecuteAsync(
             targetType: service.GetType(),
             parameters: [query],
             action: () => service.GetById(query, cancel),
             cancel: cancel
         );
 
-    public Task<CultureGetByIdsQuerySuccess> GetByIds(
+    public async Task<CultureGetByIdsQuerySuccess> GetByIds(
         CultureGetByIdsQuery query,
         CancellationToken cancel = default
     ) =>
-        ExecuteAsync(
+        await aspect.ExecuteAsync(
             targetType: service.GetType(),
             parameters: [query],
             action: () => service.GetByIds(query, cancel),
@@ -72,6 +67,17 @@ public sealed class CultureQueryServiceDecorator(
         service.DisposeIfNeeded();
     }
 }
+
+public sealed class CultureQueryServiceAspect(
+    ILoggerFactory loggerFactory,
+    FluentValidationAspect validationAspect
+)
+    : StandardServiceAspect(
+        new CultureQueryServiceTracingAspect(TeamBuildProjectsApplication.ActivitySource),
+        new CultureQueryServiceLoggingAspect(loggerFactory),
+        validationAspect,
+        new CultureQueryServiceMetricsAspect()
+    );
 
 public class CultureQueryServiceTracingAspect(ActivitySource activitySource)
     : TracingAspect(activitySource)
@@ -130,6 +136,7 @@ public class CultureQueryServiceLoggingAspect(ILoggerFactory loggerFactory)
     }
 }
 
+[ExcludeFromCodeCoverage]
 public class CultureQueryServiceMetricsAspect : MetricsAspect
 {
     private static readonly Counter<long> ListCounter =
